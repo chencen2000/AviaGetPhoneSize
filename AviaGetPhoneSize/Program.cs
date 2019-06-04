@@ -8,6 +8,10 @@ namespace AviaGetPhoneSize
 {
     class Program
     {
+        public static void logIt(string msg)
+        {
+            System.Diagnostics.Trace.WriteLine(msg);
+        }
         static int Main(string[] args)
         {
             int ret = 0;
