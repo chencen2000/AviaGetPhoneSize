@@ -32,10 +32,11 @@ namespace AviaGetPhoneSize
                 Console.WriteLine(fn);
                 DateTime _start = DateTime.Now;
                 Rectangle r = get_rectangle_by_canny(fn);
-                Console.WriteLine($"Canny: {r} and {toFloat(r)}, took: {DateTime.Now-_start}");
-                _start = DateTime.Now;
-                Rectangle r1 = get_rectangle_by_sobel(fn);
-                Console.WriteLine($"Sobel: {r1} and {toFloat(r1)}, took: {DateTime.Now - _start}");
+                Console.WriteLine($"Detect size: {toFloat(r)}");
+                //Console.WriteLine($"Canny: {r} and {toFloat(r)}, took: {DateTime.Now-_start}");
+                //_start = DateTime.Now;
+                //Rectangle r1 = get_rectangle_by_sobel(fn);
+                //Console.WriteLine($"Sobel: {r1} and {toFloat(r1)}, took: {DateTime.Now - _start}");
             }
         }
         static RectangleF toFloat(Rectangle r, float ratio= 0.0139339f)
