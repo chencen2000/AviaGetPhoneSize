@@ -42,6 +42,7 @@ namespace AviaGetPhoneSize
             //test_3();
             test_4();
             //is_apple_device();
+            //prepare_image();
             return 0;
         }
         static void test()
@@ -221,7 +222,7 @@ namespace AviaGetPhoneSize
             //Rectangle r = found_apple_logo(@"C:\Tools\avia\images\test.1\iphone6 Plus Gold\1473.1.jpg");
             //Rectangle r = found_apple_logo(@"C:\Tools\avia\images\test.1\iphone6 Gold\0123.1.jpg");
 
-            string folder = @"C:\Tools\avia\images\test.1";
+            string folder = @"C:\Tools\avia\images\test.2";
             foreach (string fn in System.IO.Directory.GetFiles(folder, "*.jpg", System.IO.SearchOption.AllDirectories))
             {
                 Rectangle r = found_apple_logo(fn);
@@ -255,18 +256,21 @@ namespace AviaGetPhoneSize
             Rectangle ret = Rectangle.Empty;
             Tuple<int, int, double>[] param = new Tuple<int, int, double>[]
                 {
-                                new Tuple<int, int, double>(0,3,0.05),
-                                new Tuple<int, int, double>(3,5,0.05),
-                                new Tuple<int, int, double>(7,7,0.05),
+                    new Tuple<int, int, double>(3,5,0.05),
+                    new Tuple<int, int, double>(0,0,0.05),
+                    new Tuple<int, int, double>(0,3,0.05),
+                    new Tuple<int, int, double>(7,7,0.05),
                 };
+            Tuple<VectorOfPoint, VectorOfPoint> apple_logo = get_apple_logo();
             foreach (Tuple<int, int, double> p in param)
             {
                 using (Mat m = CvInvoke.Imread(filename))
                 {
                     double score = 1.0;
                     int most_match = -1;
-                    Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
-                    img = img.Rotate(90, new Gray(0), false);
+                    Mat b = prepare_image(m);
+                    Image<Gray, Byte> img = b.ToImage<Gray, Byte>();
+                    //img = img.Rotate(90, new Gray(0), false);
                     if (p.Item1 > 0)
                         img = img.Erode(p.Item1);
                     if (p.Item2 > 0)
@@ -277,7 +281,6 @@ namespace AviaGetPhoneSize
                     double lower = Math.Max(1, (1.0 - sigma) * otsu);
                     double upper = Math.Min(255, (1.0 + sigma) * otsu);
                     CvInvoke.Canny(img, img, lower, upper);
-                    Tuple<VectorOfPoint, VectorOfPoint> apple_logo = get_apple_logo();
                     using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
                     {
                         CvInvoke.FindContours(img, contours, null, RetrType.List, ChainApproxMethod.ChainApproxNone);
@@ -306,7 +309,11 @@ namespace AviaGetPhoneSize
                         }
                         if(most_match>=0 && most_match < count)
                         {
-                            ret = CvInvoke.BoundingRectangle(contours[most_match]);
+                            Rectangle r = CvInvoke.BoundingRectangle(contours[most_match]);
+                            if(is_apple_logo(r, img.Size))
+                            {
+                                ret = r;
+                            }
                         }
                     }
                     if (!ret.IsEmpty)
@@ -320,25 +327,27 @@ namespace AviaGetPhoneSize
             Rectangle ret = Rectangle.Empty;
             Tuple<int, int, double>[] param = new Tuple<int, int, double>[]
                 {
-                    new Tuple<int, int, double>(0,3,0.05),
-                                //new Tuple<int, int, double>(0,0,0.02),
-                                //new Tuple<int, int, double>(3,5,0.05),
-                                //new Tuple<int, int, double>(7,7,0.05),
+                    new Tuple<int, int, double>(3,5,0.05),                                
+                    new Tuple<int, int, double>(0,3,0.05),                                
+                    new Tuple<int, int, double>(0,0,0.01),
+                    //new Tuple<int, int, double>(0,0,0.02),                                
+                    //new Tuple<int, int, double>(7,7,0.05),
                 };
-            string filename = @"C:\Tools\avia\images\test.1\AP002-iphone6_Gray\8738.1.jpg";
+            string filename = @"C:\Tools\avia\images\test.2\iphone6 Gray\3241.1.jpg";
             foreach (Tuple<int, int, double> p in param)
             {
                 using (Mat m = CvInvoke.Imread(filename))
                 {
-                    CvInvoke.Rotate(m, m, RotateFlags.Rotate90CounterClockwise);
+                    Mat b = prepare_image(m);
+                    //CvInvoke.Rotate(m, m, RotateFlags.Rotate90Clockwise);
                     double score = 1.0;
                     int most_match = -1;
-                    Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
+                    Image<Gray, Byte> img = b.ToImage<Gray, Byte>();
                     //img = img.Rotate(90, new Gray(0), false);
                     if (p.Item1 > 0)
                         img = img.Erode(p.Item1);
                     if (p.Item2 > 0)
-                        img = img.Dilate(p.Item1);
+                        img = img.Dilate(p.Item2);
                     CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
                     double otsu = CvInvoke.Threshold(img, new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
                     double sigma = 0.25;
@@ -371,21 +380,103 @@ namespace AviaGetPhoneSize
                                         most_match = i;
                                     }
                                 }
-                                CvInvoke.DrawContours(m, contours, i, new MCvScalar(0, 255, 0));
+                                CvInvoke.DrawContours(b, contours, i, new MCvScalar(0, 255, 0));
                             }
                         }
                         if (most_match >= 0 && most_match < count)
                         {
-                            ret = CvInvoke.BoundingRectangle(contours[most_match]);
+                            Rectangle r = CvInvoke.BoundingRectangle(contours[most_match]);
+                            if (is_apple_logo(r, img.Size))
+                            {
+                                ret = r;
+                                CvInvoke.Rectangle(b, ret, new MCvScalar(0, 0, 255), 3);
+                            }
                         }
                     }
-                    m.Save("temp_2.jpg");
+                    b.Save("temp_2.jpg");
                     if (!ret.IsEmpty)
                         break;
                 }
             }
             Program.logIt($"{ret}");
             //return ret;
+        }
+        static void prepare_image()
+        {
+            string fn = @"C:\Tools\avia\images\test.2\iphone6 Plus Gold\3197.1.jpg";
+            Mat m = CvInvoke.Imread(fn);
+            Mat n = prepare_image(m);
+            n.Save("temp_2.jpg");
+            //Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
+            //CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+            //double otsu = CvInvoke.Threshold(img, new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+            //double sigma = 0.25;
+            //double lower = Math.Max(1, (1.0 - sigma) * otsu);
+            //double upper = Math.Min(255, (1.0 + sigma) * otsu);
+            //CvInvoke.Canny(img, img, lower, upper);
+            //img.Save("temp_1.jpg");
+
+            //Rectangle roi = Rectangle.Empty;
+            //using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+            //{
+            //    CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxNone);
+            //    int count = contours.Size;
+            //    for (int i = 0; i < count; i++)
+            //    {
+            //        Rectangle r =  CvInvoke.BoundingRectangle(contours[i]);
+            //        if (roi.IsEmpty) roi = r;
+            //        else roi = Rectangle.Union(roi, r);
+            //    }
+            //}
+            //Program.logIt($"{roi}");
+            //Mat n = new Mat(m, roi);
+            //CvInvoke.Rotate(n, n, RotateFlags.Rotate90Clockwise);
+            //n.Save("temp_2.jpg");
+        }
+        static Mat prepare_image(Mat src)
+        {
+            Mat ret = null;
+            Image<Gray, Byte> img = src.ToImage<Gray, Byte>();
+            CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+            double otsu = CvInvoke.Threshold(img, new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+            double sigma = 0.25;
+            double lower = Math.Max(1, (1.0 - sigma) * otsu);
+            double upper = Math.Min(255, (1.0 + sigma) * otsu);
+            CvInvoke.Canny(img, img, lower, upper);
+            //img.Save("temp_1.jpg");
+
+            Rectangle roi = Rectangle.Empty;
+            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+            {
+                CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxNone);
+                int count = contours.Size;
+                for (int i = 0; i < count; i++)
+                {
+                    Rectangle r = CvInvoke.BoundingRectangle(contours[i]);
+                    if (roi.IsEmpty) roi = r;
+                    else roi = Rectangle.Union(roi, r);
+                }
+            }
+            //Program.logIt($"{roi}");
+            if (!roi.IsEmpty)
+            {
+                ret = new Mat(src, roi);
+                CvInvoke.Rotate(ret, ret, RotateFlags.Rotate90Clockwise);
+                //n.Save("temp_2.jpg");
+            }
+            return ret;
+        }
+        static bool is_apple_logo(Rectangle r, Size sz)
+        {
+            bool ret = false;
+            double w = 0.12 * sz.Width;
+            double l = 1.0 * sz.Height / 3;
+            Point center = new Point(sz.Width / 2, sz.Height / 2);
+            Rectangle target = new Rectangle((int)(center.X - w / 2), (int)(center.Y - l), (int)w, (int)l);
+            center.X = r.X + r.Width / 2;
+            center.Y = r.Y + r.Height / 2;
+            ret = target.Contains(center);
+            return ret;
         }
     }
 }
