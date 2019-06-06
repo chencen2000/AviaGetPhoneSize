@@ -40,9 +40,10 @@ namespace AviaGetPhoneSize
             //test();
             //test_2();
             //test_3();
-            test_4();
+            //test_4();
             //is_apple_device();
             //prepare_image();
+            found_text();
             return 0;
         }
         static void test()
@@ -222,7 +223,7 @@ namespace AviaGetPhoneSize
             //Rectangle r = found_apple_logo(@"C:\Tools\avia\images\test.1\iphone6 Plus Gold\1473.1.jpg");
             //Rectangle r = found_apple_logo(@"C:\Tools\avia\images\test.1\iphone6 Gold\0123.1.jpg");
 
-            string folder = @"C:\Tools\avia\images\test.2";
+            string folder = @"C:\Tools\avia\images\test.1";
             foreach (string fn in System.IO.Directory.GetFiles(folder, "*.jpg", System.IO.SearchOption.AllDirectories))
             {
                 Rectangle r = found_apple_logo(fn);
@@ -256,10 +257,13 @@ namespace AviaGetPhoneSize
             Rectangle ret = Rectangle.Empty;
             Tuple<int, int, double>[] param = new Tuple<int, int, double>[]
                 {
-                    new Tuple<int, int, double>(3,5,0.05),
+                    new Tuple<int, int, double>(7,0,0.05),
+                    new Tuple<int, int, double>(5,2,0.05),
+                    new Tuple<int, int, double>(2,0,0.05),
                     new Tuple<int, int, double>(0,0,0.05),
                     new Tuple<int, int, double>(0,3,0.05),
-                    new Tuple<int, int, double>(7,7,0.05),
+                    new Tuple<int, int, double>(3,5,0.05),
+                    new Tuple<int, int, double>(5,7,0.05),
                 };
             Tuple<VectorOfPoint, VectorOfPoint> apple_logo = get_apple_logo();
             foreach (Tuple<int, int, double> p in param)
@@ -327,13 +331,15 @@ namespace AviaGetPhoneSize
             Rectangle ret = Rectangle.Empty;
             Tuple<int, int, double>[] param = new Tuple<int, int, double>[]
                 {
-                    new Tuple<int, int, double>(3,5,0.05),                                
-                    new Tuple<int, int, double>(0,3,0.05),                                
-                    new Tuple<int, int, double>(0,0,0.01),
-                    //new Tuple<int, int, double>(0,0,0.02),                                
-                    //new Tuple<int, int, double>(7,7,0.05),
+                    new Tuple<int, int, double>(5,3,0.05),
+                    //new Tuple<int, int, double>(5,2,0.05),
+                    //new Tuple<int, int, double>(2,0,0.05),
+                    //new Tuple<int, int, double>(0,0,0.05),
+                    //new Tuple<int, int, double>(0,3,0.05),
+                    //new Tuple<int, int, double>(3,5,0.05),
+                    //new Tuple<int, int, double>(5,7,0.05),
                 };
-            string filename = @"C:\Tools\avia\images\test.2\iphone6 Gray\3241.1.jpg";
+            string filename = @"C:\Tools\avia\images\test.1\iphone6 Plus Space Gary\5747.1.jpg";
             foreach (Tuple<int, int, double> p in param)
             {
                 using (Mat m = CvInvoke.Imread(filename))
@@ -401,38 +407,6 @@ namespace AviaGetPhoneSize
             Program.logIt($"{ret}");
             //return ret;
         }
-        static void prepare_image()
-        {
-            string fn = @"C:\Tools\avia\images\test.2\iphone6 Plus Gold\3197.1.jpg";
-            Mat m = CvInvoke.Imread(fn);
-            Mat n = prepare_image(m);
-            n.Save("temp_2.jpg");
-            //Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
-            //CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
-            //double otsu = CvInvoke.Threshold(img, new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
-            //double sigma = 0.25;
-            //double lower = Math.Max(1, (1.0 - sigma) * otsu);
-            //double upper = Math.Min(255, (1.0 + sigma) * otsu);
-            //CvInvoke.Canny(img, img, lower, upper);
-            //img.Save("temp_1.jpg");
-
-            //Rectangle roi = Rectangle.Empty;
-            //using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
-            //{
-            //    CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxNone);
-            //    int count = contours.Size;
-            //    for (int i = 0; i < count; i++)
-            //    {
-            //        Rectangle r =  CvInvoke.BoundingRectangle(contours[i]);
-            //        if (roi.IsEmpty) roi = r;
-            //        else roi = Rectangle.Union(roi, r);
-            //    }
-            //}
-            //Program.logIt($"{roi}");
-            //Mat n = new Mat(m, roi);
-            //CvInvoke.Rotate(n, n, RotateFlags.Rotate90Clockwise);
-            //n.Save("temp_2.jpg");
-        }
         static Mat prepare_image(Mat src)
         {
             Mat ret = null;
@@ -466,6 +440,16 @@ namespace AviaGetPhoneSize
             }
             return ret;
         }
+        static Tuple<Mat,Mat> prepare_image(string filename)
+        {
+            Mat m0 = null;
+            Mat m1 = null;
+            using(Mat m = CvInvoke.Imread(filename))
+            {
+
+            }
+            return new Tuple<Mat, Mat>(m0, m1);
+        }
         static bool is_apple_logo(Rectangle r, Size sz)
         {
             bool ret = false;
@@ -477,6 +461,111 @@ namespace AviaGetPhoneSize
             center.Y = r.Y + r.Height / 2;
             ret = target.Contains(center);
             return ret;
+        }
+        static void found_text()
+        {
+            string filename = @"C:\Tools\avia\images\test.1\iphone6 Gold\0123.1.bmp";
+            //string folder = @"C:\Tools\avia\images\";
+            //foreach (string filename in System.IO.Directory.GetFiles(folder, "*.1.jpg", System.IO.SearchOption.AllDirectories))
+            {
+                using (Mat m = CvInvoke.Imread(filename))
+                {
+                    Mat b = prepare_image(m);
+                    CvInvoke.Rotate(m, m, RotateFlags.Rotate90Clockwise);
+                    Image<Gray, Byte> img = b.ToImage<Gray, Byte>();
+                    img = img.Erode(7);
+                    img = img.Dilate(7);
+                    CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+                    double otsu = CvInvoke.Threshold(img, new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+                    double sigma = 0.25;
+                    double lower = Math.Max(1, (1.0 - sigma) * otsu);
+                    double upper = Math.Min(255, (1.0 + sigma) * otsu);
+                    CvInvoke.Canny(img, img, lower, upper);
+                    img.Save("temp_1.jpg");
+                    // test
+                    Point p = new Point(b.Width / 2, b.Height / 2);
+                    double w = 0.12 * b.Width;
+                    double h = 0.20 * b.Height;
+                    Rectangle r_txt = new Rectangle((int)(b.Width / 2 - w / 2), (int)(2.0 / 3 * b.Height), (int)w, (int)h);
+
+                    List<Rectangle> r_txt_list = new List<Rectangle>();
+                    using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+                    {
+                        CvInvoke.FindContours(img, contours, null, RetrType.List, ChainApproxMethod.ChainApproxNone);
+                        int count = contours.Size;
+                        for (int i = 0; i < count; i++)
+                        {
+                            double a = CvInvoke.ContourArea(contours[i]);
+                            if (a > 1000.0)
+                            {
+                                Rectangle r = CvInvoke.BoundingRectangle(contours[i]);
+                                Point pc = new Point(r.X + r.Width / 2, r.Y + r.Height / 2);
+                                if (r_txt.Contains(pc))
+                                {
+                                    //Program.logIt($"{r}");
+                                    CvInvoke.DrawContours(b, contours, i, new MCvScalar(0, 255, 0));
+                                    r_txt_list.Add(r);
+                                }
+                                //CvInvoke.DrawContours(b, contours, i, new MCvScalar(0, 255, 0));
+                            }
+                        }
+                    }
+                    CvInvoke.Rectangle(b, r_txt, new MCvScalar(0, 0, 255), 3);
+                    // merge txt rect
+                    List<List<Rectangle>> ll1 = new List<List<Rectangle>>();
+                    foreach (Rectangle r in r_txt_list)
+                    {
+                        bool add_new_list = true;
+                        foreach (List<Rectangle> l in ll1)
+                        {
+                            foreach (Rectangle r1 in l)
+                            {
+                                if (r1.IntersectsWith(r))
+                                {
+                                    l.Add(r);
+                                    add_new_list = false;
+                                }
+                                if (!add_new_list)
+                                    break;
+                            }
+                            if (!add_new_list)
+                                break;
+                        }
+                        if (add_new_list)
+                        {
+                            List<Rectangle> l = new List<Rectangle>();
+                            l.Add(r);
+                            ll1.Add(l);
+                        }
+                    }
+                    List<Rectangle> ret = new List<Rectangle>();
+                    foreach (List<Rectangle> l in ll1)
+                    {
+                        Rectangle rr = Rectangle.Empty;
+                        foreach (Rectangle r in l)
+                        {
+                            if (rr.IsEmpty) rr = r;
+                            else rr = Rectangle.Union(rr, r);
+                        }
+                        ret.Add(rr);
+                        CvInvoke.Rectangle(b, rr, new MCvScalar(0, 0, 255), 3);
+                    }
+                    Program.logIt($"{filename}: dump: text rectangle: ({ret.Count})");
+                    for(int i=0; i< ret.Count; i++)
+                    {
+                        Rectangle r = ret[i];
+                        Program.logIt($"{r}");
+                        r.Inflate(r.Width / 10, r.Height / 10);
+                        r.X *= 10;
+                        r.Y *= 10;
+                        r.Width *= 10;
+                        r.Height *= 10;
+                        Mat c = new Mat(m, r);
+                        c.Save($"temp_text_{i + 1}.jpg");
+                    }
+                    b.Save("temp_2.jpg");
+                }
+            }
         }
     }
 }
