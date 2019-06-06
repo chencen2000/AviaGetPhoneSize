@@ -40,8 +40,8 @@ namespace AviaGetPhoneSize
             //test();
             //test_2();
             //test_3();
-            //test_4();
-            is_apple_device();
+            test_4();
+            //is_apple_device();
             return 0;
         }
         static void test()
@@ -255,7 +255,7 @@ namespace AviaGetPhoneSize
             Rectangle ret = Rectangle.Empty;
             Tuple<int, int, double>[] param = new Tuple<int, int, double>[]
                 {
-                                new Tuple<int, int, double>(0,0,0.02),
+                                new Tuple<int, int, double>(0,3,0.05),
                                 new Tuple<int, int, double>(3,5,0.05),
                                 new Tuple<int, int, double>(7,7,0.05),
                 };
@@ -270,7 +270,7 @@ namespace AviaGetPhoneSize
                     if (p.Item1 > 0)
                         img = img.Erode(p.Item1);
                     if (p.Item2 > 0)
-                        img = img.Dilate(p.Item1);
+                        img = img.Dilate(p.Item2);
                     CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
                     double otsu = CvInvoke.Threshold(img, new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
                     double sigma = 0.25;
@@ -320,17 +320,17 @@ namespace AviaGetPhoneSize
             Rectangle ret = Rectangle.Empty;
             Tuple<int, int, double>[] param = new Tuple<int, int, double>[]
                 {
-                    new Tuple<int, int, double>(5,5,0.05),
+                    new Tuple<int, int, double>(0,3,0.05),
                                 //new Tuple<int, int, double>(0,0,0.02),
                                 //new Tuple<int, int, double>(3,5,0.05),
                                 //new Tuple<int, int, double>(7,7,0.05),
                 };
-            string filename = @"C:\Tools\avia\images\test.1\iphone6 Plus Gold\1473.1.jpg";
+            string filename = @"C:\Tools\avia\images\test.1\AP002-iphone6_Gray\8738.1.jpg";
             foreach (Tuple<int, int, double> p in param)
             {
                 using (Mat m = CvInvoke.Imread(filename))
                 {
-                    CvInvoke.Rotate(m, m, RotateFlags.Rotate90Clockwise);
+                    CvInvoke.Rotate(m, m, RotateFlags.Rotate90CounterClockwise);
                     double score = 1.0;
                     int most_match = -1;
                     Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
