@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tesseract;
 
 namespace AviaGetPhoneSize
 {
@@ -38,12 +39,17 @@ namespace AviaGetPhoneSize
         {
             //resize_image();
             //test();
+            test_1();
             //test_2();
             //test_3();
             //test_4();
             //is_apple_device();
             //prepare_image();
-            found_text();
+            //found_text();
+            //Tuple<Mat, Mat> r = prepare_image(@"C:\Tools\avia\images\test.1\iphone6 Gold\0123.1.bmp");
+            //r.Item1.Save("temp_1.jpg");
+            //r.Item2.Save("temp_2.jpg");
+            //test_ocr();
             return 0;
         }
         static void test()
@@ -114,6 +120,23 @@ namespace AviaGetPhoneSize
             //dy.Save("temp_y.jpg");
             img.Save("temp_2.jpg");
             */
+        }
+        static void test_1()
+        {
+            string fn = @"C:\Tools\avia\images\test.1\iphone6 Plus Gold\1473.1.jpg";
+            Mat m = CvInvoke.Imread(fn);
+            Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
+            CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+            Mat dx = new Mat();
+            Mat dy = new Mat();
+            CvInvoke.Sobel(img, dx, DepthType.Cv16S, 1, 0);
+            CvInvoke.Sobel(img, dy, DepthType.Cv16S, 0, 1);
+            CvInvoke.ConvertScaleAbs(dx, dx, 1, 0);
+            CvInvoke.ConvertScaleAbs(dy, dy, 1, 0);
+            CvInvoke.AddWeighted(dx, 0.5, dy, 0.5, 0, img);
+            //dx.Save("temp_x.jpg");
+            //dy.Save("temp_y.jpg");
+            img.Save("temp_3.jpg");
         }
         static void test_2()
         {
@@ -444,10 +467,75 @@ namespace AviaGetPhoneSize
         {
             Mat m0 = null;
             Mat m1 = null;
+            double ratio = 0.1;
+#if true
+            using (Mat m = CvInvoke.Imread(filename))
+            {
+                Image<Gray, Byte> img = m.ToImage<Gray, Byte>().Resize(ratio, Inter.Linear);
+                CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+                double otsu = CvInvoke.Threshold(img, new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+                double sigma = 0.25;
+                double lower = Math.Max(1, (1.0 - sigma) * otsu);
+                double upper = Math.Min(255, (1.0 + sigma) * otsu);
+                CvInvoke.Canny(img, img, lower, upper);
+                Rectangle roi = Rectangle.Empty;
+                using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+                {
+                    CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                    int count = contours.Size;
+                    for (int i = 0; i < count; i++)
+                    {
+                        Rectangle r = CvInvoke.BoundingRectangle(contours[i]);
+                        if (roi.IsEmpty) roi = r;
+                        else roi = Rectangle.Union(roi, r);
+                    }
+                }
+                if (!roi.IsEmpty)
+                {
+                    //m1 = new Mat(img.Mat, roi);
+                    //CvInvoke.Rotate(m1, m1, RotateFlags.Rotate90Clockwise);
+                    roi.X = (int)((double)roi.X / ratio);
+                    roi.Y = (int)((double)roi.Y / ratio);
+                    roi.Width = (int)((double)roi.Width / ratio);
+                    roi.Height = (int)((double)roi.Height / ratio);
+                    m0 = new Mat(m, roi);
+                    CvInvoke.Rotate(m0, m0, RotateFlags.Rotate90Clockwise);
+                    m1 = new Mat();
+                    CvInvoke.Resize(m0, m1, new Size(0, 0), ratio, ratio);
+                }
+            }
+
+#else
             using(Mat m = CvInvoke.Imread(filename))
             {
-
+                Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
+                CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+                double otsu = CvInvoke.Threshold(img, new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+                double sigma = 0.25;
+                double lower = Math.Max(1, (1.0 - sigma) * otsu);
+                double upper = Math.Min(255, (1.0 + sigma) * otsu);
+                CvInvoke.Canny(img, img, lower, upper);
+                Rectangle roi = Rectangle.Empty;
+                using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+                {
+                    CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                    int count = contours.Size;
+                    for (int i = 0; i < count; i++)
+                    {
+                        Rectangle r = CvInvoke.BoundingRectangle(contours[i]);
+                        if (roi.IsEmpty) roi = r;
+                        else roi = Rectangle.Union(roi, r);
+                    }
+                }
+                if (!roi.IsEmpty)
+                {
+                    m0 = new Mat(m, roi);
+                    CvInvoke.Rotate(m0, m0, RotateFlags.Rotate90Clockwise);
+                    m1 = new Mat();
+                    CvInvoke.Resize(m0, m1, new Size(0, 0), 0.1, 0.1);
+                }
             }
+#endif
             return new Tuple<Mat, Mat>(m0, m1);
         }
         static bool is_apple_logo(Rectangle r, Size sz)
@@ -462,17 +550,36 @@ namespace AviaGetPhoneSize
             ret = target.Contains(center);
             return ret;
         }
+        static void test_ocr()
+        {
+            Mat b = CvInvoke.Imread(@"C:\projects\avia\pytest\temp_2.jpg");
+            //Mat b = CvInvoke.Imread(@"C:\projects\avia\pytest\temp_text_2.jpg");
+            //Image<Gray, Byte> img = b.ToImage<Gray, byte>();
+            //CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);            
+            //CvInvoke.Threshold(img, img, 0, 255, ThresholdType.BinaryInv| ThresholdType.Otsu);
+            //img = img.Erode(1);
+            //img = img.Dilate(1);
+            //b.Save("temp_1.jpg");
+            using (TesseractEngine TE = new TesseractEngine("tessdata", "eng", EngineMode.TesseractOnly))
+            {
+                //Bitmap b = new Bitmap(@"temp_text_3.jpg");
+                var p = TE.Process(b.Bitmap);
+                string s = p.GetText();
+                s = p.GetHOCRText(0);
+            }
+        }
         static void found_text()
         {
             string filename = @"C:\Tools\avia\images\test.1\iphone6 Gold\0123.1.bmp";
             //string folder = @"C:\Tools\avia\images\";
             //foreach (string filename in System.IO.Directory.GetFiles(folder, "*.1.jpg", System.IO.SearchOption.AllDirectories))
             {
-                using (Mat m = CvInvoke.Imread(filename))
+                Tuple<Mat, Mat> org_img = prepare_image(filename);
+                //using (Mat m = CvInvoke.Imread(filename))
                 {
-                    Mat b = prepare_image(m);
-                    CvInvoke.Rotate(m, m, RotateFlags.Rotate90Clockwise);
-                    Image<Gray, Byte> img = b.ToImage<Gray, Byte>();
+                    //Mat b = prepare_image(m);
+                    //CvInvoke.Rotate(m, m, RotateFlags.Rotate90Clockwise);
+                    Image<Gray, Byte> img = org_img.Item2.ToImage<Gray, Byte>();
                     img = img.Erode(7);
                     img = img.Dilate(7);
                     CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
@@ -483,34 +590,37 @@ namespace AviaGetPhoneSize
                     CvInvoke.Canny(img, img, lower, upper);
                     img.Save("temp_1.jpg");
                     // test
-                    Point p = new Point(b.Width / 2, b.Height / 2);
-                    double w = 0.12 * b.Width;
-                    double h = 0.20 * b.Height;
-                    Rectangle r_txt = new Rectangle((int)(b.Width / 2 - w / 2), (int)(2.0 / 3 * b.Height), (int)w, (int)h);
+                    Point p = new Point(img.Width / 2, img.Height / 2);
+                    double w = 0.12 * img.Width;
+                    double h = 0.20 * img.Height;
+                    Rectangle r_txt = new Rectangle((int)(img.Width / 2 - w / 2), (int)(2.0 / 3 * img.Height), (int)w, (int)h);
 
                     List<Rectangle> r_txt_list = new List<Rectangle>();
                     using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
                     {
-                        CvInvoke.FindContours(img, contours, null, RetrType.List, ChainApproxMethod.ChainApproxNone);
+                        CvInvoke.FindContours(img, contours, null, RetrType.List, ChainApproxMethod.ChainApproxSimple);
                         int count = contours.Size;
                         for (int i = 0; i < count; i++)
                         {
                             double a = CvInvoke.ContourArea(contours[i]);
-                            if (a > 1000.0)
+                            if (a > 1.0)
                             {
                                 Rectangle r = CvInvoke.BoundingRectangle(contours[i]);
                                 Point pc = new Point(r.X + r.Width / 2, r.Y + r.Height / 2);
                                 if (r_txt.Contains(pc))
                                 {
                                     //Program.logIt($"{r}");
-                                    CvInvoke.DrawContours(b, contours, i, new MCvScalar(0, 255, 0));
+                                    CvInvoke.DrawContours(org_img.Item2, contours, i, new MCvScalar(0, 255, 0));
                                     r_txt_list.Add(r);
+                                }
+                                else
+                                {
                                 }
                                 //CvInvoke.DrawContours(b, contours, i, new MCvScalar(0, 255, 0));
                             }
                         }
                     }
-                    CvInvoke.Rectangle(b, r_txt, new MCvScalar(0, 0, 255), 3);
+                    CvInvoke.Rectangle(org_img.Item2, r_txt, new MCvScalar(0, 0, 255), 3);
                     // merge txt rect
                     List<List<Rectangle>> ll1 = new List<List<Rectangle>>();
                     foreach (Rectangle r in r_txt_list)
@@ -548,7 +658,7 @@ namespace AviaGetPhoneSize
                             else rr = Rectangle.Union(rr, r);
                         }
                         ret.Add(rr);
-                        CvInvoke.Rectangle(b, rr, new MCvScalar(0, 0, 255), 3);
+                        //CvInvoke.Rectangle(org_img.Item2, rr, new MCvScalar(0, 0, 255), 3);
                     }
                     Program.logIt($"{filename}: dump: text rectangle: ({ret.Count})");
                     for(int i=0; i< ret.Count; i++)
@@ -560,10 +670,10 @@ namespace AviaGetPhoneSize
                         r.Y *= 10;
                         r.Width *= 10;
                         r.Height *= 10;
-                        Mat c = new Mat(m, r);
+                        Mat c = new Mat(org_img.Item1, r);
                         c.Save($"temp_text_{i + 1}.jpg");
                     }
-                    b.Save("temp_2.jpg");
+                    org_img.Item2.Save("temp_2.jpg");
                 }
             }
         }
