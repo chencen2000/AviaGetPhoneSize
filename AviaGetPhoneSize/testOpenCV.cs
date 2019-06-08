@@ -123,20 +123,30 @@ namespace AviaGetPhoneSize
         }
         static void test_1()
         {
-            string fn = @"C:\Tools\avia\images\test.1\iphone6 Plus Gold\1473.1.jpg";
+            float ratio = 0.0139339f;
+            string fn = @"C:\Tools\avia\images\test.1\AP001-iphone6_gold\0123.1.bmp";
             Mat m = CvInvoke.Imread(fn);
+            CvInvoke.GaussianBlur(m, m, new Size(3, 3), 0);
             Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
-            CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
-            Mat dx = new Mat();
-            Mat dy = new Mat();
-            CvInvoke.Sobel(img, dx, DepthType.Cv16S, 1, 0);
-            CvInvoke.Sobel(img, dy, DepthType.Cv16S, 0, 1);
-            CvInvoke.ConvertScaleAbs(dx, dx, 1, 0);
-            CvInvoke.ConvertScaleAbs(dy, dy, 1, 0);
-            CvInvoke.AddWeighted(dx, 0.5, dy, 0.5, 0, img);
-            //dx.Save("temp_x.jpg");
-            //dy.Save("temp_y.jpg");
-            img.Save("temp_3.jpg");
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
+            img = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            double v = CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+            img.Save("temp_1.jpg");
+            Rectangle roi = Rectangle.Empty;
+            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+            {
+                CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                int count = contours.Size;
+                for(int i=0; i<count; i++)
+                {
+                    VectorOfPoint contour = contours[i];
+                    double a = CvInvoke.ContourArea(contour);
+                    Rectangle r = CvInvoke.BoundingRectangle(contour);
+                    if (roi.IsEmpty) roi = r;
+                    else roi = Rectangle.Union(roi, r);
+                }
+            }
+            Program.logIt($"{roi}, size={ratio*roi.Width}x{ratio*roi.Height}");
         }
         static void test_2()
         {
