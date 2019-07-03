@@ -39,7 +39,7 @@ namespace AviaGetPhoneSize
         {
             //resize_image();
             //test();
-            test_1();
+            //test_1();
             //test_2();
             //test_3();
             //test_4();
@@ -50,6 +50,7 @@ namespace AviaGetPhoneSize
             //r.Item1.Save("temp_1.jpg");
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
+            test_5();
             return 0;
         }
         static void test()
@@ -686,6 +687,18 @@ namespace AviaGetPhoneSize
                     org_img.Item2.Save("temp_2.jpg");
                 }
             }
+        }
+        static void test_5()
+        {
+            Mat img0 = CvInvoke.Imread(@"C:\Tools\avia\images\0702\background.jpg");
+            Mat img1 = CvInvoke.Imread(@"C:\Tools\avia\images\0702\WIN_20190702_17_21_22_Pro.jpg");
+            Mat dm = new Mat();
+            CvInvoke.AbsDiff(img0, img1, dm);
+            CvInvoke.Imwrite("temp_1.jpg", dm);
+            Image<Gray, Byte> img = dm.ToImage<Gray, Byte>();
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
+            img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            img.Save("temp_1.jpg");
         }
     }
 }
