@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tesseract;
+using System.IO.Ports;
 
 namespace AviaGetPhoneSize
 {
@@ -50,7 +51,8 @@ namespace AviaGetPhoneSize
             //r.Item1.Save("temp_1.jpg");
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
-            test_5();
+            //test_5();
+            test_ss();
             return 0;
         }
         static void test()
@@ -718,6 +720,45 @@ namespace AviaGetPhoneSize
             img.Save("temp_5.jpg");
             img = img.MorphologyEx(MorphOp.Close, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
             img.Save("temp_5.jpg");
+        }
+        static void test_ss()
+        {
+            String port = "COM4";
+            SerialPort sp = new SerialPort();
+            try
+            {
+                sp.PortName = port;
+                sp.BaudRate = 9600;
+                sp.Parity = Parity.None;
+                sp.DataBits = 8;
+                sp.StopBits = StopBits.One;
+                sp.Open();
+                System.Threading.ThreadPool.QueueUserWorkItem((o) =>
+                {
+                    Program.logIt("Read Thread starts.");
+                    SerialPort _sp = (SerialPort)o;
+                    try
+                    {
+                        while (true)
+                        {
+                            if (_sp.BytesToRead > 0)
+                            {
+                                string line = _sp.ReadLine();
+                                System.Console.WriteLine(line);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Program.logIt(ex.Message);
+                    }
+                    Program.logIt("Read Thread ends.");
+                }, sp);
+                System.Console.ReadKey();
+                sp.Close();
+                System.Threading.Thread.Sleep(1000);
+            }
+            catch (Exception) { }
         }
     }
 }
