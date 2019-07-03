@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
 using System.IO;
+using Emgu.CV;
 
 namespace AviaGetPhoneSize
 {
@@ -16,7 +17,9 @@ namespace AviaGetPhoneSize
         static int Main(string[] args)
         {
             int ret = 0;
-            test();
+            //test();
+            //test_1();
+            test_2();
             return ret;
         }
 
@@ -36,6 +39,71 @@ namespace AviaGetPhoneSize
             }
             catch (Exception) { }
             return ret;
+        }
+        static void test_2()
+        {
+            using (FileStorage fs = new FileStorage("color_sensor.xml", FileStorage.Mode.Read))
+            {
+                FileNode fn = fs.GetNode("data");
+                Mat data = new Mat();
+                fn.ReadMat(data);
+                fn = fs.GetNode("label");
+                Mat label = new Mat();
+                fn.ReadMat(label);
+                Matrix<int> l = new Matrix<int>(data.Rows, 1);
+                double ret = CvInvoke.Kmeans(data, 4, l, new Emgu.CV.Structure.MCvTermCriteria(15), 2, Emgu.CV.CvEnum.KMeansInitType.PPCenters);
+
+                Matrix<float> md = new Matrix<float>(data.Rows, data.Cols);
+                data.CopyTo(md);
+            }
+        }
+        static void test_1()
+        {
+            List<Tuple<int, int, int, int, int, int>> data = new List<Tuple<int, int, int, int, int, int>>();
+            using (StreamReader sr = new StreamReader("data.csv"))
+            {
+                string line = sr.ReadLine();
+                while (line != null)
+                {
+                    line = sr.ReadLine();
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        string[] s = line.Split(',');
+                        int t = Int32.Parse(s[0]);
+                        int l = Int32.Parse(s[1]);
+                        int r = Int32.Parse(s[2]);
+                        int g = Int32.Parse(s[3]);
+                        int b = Int32.Parse(s[4]);
+                        int c = Int32.Parse(s[5]);
+                        data.Add(new Tuple<int, int, int, int, int, int>(t, l, r, g, b, c));
+                    }
+                }
+            }
+            Matrix<float> td = new Matrix<float>(data.Count, 6);
+            Matrix<int> label = new Matrix<int>(data.Count, 1);
+            for (int i=0; i<data.Count; i++)
+            {
+                td[i, 0] = data[i].Item1;
+                td[i, 1] = data[i].Item2;
+                td[i, 2] = data[i].Item3;
+                td[i, 3] = data[i].Item4;
+                td[i, 4] = data[i].Item5;
+                td[i, 5] = data[i].Item6;
+            }
+            double ret = CvInvoke.Kmeans(td, 4, label, new Emgu.CV.Structure.MCvTermCriteria(15), 2, Emgu.CV.CvEnum.KMeansInitType.PPCenters);
+            using (StreamWriter sw = new StreamWriter("data_l.csv"))
+            {
+                sw.WriteLine("temp,lux,r,g,b,c,label");
+                for(int i=0; i< td.Rows; i++)
+                {
+                    sw.WriteLine($"{td[i, 0]},{td[i, 1]}, {td[i, 2]}, {td[i, 3]}, {td[i, 4]}, {td[i, 5]}, {label[i, 0]}");
+                }
+            }
+            using(FileStorage fs = new FileStorage("color_sensor.xml", FileStorage.Mode.Write))
+            {
+                fs.Write(td.Mat, "data");
+                fs.Write(label.Mat, "label");
+            }
         }
         static void test()
         {

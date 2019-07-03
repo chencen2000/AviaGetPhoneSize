@@ -723,42 +723,56 @@ namespace AviaGetPhoneSize
         }
         static void test_ss()
         {
-            String port = "COM4";
-            SerialPort sp = new SerialPort();
-            try
+            //VideoCapture vc = new VideoCapture(0);
+            //for (int i=0; i < 41; i++)
+            //{
+            //    CapProp cp = (CapProp)i;
+            //    double db = vc.GetCaptureProperty(cp);
+            //    Program.logIt($"{cp} = {db}");
+            //}
+            //VideoWriter v = new VideoWriter("test.mp4", (int)vc.GetCaptureProperty(CapProp.Fps), new Size((int)vc.GetCaptureProperty(CapProp.FrameWidth), (int)vc.GetCaptureProperty(CapProp.FrameHeight)), true);
+            //while (true)
+            //{
+            //    if (vc.Grab())
+            //    {
+            //        Mat m = new Mat();
+            //        if (vc.Retrieve(m))
+            //        {
+            //            v.Write(m);
+            //        }
+            //    }
+            //    if (System.Console.KeyAvailable)
+            //    {
+            //        break;
+            //    }
+            //}
+            VideoCapture vc = new VideoCapture(0);
+            if (vc.IsOpened)
             {
-                sp.PortName = port;
-                sp.BaudRate = 9600;
-                sp.Parity = Parity.None;
-                sp.DataBits = 8;
-                sp.StopBits = StopBits.One;
-                sp.Open();
-                System.Threading.ThreadPool.QueueUserWorkItem((o) =>
+                bool b = false;
+                double db = vc.GetCaptureProperty(CapProp.Mode);
+                //for (double i =0; i<=64; i++)
+                //{
+                //    b = vc.SetCaptureProperty(CapProp.Mode, i);
+                //    if (b)
+                //    {
+                //        double w = vc.GetCaptureProperty(CapProp.FrameWidth);
+                //        double h = vc.GetCaptureProperty(CapProp.FrameHeight);
+                //        Program.logIt($"mode={i}, {w}x{h}");
+                //    }
+                //}
+                b = vc.SetCaptureProperty(CapProp.Mode, 1);
+                b = vc.SetCaptureProperty(CapProp.FrameHeight, 1080);
+                b = vc.SetCaptureProperty(CapProp.FrameWidth, 1920);
+                if (vc.Grab())
                 {
-                    Program.logIt("Read Thread starts.");
-                    SerialPort _sp = (SerialPort)o;
-                    try
+                    Mat m = new Mat();
+                    if (vc.Retrieve(m))
                     {
-                        while (true)
-                        {
-                            if (_sp.BytesToRead > 0)
-                            {
-                                string line = _sp.ReadLine();
-                                System.Console.WriteLine(line);
-                            }
-                        }
+                        m.Save("temp_1.jpg");
                     }
-                    catch (Exception ex)
-                    {
-                        Program.logIt(ex.Message);
-                    }
-                    Program.logIt("Read Thread ends.");
-                }, sp);
-                System.Console.ReadKey();
-                sp.Close();
-                System.Threading.Thread.Sleep(1000);
+                }
             }
-            catch (Exception) { }
         }
     }
 }
