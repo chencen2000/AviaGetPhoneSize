@@ -690,15 +690,34 @@ namespace AviaGetPhoneSize
         }
         static void test_5()
         {
+            /*
+            Rectangle roi = new Rectangle(new Point(1050,910), new Size(500,270));
             Mat img0 = CvInvoke.Imread(@"C:\Tools\avia\images\0702\background.jpg");
+            Image<Bgr, Byte> img = img0.ToImage<Bgr, Byte>();
+            img.ROI = roi;
+            img.Save("temp_1.jpg");
             Mat img1 = CvInvoke.Imread(@"C:\Tools\avia\images\0702\WIN_20190702_17_21_22_Pro.jpg");
+            img = img1.ToImage<Bgr, Byte>();
+            img.ROI = roi;
+            img.Save("temp_2.jpg");
+            Mat img2 = CvInvoke.Imread(@"C:\Tools\avia\images\0702\WIN_20190702_17_20_54_Pro.jpg");
+            img = img2.ToImage<Bgr, Byte>();
+            img.ROI = roi;
+            img.Save("temp_3.jpg");
+            */
+
+            Mat m0 = CvInvoke.Imread(@"temp_1.jpg");
+            Mat m2 = CvInvoke.Imread(@"temp_2.jpg");
+            Mat m3 = CvInvoke.Imread(@"temp_3.jpg");
             Mat dm = new Mat();
-            CvInvoke.AbsDiff(img0, img1, dm);
-            CvInvoke.Imwrite("temp_1.jpg", dm);
+            CvInvoke.AbsDiff(m0, m2, dm);
+            CvInvoke.Imwrite("temp_5.jpg", dm);
             Image<Gray, Byte> img = dm.ToImage<Gray, Byte>();
             Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
             img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
-            img.Save("temp_1.jpg");
+            img.Save("temp_5.jpg");
+            img = img.MorphologyEx(MorphOp.Close, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            img.Save("temp_5.jpg");
         }
     }
 }
