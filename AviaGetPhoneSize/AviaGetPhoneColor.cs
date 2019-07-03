@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace AviaGetPhoneSize
 {
@@ -38,6 +39,7 @@ namespace AviaGetPhoneSize
         }
         static void test()
         {
+            List<Tuple<int, int, int, int, int, int>> datas = new List<Tuple<int, int, int, int, int, int>>();
             if (openSerialPort())
             {
                 System.Threading.ThreadPool.QueueUserWorkItem((o) =>
@@ -68,7 +70,15 @@ namespace AviaGetPhoneSize
                                 Match m = re.Match(s);
                                 if (m.Success)
                                 {
-                                    System.Console.WriteLine($"t={m.Groups[1].Value}, l={m.Groups[2].Value}, r={m.Groups[3].Value}, g={m.Groups[4].Value}, b={m.Groups[5].Value}, c={m.Groups[6].Value}");
+                                    int t = Int32.Parse(m.Groups[1].Value);
+                                    int l = Int32.Parse(m.Groups[2].Value);
+                                    int r = Int32.Parse(m.Groups[3].Value);
+                                    int g = Int32.Parse(m.Groups[4].Value);
+                                    int b = Int32.Parse(m.Groups[5].Value);
+                                    int c = Int32.Parse(m.Groups[6].Value);
+                                    //System.Console.WriteLine($"t={m.Groups[1].Value}, l={m.Groups[2].Value}, r={m.Groups[3].Value}, g={m.Groups[4].Value}, b={m.Groups[5].Value}, c={m.Groups[6].Value}");
+                                    System.Console.WriteLine($"t={t}, l={l}, r={r}, g={g}, b={b}, c={c}");
+                                    datas.Add(new Tuple<int, int, int, int, int, int>(t, l, r, g, b, c));
                                 }                                
                             }
                         }
@@ -78,6 +88,14 @@ namespace AviaGetPhoneSize
                 System.Console.WriteLine("press any key to termine.");
                 System.Console.ReadKey();
                 sp.Close();
+            }
+            using (StreamWriter sw = new StreamWriter("data.csv"))
+            {
+                sw.WriteLine("temp,lux,r,g,b,c");
+                foreach(var v in datas)
+                {
+                    sw.WriteLine($"{v.Item1},{v.Item2},{v.Item3},{v.Item4},{v.Item5},{v.Item6}");
+                }
             }
         }
     }
