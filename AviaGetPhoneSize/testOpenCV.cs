@@ -44,7 +44,7 @@ namespace AviaGetPhoneSize
             //test_2();
             //test_3();
             //test_4();
-            //is_apple_device();
+            is_apple_device();
             //prepare_image();
             //found_text();
             //Tuple<Mat, Mat> r = prepare_image(@"C:\Tools\avia\images\test.1\iphone6 Gold\0123.1.bmp");
@@ -52,7 +52,7 @@ namespace AviaGetPhoneSize
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
             //test_5();
-            test_ss();
+            //test_ss();
             return 0;
         }
         static void test()
@@ -375,7 +375,7 @@ namespace AviaGetPhoneSize
                     //new Tuple<int, int, double>(3,5,0.05),
                     //new Tuple<int, int, double>(5,7,0.05),
                 };
-            string filename = @"C:\Tools\avia\images\test.1\iphone6 Plus Space Gary\5747.1.jpg";
+            string filename = @"C:\Tools\avia\images\test.2\iphone6 Plus Gold\5901.1.jpg";
             foreach (Tuple<int, int, double> p in param)
             {
                 using (Mat m = CvInvoke.Imread(filename))
