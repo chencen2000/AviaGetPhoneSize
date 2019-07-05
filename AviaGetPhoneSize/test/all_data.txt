@@ -1,0 +1,588 @@
+data:
+
+
+iPhone 8 Gold without light
+Color Temp: 5689 K - Lux: 306 - R: 355 G: 453 B: 400 C: 1200  
+Color Temp: 5689 K - Lux: 306 - R: 355 G: 453 B: 400 C: 1200  
+Color Temp: 5689 K - Lux: 306 - R: 355 G: 453 B: 400 C: 1200  
+Color Temp: 5677 K - Lux: 308 - R: 356 G: 454 B: 400 C: 1201  
+Color Temp: 5677 K - Lux: 308 - R: 356 G: 454 B: 400 C: 1201  
+
+iPhone 8 Gold with light
+Color Temp: 4296 K - Lux: 675 - R: 1347 G: 1186 B: 1037 C: 3487  
+Color Temp: 4296 K - Lux: 675 - R: 1347 G: 1186 B: 1037 C: 3488  
+
+
+iPhone 8P Gold without light
+Color Temp: 5669 K - Lux: 304 - R: 354 G: 450 B: 397 C: 1192  
+Color Temp: 5669 K - Lux: 304 - R: 354 G: 450 B: 397 C: 1192  
+Color Temp: 5670 K - Lux: 304 - R: 354 G: 450 B: 397 C: 1191  
+Color Temp: 5670 K - Lux: 304 - R: 354 G: 450 B: 397 C: 1191  
+Color Temp: 5670 K - Lux: 304 - R: 354 G: 450 B: 397 C: 1191  
+Color Temp: 5670 K - Lux: 304 - R: 354 G: 450 B: 397 C: 1191  
+Color Temp: 5670 K - Lux: 304 - R: 354 G: 450 B: 397 C: 1191  
+Color Temp: 5669 K - Lux: 303 - R: 354 G: 449 B: 397 C: 1191  
+Color Temp: 5669 K - Lux: 304 - R: 354 G: 450 B: 397 C: 1192  
+
+iPhone 8P Gold with light
+Color Temp: 4165 K - Lux: 677 - R: 1413 G: 1202 B: 1040 C: 3572  
+Color Temp: 4167 K - Lux: 677 - R: 1412 G: 1202 B: 1040 C: 3572  
+Color Temp: 4167 K - Lux: 677 - R: 1412 G: 1202 B: 1040 C: 3572  
+Color Temp: 4165 K - Lux: 677 - R: 1413 G: 1202 B: 1040 C: 3572  
+Color Temp: 4165 K - Lux: 677 - R: 1413 G: 1202 B: 1040 C: 3573  
+Color Temp: 4167 K - Lux: 678 - R: 1413 G: 1203 B: 1041 C: 3574  
+
+
+iPone 8P Space Gray without light
+Color Temp: 5859 K - Lux: 293 - R: 326 G: 430 B: 382 C: 1133  
+Color Temp: 5847 K - Lux: 292 - R: 327 G: 430 B: 382 C: 1133  
+Color Temp: 5847 K - Lux: 292 - R: 327 G: 430 B: 382 C: 1133  
+Color Temp: 5847 K - Lux: 292 - R: 327 G: 430 B: 382 C: 1133  
+Color Temp: 5847 K - Lux: 292 - R: 327 G: 430 B: 382 C: 1133  
+Color Temp: 5847 K - Lux: 292 - R: 327 G: 430 B: 382 C: 1133  
+Color Temp: 5847 K - Lux: 292 - R: 327 G: 430 B: 382 C: 1133  
+Color Temp: 5847 K - Lux: 292 - R: 327 G: 430 B: 382 C: 1133  
+Color Temp: 5847 K - Lux: 292 - R: 327 G: 430 B: 382 C: 1132  
+Color Temp: 5861 K - Lux: 293 - R: 326 G: 430 B: 382 C: 1132  
+Color Temp: 5861 K - Lux: 293 - R: 326 G: 430 B: 382 C: 1132  
+Color Temp: 5847 K - Lux: 294 - R: 326 G: 430 B: 381 C: 1132  
+Color Temp: 5847 K - Lux: 294 - R: 326 G: 430 B: 381 C: 1132  
+Color Temp: 5847 K - Lux: 294 - R: 326 G: 430 B: 381 C: 1132  
+Color Temp: 5847 K - Lux: 294 - R: 326 G: 430 B: 381 C: 1132  
+Color Temp: 5847 K - Lux: 292 - R: 327 G: 430 B: 382 C: 1133  
+Color Temp: 5849 K - Lux: 292 - R: 326 G: 429 B: 381 C: 1130  
+ 
+
+iPone 8P Space Gray with light
+Color Temp: 4573 K - Lux: 403 - R: 718 G: 683 B: 603 C: 1963  
+Color Temp: 4577 K - Lux: 403 - R: 717 G: 683 B: 603 C: 1963  
+Color Temp: 4577 K - Lux: 403 - R: 717 G: 683 B: 603 C: 1963  
+Color Temp: 4577 K - Lux: 403 - R: 717 G: 683 B: 603 C: 1963  
+Color Temp: 4577 K - Lux: 403 - R: 717 G: 683 B: 603 C: 1963  
+Color Temp: 4577 K - Lux: 403 - R: 717 G: 683 B: 603 C: 1963  
+Color Temp: 4577 K - Lux: 403 - R: 717 G: 683 B: 603 C: 1963  
+Color Temp: 4577 K - Lux: 403 - R: 717 G: 683 B: 603 C: 1962  
+Color Temp: 4577 K - Lux: 403 - R: 717 G: 683 B: 603 C: 1962  
+Color Temp: 4577 K - Lux: 403 - R: 717 G: 683 B: 603 C: 1962  
+Color Temp: 4577 K - Lux: 402 - R: 717 G: 682 B: 603 C: 1962  
+Color Temp: 4577 K - Lux: 403 - R: 717 G: 683 B: 603 C: 1962 
+
+iPhone 6 Silver without light
+Color Temp: 5636 K - Lux: 342 - R: 386 G: 496 B: 430 C: 1309  
+Color Temp: 5636 K - Lux: 342 - R: 386 G: 496 B: 430 C: 1309  
+Color Temp: 5636 K - Lux: 342 - R: 386 G: 496 B: 430 C: 1309  
+Color Temp: 5636 K - Lux: 342 - R: 386 G: 496 B: 430 C: 1309  
+Color Temp: 5636 K - Lux: 342 - R: 386 G: 496 B: 430 C: 1309  
+Color Temp: 5647 K - Lux: 343 - R: 386 G: 497 B: 431 C: 1310  
+Color Temp: 5647 K - Lux: 343 - R: 386 G: 497 B: 431 C: 1310  
+Color Temp: 5647 K - Lux: 343 - R: 386 G: 497 B: 431 C: 1310  
+Color Temp: 5647 K - Lux: 343 - R: 386 G: 497 B: 431 C: 1310  
+Color Temp: 5646 K - Lux: 343 - R: 386 G: 497 B: 431 C: 1311  
+Color Temp: 5646 K - Lux: 343 - R: 386 G: 497 B: 431 C: 1311  
+
+iPhone 6 Silver with light
+Color Temp: 4714 K - Lux: 740 - R: 1238 G: 1227 B: 1085 C: 3471  
+Color Temp: 4714 K - Lux: 740 - R: 1238 G: 1227 B: 1085 C: 3471  
+Color Temp: 4714 K - Lux: 740 - R: 1238 G: 1227 B: 1085 C: 3472  
+Color Temp: 4714 K - Lux: 740 - R: 1238 G: 1227 B: 1085 C: 3472  
+Color Temp: 4714 K - Lux: 742 - R: 1238 G: 1228 B: 1085 C: 3472  
+Color Temp: 4714 K - Lux: 742 - R: 1238 G: 1228 B: 1085 C: 3472  
+Color Temp: 4714 K - Lux: 742 - R: 1238 G: 1228 B: 1085 C: 3472  
+Color Temp: 4714 K - Lux: 742 - R: 1238 G: 1228 B: 1085 C: 3472  
+Color Temp: 4714 K - Lux: 742 - R: 1238 G: 1228 B: 1085 C: 3473  
+Color Temp: 4714 K - Lux: 742 - R: 1238 G: 1228 B: 1085 C: 3473  
+Color Temp: 4714 K - Lux: 742 - R: 1238 G: 1228 B: 1085 C: 3473  
+Color Temp: 4714 K - Lux: 742 - R: 1238 G: 1228 B: 1085 C: 3473  
+Color Temp: 4717 K - Lux: 741 - R: 1238 G: 1228 B: 1086 C: 3473  
+Color Temp: 4714 K - Lux: 742 - R: 1238 G: 1228 B: 1085 C: 3473  
+Color Temp: 4714 K - Lux: 742 - R: 1238 G: 1228 B: 1085 C: 3473  
+
+iPhone 6 Silver without light
+Color Temp: 5702 K - Lux: 332 - R: 374 G: 484 B: 423 C: 1276  
+Color Temp: 5702 K - Lux: 332 - R: 374 G: 484 B: 423 C: 1276  
+Color Temp: 5704 K - Lux: 332 - R: 374 G: 484 B: 423 C: 1275  
+Color Temp: 5704 K - Lux: 332 - R: 374 G: 484 B: 423 C: 1275  
+Color Temp: 5714 K - Lux: 331 - R: 373 G: 483 B: 423 C: 1275  
+Color Temp: 5714 K - Lux: 331 - R: 373 G: 483 B: 423 C: 1274  
+Color Temp: 5714 K - Lux: 331 - R: 373 G: 483 B: 423 C: 1274  
+
+iPhone 6 Silver with light
+Color Temp: 4750 K - Lux: 827 - R: 1408 G: 1392 B: 1247 C: 3952  
+Color Temp: 4752 K - Lux: 827 - R: 1407 G: 1392 B: 1247 C: 3952  
+Color Temp: 4750 K - Lux: 826 - R: 1407 G: 1391 B: 1246 C: 3951  
+Color Temp: 4750 K - Lux: 826 - R: 1407 G: 1391 B: 1246 C: 3951  
+Color Temp: 4752 K - Lux: 826 - R: 1407 G: 1391 B: 1247 C: 3951  
+Color Temp: 4750 K - Lux: 826 - R: 1407 G: 1391 B: 1246 C: 3951  
+Color Temp: 4749 K - Lux: 826 - R: 1407 G: 1391 B: 1246 C: 3950  
+Color Temp: 4749 K - Lux: 826 - R: 1407 G: 1391 B: 1246 C: 3950  
+Color Temp: 4749 K - Lux: 826 - R: 1407 G: 1391 B: 1246 C: 3950  
+
+
+iPhone 6S Rose Gold without light
+Color Temp: 5646 K - Lux: 308 - R: 363 G: 458 B: 405 C: 1218  
+Color Temp: 5658 K - Lux: 308 - R: 362 G: 458 B: 405 C: 1217  
+Color Temp: 5646 K - Lux: 308 - R: 363 G: 458 B: 405 C: 1217  
+Color Temp: 5646 K - Lux: 308 - R: 363 G: 458 B: 405 C: 1218  
+Color Temp: 5646 K - Lux: 308 - R: 363 G: 458 B: 405 C: 1217  
+Color Temp: 5658 K - Lux: 308 - R: 362 G: 458 B: 405 C: 1217  
+Color Temp: 5658 K - Lux: 308 - R: 362 G: 458 B: 405 C: 1217  
+Color Temp: 5658 K - Lux: 308 - R: 362 G: 458 B: 405 C: 1216  
+Color Temp: 5647 K - Lux: 308 - R: 362 G: 457 B: 404 C: 1215  
+Color Temp: 5646 K - Lux: 308 - R: 362 G: 457 B: 404 C: 1216  
+Color Temp: 5658 K - Lux: 308 - R: 362 G: 458 B: 405 C: 1216  
+Color Temp: 5658 K - Lux: 308 - R: 362 G: 458 B: 405 C: 1216  
+Color Temp: 5658 K - Lux: 308 - R: 362 G: 458 B: 405 C: 1216  
+Color Temp: 5581 K - Lux: 330 - R: 382 G: 483 B: 420 C: 1282  
+Color Temp: 5581 K - Lux: 330 - R: 382 G: 483 B: 420 C: 1282  
+Color Temp: 5581 K - Lux: 330 - R: 382 G: 483 B: 420 C: 1282  
+Color Temp: 5592 K - Lux: 330 - R: 382 G: 483 B: 421 C: 1282  
+Color Temp: 5591 K - Lux: 330 - R: 382 G: 483 B: 421 C: 1283  
+Color Temp: 5591 K - Lux: 330 - R: 382 G: 483 B: 421 C: 1283  
+Color Temp: 5591 K - Lux: 330 - R: 382 G: 483 B: 421 C: 1283  
+Color Temp: 5591 K - Lux: 330 - R: 382 G: 483 B: 421 C: 1283  
+Color Temp: 5581 K - Lux: 329 - R: 383 G: 483 B: 421 C: 1283
+
+iPhone 6S Gold Rose with light
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4347 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3288  
+Color Temp: 4348 K - Lux: 618 - R: 1272 G: 1116 B: 998 C: 3289 
+Color Temp: 4340 K - Lux: 617 - R: 1263 G: 1108 B: 986 C: 3284  
+Color Temp: 4343 K - Lux: 616 - R: 1263 G: 1108 B: 987 C: 3284  
+Color Temp: 4343 K - Lux: 616 - R: 1263 G: 1108 B: 987 C: 3284  
+Color Temp: 4343 K - Lux: 616 - R: 1263 G: 1108 B: 987 C: 3285  
+Color Temp: 4343 K - Lux: 617 - R: 1263 G: 1109 B: 987 C: 3285  
+Color Temp: 4340 K - Lux: 617 - R: 1264 G: 1109 B: 987 C: 3285  
+Color Temp: 4340 K - Lux: 617 - R: 1264 G: 1109 B: 987 C: 3285 
+
+
+iPhone 7P Rose Gold without light
+Color Temp: 5674 K - Lux: 304 - R: 358 G: 453 B: 402 C: 1205  
+Color Temp: 5674 K - Lux: 304 - R: 358 G: 453 B: 402 C: 1204  
+Color Temp: 5663 K - Lux: 305 - R: 358 G: 453 B: 401 C: 1204  
+Color Temp: 5663 K - Lux: 305 - R: 358 G: 453 B: 401 C: 1204  
+Color Temp: 5663 K - Lux: 305 - R: 358 G: 453 B: 401 C: 1204  
+Color Temp: 5663 K - Lux: 305 - R: 358 G: 453 B: 401 C: 1204  
+Color Temp: 5663 K - Lux: 305 - R: 358 G: 453 B: 401 C: 1204  
+Color Temp: 5674 K - Lux: 304 - R: 358 G: 453 B: 402 C: 1204  
+Color Temp: 5674 K - Lux: 304 - R: 358 G: 453 B: 402 C: 1204  
+Color Temp: 5663 K - Lux: 305 - R: 358 G: 453 B: 401 C: 1204  
+Color Temp: 5663 K - Lux: 305 - R: 358 G: 453 B: 401 C: 1203  
+Color Temp: 5663 K - Lux: 305 - R: 358 G: 453 B: 401 C: 1203  
+
+iPhone 7P Rose Gold with light
+Color Temp: 4308 K - Lux: 646 - R: 1414 G: 1207 B: 1093 C: 3625  
+Color Temp: 4308 K - Lux: 646 - R: 1414 G: 1207 B: 1093 C: 3625  
+Color Temp: 4310 K - Lux: 645 - R: 1414 G: 1207 B: 1094 C: 3625  
+Color Temp: 4310 K - Lux: 645 - R: 1414 G: 1207 B: 1094 C: 3625  
+Color Temp: 4310 K - Lux: 645 - R: 1414 G: 1207 B: 1094 C: 3625  
+Color Temp: 4310 K - Lux: 645 - R: 1414 G: 1207 B: 1094 C: 3625  
+Color Temp: 4310 K - Lux: 645 - R: 1414 G: 1207 B: 1094 C: 3625  
+Color Temp: 4311 K - Lux: 645 - R: 1414 G: 1207 B: 1094 C: 3626  
+Color Temp: 4308 K - Lux: 644 - R: 1415 G: 1207 B: 1094 C: 3627  
+Color Temp: 4308 K - Lux: 644 - R: 1415 G: 1207 B: 1094 C: 3626  
+
+
+iPhone 8P Silver without light
+Color Temp: 5771 K - Lux: 315 - R: 358 G: 464 B: 411 C: 1225  
+Color Temp: 5782 K - Lux: 314 - R: 358 G: 464 B: 412 C: 1226  
+Color Temp: 5771 K - Lux: 315 - R: 358 G: 464 B: 411 C: 1225  
+Color Temp: 5783 K - Lux: 315 - R: 357 G: 464 B: 411 C: 1224  
+Color Temp: 5782 K - Lux: 315 - R: 357 G: 464 B: 411 C: 1225  
+Color Temp: 5782 K - Lux: 315 - R: 357 G: 464 B: 411 C: 1225  
+Color Temp: 5782 K - Lux: 315 - R: 357 G: 464 B: 411 C: 1225  
+Color Temp: 5782 K - Lux: 315 - R: 357 G: 464 B: 411 C: 1225  
+Color Temp: 5771 K - Lux: 315 - R: 358 G: 464 B: 411 C: 1225  
+Color Temp: 5771 K - Lux: 315 - R: 358 G: 464 B: 411 C: 1225  
+Color Temp: 5771 K - Lux: 315 - R: 358 G: 464 B: 411 C: 1225  
+Color Temp: 5771 K - Lux: 315 - R: 358 G: 464 B: 411 C: 1225  
+Color Temp: 5771 K - Lux: 315 - R: 358 G: 464 B: 411 C: 1225  
+Color Temp: 5771 K - Lux: 315 - R: 358 G: 464 B: 411 C: 1225  
+
+
+iPhone 8P Silver with light
+Color Temp: 4732 K - Lux: 871 - R: 1523 G: 1488 B: 1342 C: 4249  
+Color Temp: 4732 K - Lux: 871 - R: 1523 G: 1488 B: 1342 C: 4249  
+Color Temp: 4734 K - Lux: 871 - R: 1523 G: 1488 B: 1343 C: 4249  
+Color Temp: 4734 K - Lux: 871 - R: 1523 G: 1488 B: 1343 C: 4250  
+Color Temp: 4734 K - Lux: 871 - R: 1523 G: 1488 B: 1343 C: 4250  
+Color Temp: 4734 K - Lux: 871 - R: 1523 G: 1488 B: 1343 C: 4250  
+Color Temp: 4734 K - Lux: 871 - R: 1523 G: 1488 B: 1343 C: 4250  
+Color Temp: 4734 K - Lux: 872 - R: 1523 G: 1489 B: 1343 C: 4251  
+Color Temp: 4734 K - Lux: 872 - R: 1523 G: 1489 B: 1343 C: 4251  
+Color Temp: 4737 K - Lux: 871 - R: 1522 G: 1488 B: 1343 C: 4249  
+Color Temp: 4737 K - Lux: 871 - R: 1522 G: 1488 B: 1343 C: 4249  
+
+
+iPhone 8P Gray without light
+Color Temp: 5820 K - Lux: 293 - R: 329 G: 431 B: 382 C: 1135  
+Color Temp: 5820 K - Lux: 293 - R: 329 G: 431 B: 382 C: 1136  
+Color Temp: 5820 K - Lux: 293 - R: 329 G: 431 B: 382 C: 1136  
+Color Temp: 5820 K - Lux: 295 - R: 329 G: 432 B: 382 C: 1137  
+Color Temp: 5820 K - Lux: 294 - R: 330 G: 432 B: 383 C: 1137  
+Color Temp: 5818 K - Lux: 294 - R: 330 G: 432 B: 383 C: 1138  
+Color Temp: 5818 K - Lux: 294 - R: 330 G: 432 B: 383 C: 1139  
+Color Temp: 5816 K - Lux: 295 - R: 330 G: 433 B: 383 C: 1141  
+Color Temp: 5816 K - Lux: 297 - R: 330 G: 434 B: 383 C: 1142  
+Color Temp: 5816 K - Lux: 295 - R: 330 G: 433 B: 383 C: 1142  
+Color Temp: 5816 K - Lux: 295 - R: 330 G: 433 B: 383 C: 1142  
+Color Temp: 5816 K - Lux: 295 - R: 330 G: 433 B: 383 C: 1141  
+Color Temp: 5816 K - Lux: 295 - R: 330 G: 433 B: 383 C: 1141  
+
+iPhone 8P Gray with light
+Color Temp: 4595 K - Lux: 406 - R: 710 G: 682 B: 600 C: 1956  
+Color Temp: 4590 K - Lux: 406 - R: 711 G: 682 B: 600 C: 1956  
+Color Temp: 4590 K - Lux: 406 - R: 711 G: 682 B: 600 C: 1956  
+Color Temp: 4590 K - Lux: 406 - R: 711 G: 682 B: 600 C: 1956  
+Color Temp: 4590 K - Lux: 406 - R: 711 G: 682 B: 600 C: 1957  
+Color Temp: 4596 K - Lux: 405 - R: 711 G: 682 B: 601 C: 1957  
+Color Temp: 4596 K - Lux: 407 - R: 711 G: 683 B: 601 C: 1958  
+Color Temp: 4596 K - Lux: 407 - R: 711 G: 683 B: 601 C: 1958  
+Color Temp: 4596 K - Lux: 407 - R: 711 G: 683 B: 601 C: 1958  
+Color Temp: 4576 K - Lux: 397 - R: 694 G: 665 B: 583 C: 1907  
+Color Temp: 4581 K - Lux: 397 - R: 693 G: 665 B: 583 C: 1906  
+Color Temp: 4581 K - Lux: 397 - R: 693 G: 665 B: 583 C: 1906  
+Color Temp: 4581 K - Lux: 397 - R: 693 G: 665 B: 583 C: 1906  
+Color Temp: 4581 K - Lux: 397 - R: 693 G: 665 B: 583 C: 1906  
+Color Temp: 4581 K - Lux: 397 - R: 693 G: 665 B: 583 C: 1906  
+Color Temp: 4581 K - Lux: 397 - R: 693 G: 665 B: 583 C: 1906  
+Color Temp: 4581 K - Lux: 396 - R: 693 G: 664 B: 583 C: 1905  
+Color Temp: 4581 K - Lux: 396 - R: 693 G: 664 B: 583 C: 1905  
+Color Temp: 4581 K - Lux: 396 - R: 693 G: 664 B: 583 C: 1905  
+Color Temp: 4581 K - Lux: 396 - R: 693 G: 664 B: 583 C: 1905  
+
+iPhone 7P Matte Black without light
+Color Temp: 5830 K - Lux: 288 - R: 325 G: 425 B: 378 C: 1120  
+Color Temp: 5830 K - Lux: 288 - R: 325 G: 425 B: 378 C: 1120  
+Color Temp: 5830 K - Lux: 288 - R: 325 G: 425 B: 378 C: 1120  
+Color Temp: 5830 K - Lux: 288 - R: 325 G: 425 B: 378 C: 1120  
+Color Temp: 5830 K - Lux: 288 - R: 325 G: 425 B: 378 C: 1120  
+Color Temp: 5830 K - Lux: 288 - R: 325 G: 425 B: 378 C: 1120  
+Color Temp: 5830 K - Lux: 288 - R: 325 G: 425 B: 378 C: 1120  
+Color Temp: 5830 K - Lux: 288 - R: 325 G: 425 B: 378 C: 1120  
+Color Temp: 5843 K - Lux: 288 - R: 324 G: 425 B: 378 C: 1119  
+Color Temp: 5843 K - Lux: 288 - R: 324 G: 425 B: 378 C: 1119  
+Color Temp: 5843 K - Lux: 288 - R: 324 G: 425 B: 378 C: 1119  
+Color Temp: 5843 K - Lux: 288 - R: 324 G: 425 B: 378 C: 1119  
+Color Temp: 5843 K - Lux: 288 - R: 324 G: 425 B: 378 C: 1119  
+Color Temp: 5843 K - Lux: 288 - R: 324 G: 425 B: 378 C: 1119  
+Color Temp: 5786 K - Lux: 298 - R: 335 G: 437 B: 386 C: 1151  
+Color Temp: 5774 K - Lux: 299 - R: 335 G: 437 B: 385 C: 1151  
+Color Temp: 5774 K - Lux: 299 - R: 335 G: 437 B: 385 C: 1151  
+Color Temp: 5774 K - Lux: 299 - R: 335 G: 437 B: 385 C: 1151  
+Color Temp: 5774 K - Lux: 299 - R: 335 G: 437 B: 385 C: 1151  
+Color Temp: 5774 K - Lux: 299 - R: 335 G: 437 B: 385 C: 1151  
+Color Temp: 5774 K - Lux: 299 - R: 335 G: 437 B: 385 C: 1150  
+Color Temp: 5788 K - Lux: 299 - R: 334 G: 437 B: 385 C: 1150  
+Color Temp: 5761 K - Lux: 310 - R: 342 G: 449 B: 392 C: 1179  
+Color Temp: 5759 K - Lux: 310 - R: 342 G: 449 B: 392 C: 1180  
+Color Temp: 5759 K - Lux: 310 - R: 342 G: 449 B: 392 C: 1180  
+
+iPhone 7P Matte Black with light
+Color Temp: 4567 K - Lux: 366 - R: 641 G: 613 B: 537 C: 1759  
+Color Temp: 4567 K - Lux: 366 - R: 641 G: 613 B: 537 C: 1759  
+Color Temp: 4567 K - Lux: 366 - R: 641 G: 613 B: 537 C: 1759  
+Color Temp: 4567 K - Lux: 366 - R: 641 G: 613 B: 537 C: 1759  
+Color Temp: 4567 K - Lux: 366 - R: 641 G: 613 B: 537 C: 1759  
+Color Temp: 4567 K - Lux: 366 - R: 641 G: 613 B: 537 C: 1759  
+Color Temp: 4567 K - Lux: 366 - R: 641 G: 613 B: 537 C: 1759  
+Color Temp: 4567 K - Lux: 366 - R: 641 G: 613 B: 537 C: 1759  
+Color Temp: 4567 K - Lux: 366 - R: 641 G: 613 B: 537 C: 1759  
+Color Temp: 4567 K - Lux: 366 - R: 641 G: 613 B: 537 C: 1759  
+Color Temp: 4567 K - Lux: 366 - R: 641 G: 613 B: 537 C: 1759  
+Color Temp: 4570 K - Lux: 378 - R: 656 G: 630 B: 550 C: 1805  
+Color Temp: 4570 K - Lux: 378 - R: 656 G: 630 B: 550 C: 1805  
+Color Temp: 4571 K - Lux: 377 - R: 657 G: 630 B: 551 C: 1807  
+Color Temp: 4576 K - Lux: 378 - R: 656 G: 630 B: 551 C: 1806  
+Color Temp: 4575 K - Lux: 378 - R: 656 G: 630 B: 551 C: 1805  
+Color Temp: 4570 K - Lux: 378 - R: 656 G: 630 B: 550 C: 1805 
+Color Temp: 4564 K - Lux: 375 - R: 629 G: 611 B: 526 C: 1742  
+Color Temp: 4559 K - Lux: 374 - R: 630 G: 611 B: 526 C: 1742  
+Color Temp: 4559 K - Lux: 374 - R: 630 G: 611 B: 526 C: 1743  
+Color Temp: 4566 K - Lux: 374 - R: 630 G: 611 B: 527 C: 1743  
+Color Temp: 4566 K - Lux: 374 - R: 630 G: 611 B: 527 C: 1743  
+Color Temp: 4566 K - Lux: 375 - R: 630 G: 612 B: 527 C: 1744  
+
+iPhone 6s Silver without light
+Color Temp: 5667 K - Lux: 332 - R: 379 G: 486 B: 425 C: 1284  
+Color Temp: 5667 K - Lux: 332 - R: 379 G: 486 B: 425 C: 1284  
+Color Temp: 5665 K - Lux: 332 - R: 379 G: 486 B: 425 C: 1285  
+Color Temp: 5667 K - Lux: 334 - R: 379 G: 487 B: 425 C: 1285  
+Color Temp: 5667 K - Lux: 334 - R: 379 G: 487 B: 425 C: 1285  
+Color Temp: 5665 K - Lux: 334 - R: 379 G: 487 B: 425 C: 1286  
+
+iPhone 6s Silver with light
+Color Temp: 4681 K - Lux: 771 - R: 1269 G: 1262 B: 1105 C: 3501  
+Color Temp: 4681 K - Lux: 771 - R: 1269 G: 1262 B: 1105 C: 3501  
+Color Temp: 4681 K - Lux: 771 - R: 1269 G: 1262 B: 1105 C: 3502  
+Color Temp: 4684 K - Lux: 770 - R: 1269 G: 1262 B: 1106 C: 3503  
+Color Temp: 4684 K - Lux: 770 - R: 1269 G: 1262 B: 1106 C: 3503  
+Color Temp: 4684 K - Lux: 770 - R: 1269 G: 1262 B: 1106 C: 3502  
+Color Temp: 4684 K - Lux: 770 - R: 1269 G: 1262 B: 1106 C: 3503  
+
+
+iPhone 7 Silver without light
+Color Temp: 5608 K - Lux: 348 - R: 395 G: 505 B: 437 C: 1333  
+Color Temp: 5608 K - Lux: 348 - R: 395 G: 505 B: 437 C: 1333  
+Color Temp: 5608 K - Lux: 348 - R: 395 G: 505 B: 437 C: 1333  
+Color Temp: 5608 K - Lux: 348 - R: 395 G: 505 B: 437 C: 1333  
+Color Temp: 5608 K - Lux: 348 - R: 395 G: 505 B: 437 C: 1333  
+Color Temp: 5608 K - Lux: 348 - R: 395 G: 505 B: 437 C: 1333  
+Color Temp: 5608 K - Lux: 348 - R: 395 G: 505 B: 437 C: 1333  
+Color Temp: 5597 K - Lux: 348 - R: 396 G: 505 B: 437 C: 1334  
+Color Temp: 5597 K - Lux: 348 - R: 396 G: 505 B: 437 C: 1334  
+Color Temp: 5597 K - Lux: 350 - R: 396 G: 506 B: 437 C: 1334  
+
+iPhone 7 Silver with light
+Color Temp: 4723 K - Lux: 766 - R: 1301 G: 1283 B: 1143 C: 3647  
+Color Temp: 4723 K - Lux: 766 - R: 1301 G: 1283 B: 1143 C: 3648  
+Color Temp: 4723 K - Lux: 767 - R: 1301 G: 1284 B: 1143 C: 3648  
+Color Temp: 4723 K - Lux: 767 - R: 1301 G: 1284 B: 1143 C: 3648  
+Color Temp: 4723 K - Lux: 766 - R: 1301 G: 1283 B: 1143 C: 3648  
+Color Temp: 4723 K - Lux: 767 - R: 1301 G: 1284 B: 1143 C: 3648  
+
+
+iPhone 7 Rose Gold without light
+Color Temp: 5631 K - Lux: 312 - R: 366 G: 462 B: 407 C: 1228  
+Color Temp: 5631 K - Lux: 313 - R: 367 G: 463 B: 408 C: 1230  
+Color Temp: 5631 K - Lux: 312 - R: 366 G: 462 B: 407 C: 1228  
+Color Temp: 5643 K - Lux: 312 - R: 365 G: 462 B: 407 C: 1227  
+Color Temp: 5643 K - Lux: 312 - R: 365 G: 462 B: 407 C: 1228  
+Color Temp: 5631 K - Lux: 312 - R: 366 G: 462 B: 407 C: 1228  
+Color Temp: 5631 K - Lux: 314 - R: 366 G: 463 B: 407 C: 1229  
+Color Temp: 5630 K - Lux: 313 - R: 367 G: 463 B: 408 C: 1231  
+Color Temp: 5630 K - Lux: 313 - R: 367 G: 463 B: 408 C: 1231  
+Color Temp: 5630 K - Lux: 313 - R: 367 G: 463 B: 408 C: 1231  
+
+iphone 7 Rose Gold with light
+Color Temp: 4328 K - Lux: 605 - R: 1260 G: 1097 B: 980 C: 3260  
+Color Temp: 4328 K - Lux: 606 - R: 1260 G: 1098 B: 980 C: 3261  
+Color Temp: 4325 K - Lux: 606 - R: 1261 G: 1098 B: 980 C: 3262  
+Color Temp: 4325 K - Lux: 606 - R: 1261 G: 1098 B: 980 C: 3263  
+Color Temp: 4328 K - Lux: 607 - R: 1261 G: 1099 B: 981 C: 3264  
+
+iphone 7 Gold without light
+Color Temp: 5566 K - Lux: 340 - R: 387 G: 492 B: 424 C: 1300  
+Color Temp: 5556 K - Lux: 341 - R: 387 G: 492 B: 423 C: 1299  
+Color Temp: 5567 K - Lux: 341 - R: 386 G: 492 B: 423 C: 1299  
+Color Temp: 5567 K - Lux: 341 - R: 386 G: 492 B: 423 C: 1298  
+Color Temp: 5567 K - Lux: 340 - R: 386 G: 491 B: 423 C: 1297  
+Color Temp: 5567 K - Lux: 340 - R: 386 G: 491 B: 423 C: 1297  
+Color Temp: 5568 K - Lux: 340 - R: 386 G: 491 B: 423 C: 1296  
+Color Temp: 5568 K - Lux: 340 - R: 386 G: 491 B: 423 C: 1296  
+
+iPhone 7 Gold with light
+Color Temp: 4364 K - Lux: 770 - R: 1395 G: 1284 B: 1097 C: 3702  
+Color Temp: 4364 K - Lux: 770 - R: 1395 G: 1284 B: 1097 C: 3701  
+Color Temp: 4362 K - Lux: 771 - R: 1395 G: 1284 B: 1096 C: 3700  
+Color Temp: 4362 K - Lux: 771 - R: 1395 G: 1284 B: 1096 C: 3700  
+Color Temp: 4362 K - Lux: 769 - R: 1395 G: 1283 B: 1096 C: 3699  
+
+
+iPhone 6 Gray with light
+Color Temp: 5785 K - Lux: 302 - R: 342 G: 445 B: 394 C: 1174  
+Color Temp: 5772 K - Lux: 304 - R: 343 G: 446 B: 394 C: 1176  
+Color Temp: 5774 K - Lux: 304 - R: 343 G: 446 B: 394 C: 1175  
+Color Temp: 5785 K - Lux: 303 - R: 343 G: 446 B: 395 C: 1176  
+Color Temp: 5785 K - Lux: 303 - R: 343 G: 446 B: 395 C: 1176  
+Color Temp: 5785 K - Lux: 303 - R: 343 G: 446 B: 395 C: 1176  
+Color Temp: 5785 K - Lux: 303 - R: 343 G: 446 B: 395 C: 1176  
+
+iPhone 6 Gray with light
+Color Temp: 4682 K - Lux: 521 - R: 905 G: 881 B: 786 C: 2511  
+Color Temp: 4682 K - Lux: 521 - R: 905 G: 881 B: 786 C: 2511  
+Color Temp: 4682 K - Lux: 521 - R: 905 G: 881 B: 786 C: 2512  
+Color Temp: 4679 K - Lux: 522 - R: 906 G: 882 B: 786 C: 2513  
+Color Temp: 4679 K - Lux: 522 - R: 906 G: 882 B: 786 C: 2514  
+
+
+iPhone 6s Gray without light
+Color Temp: 5668 K - Lux: 329 - R: 368 G: 476 B: 413 C: 1255  
+Color Temp: 5668 K - Lux: 329 - R: 368 G: 476 B: 413 C: 1254  
+Color Temp: 5668 K - Lux: 329 - R: 368 G: 476 B: 413 C: 1254  
+Color Temp: 5668 K - Lux: 329 - R: 368 G: 476 B: 413 C: 1254  
+Color Temp: 5668 K - Lux: 329 - R: 368 G: 476 B: 413 C: 1254  
+Color Temp: 5668 K - Lux: 329 - R: 368 G: 476 B: 413 C: 1254  
+Color Temp: 5668 K - Lux: 329 - R: 368 G: 476 B: 413 C: 1254  
+Color Temp: 5668 K - Lux: 329 - R: 368 G: 476 B: 413 C: 1255  
+
+
+iphone 6s Gray with light
+Color Temp: 4676 K - Lux: 583 - R: 998 G: 976 B: 865 C: 2777  
+Color Temp: 4676 K - Lux: 581 - R: 998 G: 975 B: 865 C: 2776  
+Color Temp: 4677 K - Lux: 581 - R: 998 G: 975 B: 865 C: 2777  
+Color Temp: 4676 K - Lux: 583 - R: 998 G: 976 B: 865 C: 2777  
+Color Temp: 4676 K - Lux: 583 - R: 998 G: 976 B: 865 C: 2777  
+Color Temp: 4676 K - Lux: 583 - R: 998 G: 976 B: 865 C: 2777  
+
+
+iphone 6P Gold without light
+Color Temp: 5649 K - Lux: 315 - R: 361 G: 461 B: 403 C: 1217  
+Color Temp: 5661 K - Lux: 315 - R: 360 G: 461 B: 403 C: 1216  
+Color Temp: 5661 K - Lux: 315 - R: 360 G: 461 B: 403 C: 1216  
+Color Temp: 5661 K - Lux: 315 - R: 360 G: 461 B: 403 C: 1216  
+Color Temp: 5659 K - Lux: 314 - R: 360 G: 460 B: 403 C: 1216  
+Color Temp: 5661 K - Lux: 315 - R: 360 G: 461 B: 403 C: 1216  
+Color Temp: 5661 K - Lux: 315 - R: 360 G: 461 B: 403 C: 1216  
+Color Temp: 5661 K - Lux: 315 - R: 360 G: 461 B: 403 C: 1216  
+Color Temp: 5661 K - Lux: 315 - R: 360 G: 461 B: 403 C: 1216  
+Color Temp: 5661 K - Lux: 315 - R: 360 G: 461 B: 403 C: 1216  
+
+iPhone 6P Gold with light
+Color Temp: 4323 K - Lux: 771 - R: 1409 G: 1286 B: 1094 C: 3706  
+Color Temp: 4323 K - Lux: 771 - R: 1409 G: 1286 B: 1094 C: 3706  
+Color Temp: 4323 K - Lux: 771 - R: 1409 G: 1286 B: 1094 C: 3706  
+Color Temp: 4323 K - Lux: 771 - R: 1409 G: 1286 B: 1094 C: 3705  
+Color Temp: 4325 K - Lux: 770 - R: 1408 G: 1285 B: 1094 C: 3705  
+Color Temp: 4325 K - Lux: 770 - R: 1408 G: 1285 B: 1094 C: 3705  
+Color Temp: 4325 K - Lux: 770 - R: 1408 G: 1285 B: 1094 C: 3705  
+Color Temp: 4325 K - Lux: 770 - R: 1408 G: 1285 B: 1094 C: 3705  
+Color Temp: 4325 K - Lux: 770 - R: 1408 G: 1285 B: 1094 C: 3705  
+
+
+iPhone XSM Gold without light
+Color Temp: 5991 K - Lux: 271 - R: 301 G: 402 B: 363 C: 1061  
+Color Temp: 6003 K - Lux: 271 - R: 301 G: 403 B: 364 C: 1063  
+Color Temp: 6003 K - Lux: 271 - R: 301 G: 403 B: 364 C: 1064  
+Color Temp: 5991 K - Lux: 272 - R: 301 G: 403 B: 363 C: 1062  
+Color Temp: 6006 K - Lux: 271 - R: 300 G: 402 B: 363 C: 1060  
+Color Temp: 6006 K - Lux: 271 - R: 300 G: 402 B: 363 C: 1060 
+
+iPhone XSM Gold with light
+Color Temp: 4174 K - Lux: 469 - R: 963 G: 825 B: 711 C: 2442  
+Color Temp: 4171 K - Lux: 468 - R: 964 G: 825 B: 711 C: 2444  
+Color Temp: 4175 K - Lux: 468 - R: 964 G: 825 B: 712 C: 2444  
+Color Temp: 4172 K - Lux: 470 - R: 965 G: 827 B: 712 C: 2448  
+Color Temp: 4175 K - Lux: 469 - R: 964 G: 826 B: 712 C: 2446  
+
+
+iPhone 8 Gray without light
+Color Temp: 5737 K - Lux: 316 - R: 349 G: 457 B: 398 C: 1201  
+Color Temp: 5737 K - Lux: 316 - R: 349 G: 457 B: 398 C: 1201  
+Color Temp: 5726 K - Lux: 315 - R: 349 G: 456 B: 397 C: 1200  
+Color Temp: 5737 K - Lux: 316 - R: 348 G: 456 B: 397 C: 1200  
+Color Temp: 5739 K - Lux: 316 - R: 348 G: 456 B: 397 C: 1199  
+
+iPhone 8 Gray with light
+Color Temp: 4579 K - Lux: 405 - R: 690 G: 668 B: 580 C: 1906  
+Color Temp: 4579 K - Lux: 405 - R: 690 G: 668 B: 580 C: 1906  
+Color Temp: 4579 K - Lux: 405 - R: 690 G: 668 B: 580 C: 1906  
+Color Temp: 4574 K - Lux: 404 - R: 690 G: 667 B: 579 C: 1905  
+Color Temp: 4579 K - Lux: 403 - R: 689 G: 666 B: 579 C: 1904  
+Color Temp: 4575 K - Lux: 405 - R: 691 G: 668 B: 580 C: 1909  
+Color Temp: 4583 K - Lux: 404 - R: 688 G: 666 B: 579 C: 1902  
+Color Temp: 4578 K - Lux: 403 - R: 689 G: 666 B: 579 C: 1902  
+Color Temp: 4578 K - Lux: 405 - R: 689 G: 667 B: 579 C: 1903  
+
+iphone 8P Silver without light
+Color Temp: 5739 K - Lux: 316 - R: 348 G: 456 B: 397 C: 1199  
+Color Temp: 5739 K - Lux: 316 - R: 348 G: 456 B: 397 C: 1198  
+Color Temp: 5739 K - Lux: 314 - R: 348 G: 455 B: 397 C: 1198  
+Color Temp: 5739 K - Lux: 314 - R: 348 G: 455 B: 397 C: 1197  
+Color Temp: 5739 K - Lux: 314 - R: 348 G: 455 B: 397 C: 1197  
+Color Temp: 5751 K - Lux: 314 - R: 347 G: 455 B: 397 C: 1196  
+
+iPone 8P Silver with light
+Color Temp: 4580 K - Lux: 405 - R: 690 G: 668 B: 580 C: 1907  
+Color Temp: 4580 K - Lux: 405 - R: 690 G: 668 B: 580 C: 1907  
+Color Temp: 4579 K - Lux: 405 - R: 690 G: 668 B: 580 C: 1906  
+Color Temp: 4579 K - Lux: 405 - R: 690 G: 668 B: 580 C: 1906  
+Color Temp: 4579 K - Lux: 405 - R: 690 G: 668 B: 580 C: 1906  
+Color Temp: 4574 K - Lux: 404 - R: 690 G: 667 B: 579 C: 1905  
+Color Temp: 4579 K - Lux: 403 - R: 689 G: 666 B: 579 C: 1904  
+Color Temp: 4575 K - Lux: 405 - R: 691 G: 668 B: 580 C: 1909  
+Color Temp: 4583 K - Lux: 404 - R: 688 G: 666 B: 579 C: 1902  
+Color Temp: 4578 K - Lux: 403 - R: 689 G: 666 B: 579 C: 1902  
+Color Temp: 4578 K - Lux: 405 - R: 689 G: 667 B: 579 C: 1903  
+
+iPhone XS Silver without light
+Color Temp: 5751 K - Lux: 332 - R: 367 G: 481 B: 420 C: 1267  
+Color Temp: 5752 K - Lux: 334 - R: 367 G: 482 B: 420 C: 1267  
+Color Temp: 5751 K - Lux: 334 - R: 367 G: 482 B: 420 C: 1268  
+Color Temp: 5751 K - Lux: 334 - R: 368 G: 483 B: 421 C: 1270  
+Color Temp: 5751 K - Lux: 333 - R: 368 G: 482 B: 421 C: 1269  
+Color Temp: 5739 K - Lux: 333 - R: 368 G: 482 B: 420 C: 1269  
+Color Temp: 5751 K - Lux: 333 - R: 368 G: 482 B: 421 C: 1269  
+
+
+iPhone XS Silver with light
+Color Temp: 4531 K - Lux: 784 - R: 1418 G: 1334 B: 1176 C: 3847  
+Color Temp: 4529 K - Lux: 785 - R: 1419 G: 1335 B: 1176 C: 3847  
+Color Temp: 4529 K - Lux: 785 - R: 1419 G: 1335 B: 1176 C: 3848  
+Color Temp: 4531 K - Lux: 786 - R: 1418 G: 1335 B: 1176 C: 3847  
+
+
+iPhone XR Blue without light
+Color Temp: 5895 K - Lux: 319 - R: 352 G: 468 B: 416 C: 1234  
+Color Temp: 5895 K - Lux: 319 - R: 352 G: 468 B: 416 C: 1233  
+Color Temp: 5895 K - Lux: 319 - R: 352 G: 468 B: 416 C: 1233  
+Color Temp: 5908 K - Lux: 320 - R: 351 G: 468 B: 416 C: 1232  
+Color Temp: 5897 K - Lux: 320 - R: 351 G: 468 B: 415 C: 1232  
+Color Temp: 5897 K - Lux: 319 - R: 351 G: 467 B: 415 C: 1230  
+Color Temp: 5897 K - Lux: 319 - R: 351 G: 467 B: 415 C: 1230  
+Color Temp: 5897 K - Lux: 319 - R: 351 G: 467 B: 415 C: 1230  
+Color Temp: 5899 K - Lux: 319 - R: 351 G: 467 B: 415 C: 1229  
+
+iPhone XR Blue with light
+Color Temp: 5551 K - Lux: 690 - R: 1094 G: 1215 B: 1191 C: 3420  
+Color Temp: 5551 K - Lux: 689 - R: 1094 G: 1214 B: 1191 C: 3418  
+Color Temp: 5551 K - Lux: 689 - R: 1094 G: 1214 B: 1191 C: 3418  
+Color Temp: 5551 K - Lux: 689 - R: 1094 G: 1214 B: 1191 C: 3418  
+Color Temp: 5555 K - Lux: 689 - R: 1093 G: 1214 B: 1191 C: 3417  
+Color Temp: 5555 K - Lux: 689 - R: 1093 G: 1214 B: 1191 C: 3417  
+Color Temp: 5555 K - Lux: 688 - R: 1093 G: 1213 B: 1191 C: 3417  
+Color Temp: 5555 K - Lux: 688 - R: 1093 G: 1213 B: 1191 C: 3416  
+Color Temp: 5555 K - Lux: 688 - R: 1093 G: 1213 B: 1191 C: 3416  
+Color Temp: 5555 K - Lux: 688 - R: 1093 G: 1213 B: 1191 C: 3416  
+
+
+iPhone X Gray without light
+Color Temp: 5871 K - Lux: 288 - R: 320 G: 423 B: 376 C: 1114  
+Color Temp: 5874 K - Lux: 288 - R: 320 G: 423 B: 376 C: 1113  
+Color Temp: 5874 K - Lux: 288 - R: 320 G: 423 B: 376 C: 1113  
+Color Temp: 5874 K - Lux: 288 - R: 320 G: 423 B: 376 C: 1113  
+Color Temp: 5874 K - Lux: 288 - R: 320 G: 423 B: 376 C: 1113  
+Color Temp: 5871 K - Lux: 288 - R: 320 G: 423 B: 376 C: 1114  
+Color Temp: 5874 K - Lux: 288 - R: 320 G: 423 B: 376 C: 1113  
+
+iPhone X Gray with light
+Color Temp: 4589 K - Lux: 412 - R: 727 G: 695 B: 613 C: 2000  
+Color Temp: 4589 K - Lux: 412 - R: 727 G: 695 B: 613 C: 2000  
+Color Temp: 4589 K - Lux: 412 - R: 727 G: 695 B: 613 C: 2001  
+Color Temp: 4589 K - Lux: 412 - R: 727 G: 695 B: 613 C: 2001  
+Color Temp: 4589 K - Lux: 412 - R: 727 G: 695 B: 613 C: 2001  
+Color Temp: 4589 K - Lux: 412 - R: 727 G: 695 B: 613 C: 2001  
+Color Temp: 4589 K - Lux: 412 - R: 727 G: 695 B: 613 C: 2001  
+Color Temp: 4589 K - Lux: 412 - R: 727 G: 695 B: 613 C: 2001  
+Color Temp: 4590 K - Lux: 412 - R: 727 G: 695 B: 613 C: 2002  
+Color Temp: 4594 K - Lux: 411 - R: 727 G: 695 B: 614 C: 2002  
+
+iPhone XR White without light
+Color Temp: 5794 K - Lux: 317 - R: 355 G: 464 B: 410 C: 1224  
+Color Temp: 5783 K - Lux: 316 - R: 356 G: 464 B: 410 C: 1224  
+Color Temp: 5782 K - Lux: 316 - R: 356 G: 464 B: 410 C: 1225  
+Color Temp: 5792 K - Lux: 315 - R: 356 G: 464 B: 411 C: 1226  
+Color Temp: 5792 K - Lux: 317 - R: 356 G: 465 B: 411 C: 1227  
+Color Temp: 5792 K - Lux: 317 - R: 356 G: 465 B: 411 C: 1227  
+Color Temp: 5780 K - Lux: 317 - R: 357 G: 465 B: 411 C: 1228  
+Color Temp: 5780 K - Lux: 317 - R: 357 G: 465 B: 411 C: 1228  
+
+iPhone XR White with light 
+Color Temp: 4730 K - Lux: 864 - R: 1512 G: 1476 B: 1331 C: 4227  
+Color Temp: 4730 K - Lux: 864 - R: 1512 G: 1476 B: 1331 C: 4227  
+Color Temp: 4730 K - Lux: 864 - R: 1512 G: 1476 B: 1331 C: 4228  
+Color Temp: 4728 K - Lux: 865 - R: 1513 G: 1477 B: 1331 C: 4229  
+Color Temp: 4730 K - Lux: 865 - R: 1513 G: 1477 B: 1332 C: 4230  
+Color Temp: 4731 K - Lux: 865 - R: 1513 G: 1477 B: 1332 C: 4231  
+Color Temp: 4731 K - Lux: 866 - R: 1513 G: 1478 B: 1332 C: 4232  
+Color Temp: 4730 K - Lux: 866 - R: 1513 G: 1478 B: 1332 C: 4231  
