@@ -41,10 +41,10 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            //test_2();
+            test_2();
             //test_3();
             //test_4();
-            is_apple_device();
+            //is_apple_device();
             //prepare_image();
             //found_text();
             //Tuple<Mat, Mat> r = prepare_image(@"C:\Tools\avia\images\test.1\iphone6 Gold\0123.1.bmp");
@@ -127,7 +127,7 @@ namespace AviaGetPhoneSize
         static void test_1()
         {
             float ratio = 0.0139339f;
-            string fn = @"C:\Tools\avia\images\test.1\AP001-iphone6_gold\0123.1.bmp";
+            string fn = @"C:\Tools\avia\images\test.2\iphone6 Gold\0123.1.jpg";
             Mat m = CvInvoke.Imread(fn);
             CvInvoke.GaussianBlur(m, m, new Size(3, 3), 0);
             Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
@@ -153,53 +153,110 @@ namespace AviaGetPhoneSize
         }
         static void test_2()
         {
-            Mat m = CvInvoke.Imread("temp_2.jpg");
-            Image<Gray, byte> img = m.ToImage<Gray, byte>();
-            List<myContour> myc = new List<myContour>();
+            string fn = @"C:\Tools\avia\images\test.1\iphone_6\AP001-iphone6_gold\0123.1.bmp";
+            //string fn = @"C:\Tools\avia\images\test.1\iphone_x\iphoneX Silver_img\1136.1.bmp";
+            Mat m = CvInvoke.Imread(fn);
+            Image<Gray, Byte> img = m.ToImage<Gray, Byte>().Rotate(-90, new Gray(0), false);
+            Rectangle r =  AviaGetPhoneModel.found_device_image(img.Resize(0.1, Inter.Cubic));
+            Image<Gray, Byte> img1 = img.Copy(r);
+            img1.Save("temp_2.jpg");
+            r = new Rectangle(img1.Width / 4, img1.Height * 7 / 10, img1.Width / 2, img1.Height / 10);
+            Image<Gray, Byte> img_txt = img1.Copy(r);
+            img_txt.Save("temp_3.jpg");
+            double v = CvInvoke.Threshold(img_txt, img_txt, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+            using (TesseractEngine TE = new TesseractEngine("tessdata", "eng", EngineMode.TesseractOnly))
+            {
+                //Bitmap b = new Bitmap(@"temp_text_3.jpg");
+                var p = TE.Process(img_txt.ToBitmap());
+                string s = p.GetText();
+                s = p.GetHOCRText(0);
+            }
+
+            //img = img.Rotate(90, new Gray(0), false);
+            //CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);            
+            //Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            //img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+            //img = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            //img.Save("temp_2.jpg");
+            //Rectangle r = new Rectangle(m.Width / 4, m.Height * 7 / 10, m.Width / 2, m.Height / 10);
+            //img = m.ToImage<Gray, Byte>();
+            //img.ROI = r;
+
+        }
+        static Rectangle found_device_image(Image<Gray, Byte> img, double ratio=10)
+        {
+            CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            //img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+            img = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            double v = CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+            //img.Save("temp_1.jpg");
+            Rectangle roi = Rectangle.Empty;
             using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
             {
-                Mat info = new Mat();
-                CvInvoke.FindContours(img, contours, info, RetrType.Tree, ChainApproxMethod.ChainApproxNone);
-                Matrix<Int32> infox = new Matrix<Int32>(info.Rows, info.Cols, info.NumberOfChannels);
-                info.CopyTo(infox);
+                CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
                 int count = contours.Size;
                 for (int i = 0; i < count; i++)
                 {
                     VectorOfPoint contour = contours[i];
                     double a = CvInvoke.ContourArea(contour);
-                    int next = infox.Data[0, i * 4+0];
-                    int previous = infox.Data[0, i * 4+1];
-                    int child = infox.Data[0, i * 4+2];
-                    int parent = infox.Data[0, i * 4+3];
-                    myContour c = new myContour(contour, i, a, next, previous, child, parent);
-                    myc.Add(c);
+                    Rectangle r = CvInvoke.BoundingRectangle(contour);
+                    if (roi.IsEmpty) roi = r;
+                    else roi = Rectangle.Union(roi, r);
                 }
             }
-            List<myContour> outer = new List<myContour>();
-            foreach (myContour c in myc)
+            v = ratio * roi.X;
+            roi.X = (int)v;
+            v = ratio * roi.Y;
+            roi.Y = (int)v;
+            v = ratio * roi.Width;
+            roi.Width = (int)v;
+            v = ratio * roi.Height;
+            roi.Height = (int)v;
+            Program.logIt($"{roi}");
+            return roi;
+        }
+        static Rectangle found_apple_text(Image<Gray,Byte> img, double ratio= 10)
+        {
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+            img = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            //img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+            double db = CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+            img.Save("temp_1.jpg");
+            Point p = new Point(img.Width / 2, img.Height * 3 / 4);
+            Rectangle roi = Rectangle.Empty;
+            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
             {
-                if(c.area>1000.0 && c.child!=-1 && c.parent == -1)
+                CvInvoke.FindContours(img, contours, null, RetrType.List, ChainApproxMethod.ChainApproxSimple);
+                int count = contours.Size;
+                for(int i=0; i<count; i++)
                 {
-                    outer.Add(c);
+                    VectorOfPoint contour = contours[i];
+                    double a = CvInvoke.ContourArea(contour);
+                    if (a > 1000)
+                    {
+                        Rectangle r = CvInvoke.BoundingRectangle(contour);
+                        if (r.Contains(p))
+                        {
+                            roi = r;
+                            Program.logIt($"area={a}, r={roi}");
+                        }                            
+                    }
                 }
             }
-            //VectorOfVectorOfPoint vvp = new VectorOfVectorOfPoint();
-            /*
-            VectorOfPoint match_t = test_3();
-            foreach (myContour c in outer)
-            {
-                //using (VectorOfVectorOfPoint vvp = new VectorOfVectorOfPoint())
-                //{
-                //    VectorOfPoint vp = new VectorOfPoint(c.points);
-                //    vvp.Push(vp);
-                //    CvInvoke.DrawContours(m, vvp, -1, new MCvScalar(0, 255, 0));
-                //    m.Save("temp_3.jpg");
-                //}
-                //CvInvoke.DrawContours(m, vp, 0, new MCvScalar(0, 255, 0));
-                double d = CvInvoke.MatchShapes(match_t, new VectorOfPoint(c.points), ContoursMatchType.I1);
-            }
-            */
-            m.Save("temp_3.jpg");
+            Size sz = new Size(roi.Width / 10, roi.Height / 10);
+            roi = Rectangle.Inflate(roi, sz.Width, sz.Height);
+            double v = ratio * roi.X;
+            roi.X = (int)v;
+            v = ratio * roi.Y;
+            roi.Y = (int)v;
+            v = ratio * roi.Width;
+            roi.Width = (int)v;
+            v = ratio * roi.Height;
+            roi.Height = (int)v;
+            Program.logIt($"{roi}");
+            return roi;
         }
         static Dictionary<int,object> find_contour(Dictionary<int,object> data, int id)
         {
@@ -565,18 +622,20 @@ namespace AviaGetPhoneSize
         }
         static void test_ocr()
         {
-            Mat b = CvInvoke.Imread(@"C:\projects\avia\pytest\temp_2.jpg");
+            Mat b = CvInvoke.Imread(@"temp_1.jpg");
             //Mat b = CvInvoke.Imread(@"C:\projects\avia\pytest\temp_text_2.jpg");
-            //Image<Gray, Byte> img = b.ToImage<Gray, byte>();
-            //CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);            
-            //CvInvoke.Threshold(img, img, 0, 255, ThresholdType.BinaryInv| ThresholdType.Otsu);
+            Image<Gray, Byte> img = b.ToImage<Gray, byte>();
+            CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+            //Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            //img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 5, BorderType.Default, new MCvScalar(0));
+            double v = CvInvoke.Threshold(img, img, 0, 255, ThresholdType.BinaryInv| ThresholdType.Otsu);
             //img = img.Erode(1);
             //img = img.Dilate(1);
-            //b.Save("temp_1.jpg");
+            img.Save("temp_2.jpg");
             using (TesseractEngine TE = new TesseractEngine("tessdata", "eng", EngineMode.TesseractOnly))
             {
                 //Bitmap b = new Bitmap(@"temp_text_3.jpg");
-                var p = TE.Process(b.Bitmap);
+                var p = TE.Process(img.ToBitmap());
                 string s = p.GetText();
                 s = p.GetHOCRText(0);
             }

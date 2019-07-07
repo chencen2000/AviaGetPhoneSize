@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>AviaGetPhoneSize.AviaGetPhoneColor</StartupObject>
+    <StartupObject>AviaGetPhoneSize.AviaGetPhoneModel</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -64,6 +64,9 @@
     <Reference Include="Emgu.CV.World, Version=4.1.0.3420, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
       <HintPath>..\packages\EMGU.CV.4.1.0.3420\lib\net35\Emgu.CV.World.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.11.8.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.8\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
@@ -84,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AviaGetPhoneColor.cs" />
+    <Compile Include="AviaGetPhoneModel.cs" />
     <Compile Include="AVIAGetPhoneSize.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -104,6 +108,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="License-LGPL.txt" />
+    <Content Include="readme.txt" />
     <Content Include="test\all_data.txt" />
     <Content Include="test\background.txt" />
     <Content Include="test\color_sensor_output.txt" />

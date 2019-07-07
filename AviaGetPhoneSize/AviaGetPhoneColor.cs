@@ -21,7 +21,8 @@ namespace AviaGetPhoneSize
             //test_1();
             //test_2();
             //load_data_for_background();
-            train_bg_data();
+            //train_bg_data();
+            test_device_detection();
             return ret;
         }
 
@@ -240,15 +241,37 @@ namespace AviaGetPhoneSize
         }
         static void test_device_detection()
         {
-
-        }
-        static void train_bg_data()
-        {
+            string s = @"..\..\test\background.txt";
+            string[] lines = System.IO.File.ReadAllLines(s);
+            Regex re = new Regex(@"^Color Temp: (\d+) K - Lux: (\d+) - R: (\d+) G: (\d+) B: (\d+) C: (\d+)\s*$");
+            List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
+            foreach (string l in lines)
+            {
+                Match m = re.Match(l);
+                if (m.Success)
+                {
+                    Dictionary<string, object> r = new Dictionary<string, object>();
+                    r.Add("t", Int32.Parse(m.Groups[1].Value));
+                    r.Add("l", Int32.Parse(m.Groups[2].Value));
+                    int rr = Int32.Parse(m.Groups[3].Value);
+                    int rg = Int32.Parse(m.Groups[4].Value);
+                    int rb = Int32.Parse(m.Groups[5].Value);
+                    int rc = Int32.Parse(m.Groups[6].Value);
+                    r.Add("rr", Int32.Parse(m.Groups[3].Value));
+                    r.Add("rg", Int32.Parse(m.Groups[4].Value));
+                    r.Add("rb", Int32.Parse(m.Groups[5].Value));
+                    r.Add("rc", Int32.Parse(m.Groups[6].Value));
+                    r.Add("r", 255.0 * rr / rc);
+                    r.Add("g", 255.0 * rg / rc);
+                    r.Add("b", 255.0 * rb / rc);
+                    data.Add(r);
+                }
+            }
             try
             {
                 var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-                Dictionary<string, object> data = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText("bg_train.json"));
-
+                s = jss.Serialize(data);
+                System.IO.File.WriteAllText("test.json", s);
             }
             catch (Exception) { }
         }

@@ -19,7 +19,7 @@ namespace AviaGetPhoneSize
             //Console.WriteLine($"Canny: {r} and {toFloat(r)}");
             //Rectangle r1 = get_rectangle_by_sobel(@"C:\Tools\avia\images\Final270\iphone6 Gold\0123.6.bmp");
             //Console.WriteLine($"Sobel: {r1} and {toFloat(r1)}");
-            test();
+            //test();
             return 0;
 
         }
