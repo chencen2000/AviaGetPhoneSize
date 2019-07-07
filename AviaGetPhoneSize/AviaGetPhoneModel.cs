@@ -28,18 +28,20 @@ namespace AviaGetPhoneSize
 
         static void extract_phone_image()
         {
-            //string fn = @"C:\Tools\avia\images\test.1\iphone_6\AP002-iphone6_Gray\8738.1.bmp";
-            foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test.1\iphone_x", "*.bmp", System.IO.SearchOption.AllDirectories))
+            //string fn = @"C:\Tools\avia\images\test.1\iphone_6\AP001-iphone6_gold\8301.1.bmp";
+            foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test.1\iphone_6", "*.bmp", System.IO.SearchOption.AllDirectories))
             {
                 Mat m = CvInvoke.Imread(fn);
-                Image<Gray, Byte> img = m.ToImage<Gray, Byte>().Rotate(90.0, new Gray(0), false);
+                string f = System.IO.Path.Combine("output", "iphone_6", System.IO.Path.GetFileName(fn));
+                Image<Gray, Byte> img = m.ToImage<Gray, Byte>().Rotate(-90.0, new Gray(0), false);
                 Rectangle roi = found_device_image(img.Resize(0.1, Inter.Cubic));
                 Image<Gray, Byte> img0 = img.Copy(roi);
-                roi = found_apple_text_v4(img0);
-                img0.ROI = roi;
-                string f = System.IO.Path.Combine("output", "temp", System.IO.Path.GetFileName(fn));
                 img0.Save(f);
-                test_ocr(img0, f);
+                Program.logIt($"{f}: {img0.Size}");
+                //roi = found_apple_text_v4(img0);
+                //img0.ROI = roi;
+                //img0.Save(f);
+                //test_ocr(img0, f);
                 m = null;
                 GC.Collect();
             }
@@ -60,10 +62,11 @@ namespace AviaGetPhoneSize
         {
             Image<Gray, Byte> img0 = img.SmoothGaussian(3);
             Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
-            img0 = img0.MorphologyEx(MorphOp.Erode, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            img0 = img0.MorphologyEx(MorphOp.Erode, k, new Point(-1, -1), 5, BorderType.Default, new MCvScalar(0));
             CvInvoke.Threshold(img0, img0, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
             using (TesseractEngine TE = new TesseractEngine("tessdata", "eng", EngineMode.TesseractOnly))
             {
+                //img0.Save("temp_1.jpg");
                 var p = TE.Process(img0.ToBitmap());
                 string s = p.GetText();
                 Program.logIt($"{fn}: {s}");
@@ -265,7 +268,7 @@ namespace AviaGetPhoneSize
             double y = 0.7 * src.Height;
             // height >= height * 3.825% ~ 3.853%
             double h = 0.1 * src.Height;
-            if(src.Height<9750)
+            if(src.Height<9800)
                 h = 0.07 * src.Height;
             Rectangle r = new Rectangle((int)x, (int)y, (int)w, (int)h);
             return r;
