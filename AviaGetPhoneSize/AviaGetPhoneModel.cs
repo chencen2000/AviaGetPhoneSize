@@ -28,20 +28,23 @@ namespace AviaGetPhoneSize
 
         static void extract_phone_image()
         {
-            //string fn = @"C:\Tools\avia\images\test.1\iphone_6\AP001-iphone6_gold\8301.1.bmp";
-            foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test.1\iphone_6", "*.bmp", System.IO.SearchOption.AllDirectories))
+            //string fn = @"C:\Tools\avia\images\test.1\iphone7 MatteBlack_img\0342.1.bmp";
+            foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test.1\iphone_x", "*.bmp", System.IO.SearchOption.AllDirectories))
             {
                 Mat m = CvInvoke.Imread(fn);
-                string f = System.IO.Path.Combine("output", "iphone_6", System.IO.Path.GetFileName(fn));
+                string f = System.IO.Path.Combine("output", "iphone_x", System.IO.Path.GetFileName(fn));
                 Image<Gray, Byte> img = m.ToImage<Gray, Byte>().Rotate(-90.0, new Gray(0), false);
-                Rectangle roi = found_device_image(img.Resize(0.1, Inter.Cubic));
-                Image<Gray, Byte> img0 = img.Copy(roi);
-                img0.Save(f);
-                Program.logIt($"{f}: {img0.Size}");
-                //roi = found_apple_text_v4(img0);
-                //img0.ROI = roi;
-                //img0.Save(f);
-                //test_ocr(img0, f);
+                Rectangle roi = found_device_image_v2(img.Resize(0.1, Inter.Cubic));
+                if (!roi.IsEmpty)
+                {
+                    Image<Gray, Byte> img0 = img.Copy(roi);
+                    img0.Save(f);
+                    Program.logIt($"{f}: {img0.Size}");
+                    //roi = found_apple_text_v4(img0);
+                    //img0.ROI = roi;
+                    //img0.Save(f);
+                    //test_ocr(img0, f);
+                }
                 m = null;
                 GC.Collect();
             }
@@ -155,18 +158,54 @@ namespace AviaGetPhoneSize
             }
             return ret;
         }
+        static public Rectangle found_device_image_v2(Image<Gray, Byte> src, double ratio = 10)
+        {
+            Rectangle ret = Rectangle.Empty;
+            Mat m = new Mat();
+            CvInvoke.GaussianBlur(src, m, new Size(3, 3), 0);
+            CvInvoke.Threshold(m, m, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            CvInvoke.MorphologyEx(m, m, MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            m.Save("temp_1.jpg");
+            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+            {
+                CvInvoke.FindContours(m, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                int count = contours.Size;
+                for (int i = 0; i < count; i++)
+                {
+                    VectorOfPoint contour = contours[i];
+                    double a = CvInvoke.ContourArea(contour);
+                    Rectangle r = CvInvoke.BoundingRectangle(contour);
+                    if (ret.IsEmpty) ret = r;
+                    else ret = Rectangle.Union(ret, r);
+                }
+            }
+            if (!ret.IsEmpty)
+            {
+                double v = ratio * ret.X;
+                ret.X = (int)v;
+                v = ratio * ret.Y;
+                ret.Y = (int)v;
+                v = ratio * ret.Width;
+                ret.Width = (int)v;
+                v = ratio * ret.Height;
+                ret.Height = (int)v;
+            }
+            Program.logIt($"{ret}");
+            return ret;
+        }
         static public Rectangle found_device_image(Image<Gray, Byte> src, double ratio = 10)
         {
             Mat m = new Mat();
             CvInvoke.GaussianBlur(src, m, new Size(3, 3), 0);
             Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
             Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
-            img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+            img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 9, BorderType.Default, new MCvScalar(0));
             img = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
-            //img.Save("temp_1.jpg");
+            img.Save("temp_1.jpg");
             double v;
             v = CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
-            //img.Save("temp_1.jpg");
+            img.Save("temp_1.jpg");
             Rectangle roi = Rectangle.Empty;
             using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
             {
@@ -192,7 +231,7 @@ namespace AviaGetPhoneSize
                 v = ratio * roi.Height;
                 roi.Height = (int)v;
             }
-            //Program.logIt($"{roi}");
+            Program.logIt($"{roi}");
             return roi;
         }
         static Rectangle found_apple_text(Image<Gray, Byte> src, double ratio = 10)
