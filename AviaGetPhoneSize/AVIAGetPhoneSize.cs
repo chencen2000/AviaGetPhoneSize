@@ -144,6 +144,8 @@ namespace AviaGetPhoneSize
                 BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
                 bool monition = false;
                 Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+                Image<Gray, Byte> bg_img = null;
+                int index = 1;
                 while (true)
                 {
                     Mat cm = new Mat();
@@ -161,7 +163,7 @@ namespace AviaGetPhoneSize
                     {
                         if (!monition)
                         {
-                            Program.logIt("monitor detected!");
+                            Program.logIt("motion detected!");
                             monition = true;
                         }
                     }
@@ -169,15 +171,63 @@ namespace AviaGetPhoneSize
                     {
                         if (monition)
                         {
-                            Program.logIt("monitor stopped!");
+                            Program.logIt("motion stopped!");
                             monition = false;
+                            if(bg_img == null)
+                            {
+                                bg_img = cm.ToImage<Gray, Byte>().Rotate(-90, new Gray(0), false);
+                                bg_img.Save("temp_bg.jpg");
+                            }
+                            else
+                            {
+                                handle_motion(cm.ToImage<Bgr, Byte>().Rotate(-90, new Bgr(0, 0, 0), false), bg_img, index++);
+                                //Rectangle r = new Rectangle(196, 665, 269, 628);
+                                //// check needed.
+                                //{
+                                //    Image<Gray, Byte> img = cm.ToImage<Gray, Byte>().Rotate(-90, new Gray(0), false);
+                                //    img.Save($"temp_{index}.jpg");
+                                //    img = img.AbsDiff(bg_img);
+                                //    if (img.GetAverage().MCvScalar.V0 > 10)
+                                //    {
+
+                                //    }
+                                //    img.Save($"temp_{index}_diff.jpg");
+                                //}
+                                //{
+                                //    Image<Bgr, Byte> img = cm.ToImage<Bgr, Byte>().Rotate(-90, new Bgr(0, 0, 0), false);
+                                //    Image<Bgr, Byte> img1 = img.Copy(r);
+                                //    img1.Save($"temp_{index}_1.jpg");
+                                //}
+                                //index++;
+                            }
                         }
                     }
+                    GC.Collect();
                     if (System.Console.KeyAvailable)
                     {
                         break;
                     }
                 }
+            }
+        }
+        static void handle_motion(Image<Bgr, Byte> frane, Image<Gray,Byte> bg, int idx)
+        {
+            Rectangle r = new Rectangle(196, 665, 269, 628);
+            Image<Bgr, Byte> img1 = frane.Copy(r);
+            Image<Gray, Byte> imgg = frane.Mat.ToImage<Gray, Byte>().Copy(r);
+            Image<Gray, Byte> imgbg = bg.Copy(r);
+            imgg = imgg.AbsDiff(imgbg);
+            Gray g = imgg.GetAverage();
+            if (g.MCvScalar.V0 > 10)
+            {
+                Program.logIt("Device arrival.");
+                img1.Save($"temp_{idx}_2.jpg");
+                imgbg.Save($"temp_{idx}_1.jpg");
+                imgg.Save($"temp_{idx}_3.jpg");
+            }
+            else
+            {
+                Program.logIt("Device removal.");
             }
         }
     }

@@ -40,7 +40,7 @@ namespace AviaGetPhoneSize
         {
             //resize_image();
             //test();
-            //test_1();
+            test_1();
             //test_2();
             //test_3();
             //test_4();
@@ -52,7 +52,7 @@ namespace AviaGetPhoneSize
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
             //test_5();
-            test_ss();
+            //test_ss();
             return 0;
         }
         static void test()
@@ -126,8 +126,8 @@ namespace AviaGetPhoneSize
         }
         static void test_1()
         {
-            //string fn = @"temp_1.jpg";
-            string fn = @"C:\Tools\avia\images\test.png";
+            string fn = @"temp_2_3.jpg";
+            //string fn = @"C:\Tools\avia\images\test.png";
             Mat m = CvInvoke.Imread(fn);
             Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
             var histogram = new DenseHistogram(256, new RangeF(0.0f, 255.0f));
