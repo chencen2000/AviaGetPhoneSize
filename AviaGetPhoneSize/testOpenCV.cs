@@ -40,7 +40,7 @@ namespace AviaGetPhoneSize
         {
             //resize_image();
             //test();
-            test_1();
+            //test_1();
             //test_2();
             //test_3();
             //test_4();
@@ -52,7 +52,7 @@ namespace AviaGetPhoneSize
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
             //test_5();
-            //test_ss();
+            test_ss();
             return 0;
         }
         static void test()
@@ -126,7 +126,8 @@ namespace AviaGetPhoneSize
         }
         static void test_1()
         {
-            string fn = @"output\iphone_7\0340.1.bmp";
+            //string fn = @"temp_1.jpg";
+            string fn = @"C:\Tools\avia\images\test.png";
             Mat m = CvInvoke.Imread(fn);
             Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
             var histogram = new DenseHistogram(256, new RangeF(0.0f, 255.0f));
@@ -139,9 +140,9 @@ namespace AviaGetPhoneSize
             Gray g1 = new Gray();
             MCvScalar m1 = new MCvScalar();
             img.AvgSdv(out g1, out m1);
-            img._EqualizeHist();
-            img._GammaCorrect(2.0d);
-            img.Save("temp_1.jpg");
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            img = img.MorphologyEx(MorphOp.Erode, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+            img.Save("temp_2.jpg");
         }
         static void test_2()
         {
@@ -802,16 +803,6 @@ namespace AviaGetPhoneSize
             {
                 bool b = false;
                 double db = vc.GetCaptureProperty(CapProp.Mode);
-                //for (double i =0; i<=64; i++)
-                //{
-                //    b = vc.SetCaptureProperty(CapProp.Mode, i);
-                //    if (b)
-                //    {
-                //        double w = vc.GetCaptureProperty(CapProp.FrameWidth);
-                //        double h = vc.GetCaptureProperty(CapProp.FrameHeight);
-                //        Program.logIt($"mode={i}, {w}x{h}");
-                //    }
-                //}
                 b = vc.SetCaptureProperty(CapProp.Mode, 1);
                 b = vc.SetCaptureProperty(CapProp.FrameHeight, 1080);
                 b = vc.SetCaptureProperty(CapProp.FrameWidth, 1920);
@@ -821,6 +812,45 @@ namespace AviaGetPhoneSize
                     if (vc.Retrieve(m))
                     {
                         m.Save("temp_1.jpg");
+                    }
+                }
+                //VideoWriter v1 = new VideoWriter("test_1.mp4", (int)vc.GetCaptureProperty(CapProp.Fps), new Size((int)vc.GetCaptureProperty(CapProp.FrameWidth), (int)vc.GetCaptureProperty(CapProp.FrameHeight)), true);
+                //VideoWriter v2 = new VideoWriter("test_2.mp4", (int)vc.GetCaptureProperty(CapProp.Fps), new Size((int)vc.GetCaptureProperty(CapProp.FrameWidth), (int)vc.GetCaptureProperty(CapProp.FrameHeight)), true);
+                BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
+                bool monition = false;
+                Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+                while (true)
+                {
+                    Mat cm = new Mat();
+                    vc.Read(cm);
+                    Mat mask = new Mat();
+                    bgs.Apply(cm, mask);
+                    //v1.Write(cm);
+                    //v2.Write(mask);
+                    //img = img.MorphologyEx(MorphOp.Erode, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+                    //CvInvoke.MorphologyEx(mask, mask, MorphOp.Erode, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+                    MCvScalar mean = new MCvScalar();
+                    MCvScalar stdDev = new MCvScalar();
+                    CvInvoke.MeanStdDev(mask, ref mean, ref stdDev);
+                    if(mean.V0 > 10)
+                    {
+                        if (!monition)
+                        {
+                            Program.logIt("monitor detected!");
+                            monition = true;
+                        }
+                    }
+                    else
+                    {
+                        if (monition)
+                        {
+                            Program.logIt("monitor stopped!");
+                            monition = false;
+                        }
+                    }
+                    if (System.Console.KeyAvailable)
+                    {
+                        break;
                     }
                 }
             }

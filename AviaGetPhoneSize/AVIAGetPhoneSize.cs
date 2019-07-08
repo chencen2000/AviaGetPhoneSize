@@ -20,6 +20,7 @@ namespace AviaGetPhoneSize
             //Rectangle r1 = get_rectangle_by_sobel(@"C:\Tools\avia\images\Final270\iphone6 Gold\0123.6.bmp");
             //Console.WriteLine($"Sobel: {r1} and {toFloat(r1)}");
             //test();
+            montion_detect();
             return 0;
 
         }
@@ -120,6 +121,64 @@ namespace AviaGetPhoneSize
             ret = new Rectangle(rs[0].X, rs[1].Y, rs[0].Width, rs[1].Height);
             //Program.logIt($"Rect: {ret}, size={toFloat(ret)}");
             return ret;
+        }
+        static void montion_detect()
+        {
+            VideoCapture vc = new VideoCapture(0);
+            if (vc.IsOpened)
+            {
+                double db = vc.GetCaptureProperty(CapProp.Mode);
+                bool b = vc.SetCaptureProperty(CapProp.Mode, 1);
+                b = vc.SetCaptureProperty(CapProp.FrameHeight, 1080);
+                b = vc.SetCaptureProperty(CapProp.FrameWidth, 1920);
+                if (vc.Grab())
+                {
+                    Mat m = new Mat();
+                    if (vc.Retrieve(m))
+                    {
+                        m.Save("temp_1.jpg");
+                    }
+                }
+                //VideoWriter v1 = new VideoWriter("test_1.mp4", (int)vc.GetCaptureProperty(CapProp.Fps), new Size((int)vc.GetCaptureProperty(CapProp.FrameWidth), (int)vc.GetCaptureProperty(CapProp.FrameHeight)), true);
+                //VideoWriter v2 = new VideoWriter("test_2.mp4", (int)vc.GetCaptureProperty(CapProp.Fps), new Size((int)vc.GetCaptureProperty(CapProp.FrameWidth), (int)vc.GetCaptureProperty(CapProp.FrameHeight)), true);
+                BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
+                bool monition = false;
+                Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+                while (true)
+                {
+                    Mat cm = new Mat();
+                    vc.Read(cm);
+                    Mat mask = new Mat();
+                    bgs.Apply(cm, mask);
+                    //v1.Write(cm);
+                    //v2.Write(mask);
+                    //img = img.MorphologyEx(MorphOp.Erode, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+                    //CvInvoke.MorphologyEx(mask, mask, MorphOp.Erode, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+                    MCvScalar mean = new MCvScalar();
+                    MCvScalar stdDev = new MCvScalar();
+                    CvInvoke.MeanStdDev(mask, ref mean, ref stdDev);
+                    if (mean.V0 > 10)
+                    {
+                        if (!monition)
+                        {
+                            Program.logIt("monitor detected!");
+                            monition = true;
+                        }
+                    }
+                    else
+                    {
+                        if (monition)
+                        {
+                            Program.logIt("monitor stopped!");
+                            monition = false;
+                        }
+                    }
+                    if (System.Console.KeyAvailable)
+                    {
+                        break;
+                    }
+                }
+            }
         }
     }
 }
