@@ -29,21 +29,42 @@ namespace AviaGetPhoneSize
         static void extract_phone_image()
         {
             //string fn = @"C:\Tools\avia\images\test.1\iphone7 MatteBlack_img\0342.1.bmp";
-            foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test.1\iphone_x", "*.bmp", System.IO.SearchOption.AllDirectories))
+            foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test.1\iphone7 MatteBlack_img", "*.1.bmp", System.IO.SearchOption.AllDirectories))
             {
                 Mat m = CvInvoke.Imread(fn);
-                string f = System.IO.Path.Combine("output", "iphone_x", System.IO.Path.GetFileName(fn));
-                Image<Gray, Byte> img = m.ToImage<Gray, Byte>().Rotate(-90.0, new Gray(0), false);
+                string f = System.IO.Path.Combine("output", "temp", System.IO.Path.GetFileName(fn));
+                Image<Gray, Byte> img = m.ToImage<Gray, Byte>().Rotate(90.0, new Gray(0), false);
                 Rectangle roi = found_device_image_v2(img.Resize(0.1, Inter.Cubic));
                 if (!roi.IsEmpty)
                 {
                     Image<Gray, Byte> img0 = img.Copy(roi);
-                    img0.Save(f);
-                    Program.logIt($"{f}: {img0.Size}");
-                    //roi = found_apple_text_v4(img0);
-                    //img0.ROI = roi;
                     //img0.Save(f);
-                    //test_ocr(img0, f);
+                    //double norm = CvInvoke.Norm(img);
+                    //MCvScalar mean = new MCvScalar();
+                    //MCvScalar stdDev = new MCvScalar();
+                    //CvInvoke.MeanStdDev(img, ref mean, ref stdDev);
+                    //Program.logIt($"{fn}: norm={norm}, mean={mean.V0}, stdDev={stdDev.V0}");
+                    roi = found_apple_text_iPhone_7(img0);
+                    if (!roi.IsEmpty)
+                    {
+                        Image<Gray, Byte> img_txt = img0.GetSubRect(roi);
+                        test_ocr(img_txt, f);
+                        double norm = CvInvoke.Norm(img_txt);
+                        Gray g1 = new Gray(0);
+                        MCvScalar mean1 = new MCvScalar();
+                        img_txt.AvgSdv(out g1, out mean1);
+                        Program.logIt($"{fn}: norm={norm}, mean={g1}, stdDev={mean1.V0}");
+                        img_txt._EqualizeHist();
+                        img_txt._GammaCorrect(4.0d);
+                        img_txt.Save(f);
+                        test_ocr(img_txt, f);
+                        norm = CvInvoke.Norm(img_txt);
+                        g1 = new Gray(0);
+                        mean1 = new MCvScalar();
+                        img_txt.AvgSdv(out g1, out mean1);
+                        Program.logIt($"{fn}: norm={norm}, mean={g1}, stdDev={mean1.V0}");
+
+                    }
                 }
                 m = null;
                 GC.Collect();
@@ -51,7 +72,7 @@ namespace AviaGetPhoneSize
         }
         static void test()
         {
-            foreach(string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test.1\iphone_6", "*.bmp", System.IO.SearchOption.AllDirectories))
+            foreach(string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test.1\iphone7 MatteBlack_img", "*.bmp", System.IO.SearchOption.AllDirectories))
             {
                 Program.logIt($"check: {fn}");
                 if (!check_apple_device(fn))
@@ -166,7 +187,7 @@ namespace AviaGetPhoneSize
             CvInvoke.Threshold(m, m, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
             Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
             CvInvoke.MorphologyEx(m, m, MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
-            m.Save("temp_1.jpg");
+            //m.Save("temp_1.jpg");
             using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
             {
                 CvInvoke.FindContours(m, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
@@ -191,7 +212,7 @@ namespace AviaGetPhoneSize
                 v = ratio * ret.Height;
                 ret.Height = (int)v;
             }
-            Program.logIt($"{ret}");
+            //Program.logIt($"{ret}");
             return ret;
         }
         static public Rectangle found_device_image(Image<Gray, Byte> src, double ratio = 10)
@@ -298,17 +319,19 @@ namespace AviaGetPhoneSize
         }
         static Rectangle found_apple_text_v4(Image<Gray, Byte> src)
         {
-            // height == 9880 is iphone X
-            // height == 9620 is iphone 6
-            // x <= width * 38%
             double x = 0.30 * src.Width;
             double w = 0.4 * src.Width;
-            // y <= height * 72.212 %
             double y = 0.7 * src.Height;
-            // height >= height * 3.825% ~ 3.853%
-            double h = 0.1 * src.Height;
-            if(src.Height<9800)
-                h = 0.07 * src.Height;
+            double h = 0.07 * src.Height;
+            Rectangle r = new Rectangle((int)x, (int)y, (int)w, (int)h);
+            return r;
+        }
+        static Rectangle found_apple_text_iPhone_7(Image<Gray, Byte> src)
+        {
+            double x = 0.30 * src.Width;
+            double w = 0.4 * src.Width;
+            double y = 0.72 * src.Height;
+            double h = 0.07 * src.Height;
             Rectangle r = new Rectangle((int)x, (int)y, (int)w, (int)h);
             return r;
         }

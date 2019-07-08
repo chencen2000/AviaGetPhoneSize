@@ -40,8 +40,8 @@ namespace AviaGetPhoneSize
         {
             //resize_image();
             //test();
-            //test_1();
-            test_2();
+            test_1();
+            //test_2();
             //test_3();
             //test_4();
             //is_apple_device();
@@ -126,30 +126,22 @@ namespace AviaGetPhoneSize
         }
         static void test_1()
         {
-            float ratio = 0.0139339f;
-            string fn = @"C:\Tools\avia\images\test.2\iphone6 Gold\0123.1.jpg";
+            string fn = @"output\iphone_7\0340.1.bmp";
             Mat m = CvInvoke.Imread(fn);
-            CvInvoke.GaussianBlur(m, m, new Size(3, 3), 0);
             Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
-            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
-            img = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
-            double v = CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+            var histogram = new DenseHistogram(256, new RangeF(0.0f, 255.0f));
+            histogram.Calculate(new Image<Gray, Byte>[] { img}, true, null);
+            double norm = CvInvoke.Norm(img);
+            MCvScalar mean = new MCvScalar();
+            MCvScalar stdDev = new MCvScalar();
+            CvInvoke.MeanStdDev(img, ref mean, ref stdDev);
+            Gray g = img.GetAverage();
+            Gray g1 = new Gray();
+            MCvScalar m1 = new MCvScalar();
+            img.AvgSdv(out g1, out m1);
+            img._EqualizeHist();
+            img._GammaCorrect(2.0d);
             img.Save("temp_1.jpg");
-            Rectangle roi = Rectangle.Empty;
-            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
-            {
-                CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
-                int count = contours.Size;
-                for(int i=0; i<count; i++)
-                {
-                    VectorOfPoint contour = contours[i];
-                    double a = CvInvoke.ContourArea(contour);
-                    Rectangle r = CvInvoke.BoundingRectangle(contour);
-                    if (roi.IsEmpty) roi = r;
-                    else roi = Rectangle.Union(roi, r);
-                }
-            }
-            Program.logIt($"{roi}, size={ratio*roi.Width}x{ratio*roi.Height}");
         }
         static void test_2()
         {
