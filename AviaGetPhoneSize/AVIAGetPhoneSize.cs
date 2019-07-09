@@ -147,6 +147,8 @@ namespace AviaGetPhoneSize
                 Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
                 Image<Gray, Byte> bg_img = null;
                 int index = 1;
+                Console.WriteLine("Camera is ready. Press Esc to exit.");
+                bool device_in_place = false;
                 while (true)
                 {
                     Mat cm = new Mat();
@@ -160,11 +162,12 @@ namespace AviaGetPhoneSize
                     MCvScalar mean = new MCvScalar();
                     MCvScalar stdDev = new MCvScalar();
                     CvInvoke.MeanStdDev(mask, ref mean, ref stdDev);
-                    if (mean.V0 > 10)
+                    if (mean.V0 > 17)
                     {
                         if (!monition)
                         {
                             Program.logIt("motion detected!");
+                            Console.WriteLine("Detected montion.");
                             monition = true;
                         }
                     }
@@ -173,15 +176,20 @@ namespace AviaGetPhoneSize
                         if (monition)
                         {
                             Program.logIt("motion stopped!");
+                            Console.WriteLine("Montion stopped.");
                             monition = false;
+#if true
+
                             if(bg_img == null)
                             {
                                 bg_img = cm.ToImage<Gray, Byte>().Rotate(-90, new Gray(0), false);
-                                bg_img.Save("temp_bg.jpg");
+                                //bg_img.Save("temp_bg.jpg");
                             }
                             else
                             {
-                                handle_motion(cm.ToImage<Bgr, Byte>().Rotate(-90, new Bgr(0, 0, 0), false), bg_img, index++);
+                                device_in_place = handle_motion(cm.ToImage<Bgr, Byte>().Rotate(-90, new Bgr(0, 0, 0), false), bg_img, index++);
+                                if(!device_in_place)
+                                    bg_img = cm.ToImage<Gray, Byte>().Rotate(-90, new Gray(0), false);
                                 //Rectangle r = new Rectangle(196, 665, 269, 628);
                                 //// check needed.
                                 //{
@@ -201,18 +209,28 @@ namespace AviaGetPhoneSize
                                 //}
                                 //index++;
                             }
+#else
+                            if (!device_in_place)
+                            {
+                                bg_img = cm.ToImage<Gray, Byte>().Rotate(-90, new Gray(0), false);
+                            }
+                            device_in_place = handle_motion(cm.ToImage<Bgr, Byte>().Rotate(-90, new Bgr(0, 0, 0), false), bg_img, index++);
+#endif
                         }
                     }
                     GC.Collect();
                     if (System.Console.KeyAvailable)
                     {
-                        break;
+                        ConsoleKeyInfo ki = Console.ReadKey();
+                        if(ki.Key==ConsoleKey.Escape)
+                            break;
                     }
                 }
             }
         }
-        static void handle_motion(Image<Bgr, Byte> frane, Image<Gray,Byte> bg, int idx)
+        static bool handle_motion(Image<Bgr, Byte> frane, Image<Gray,Byte> bg, int idx)
         {
+            bool device_in_place = false;
             //Rectangle r = new Rectangle(196, 665, 269, 628);
             Rectangle r = new Rectangle(334, 774, 452, 1016);
             Image<Bgr, Byte> img1 = frane.Copy(r);
@@ -220,19 +238,26 @@ namespace AviaGetPhoneSize
             Image<Gray, Byte> imgbg = bg.Copy(r);
             imgg = imgg.AbsDiff(imgbg);
             Gray g = imgg.GetAverage();
-            if (g.MCvScalar.V0 > 13)
+            if (g.MCvScalar.V0 > 17)
             {
                 Rectangle sz = detect_size(imgg);
                 Bgr rgb = sample_color(img1);
                 Program.logIt($"Device arrival. size: {sz.Size}, color: {rgb} ({g.MCvScalar.V0})");
-                //img1.Save($"temp_{idx}_2.jpg");
-                //imgbg.Save($"temp_{idx}_1.jpg");
-                //imgg.Save($"temp_{idx}_3.jpg");
+                Console.WriteLine("Enter device model and color:");
+                string info = System.Console.ReadLine();
+                img1.Save($"temp_{info}_2.jpg");
+                imgbg.Save($"temp_{info}_1.jpg");
+                imgg.Save($"temp_{info}_3.jpg");
+                Console.WriteLine($"{info}: size={sz.Size}, color={rgb}");
+                Program.logIt($"{info}: size={sz.Size}, color={rgb}");
+                device_in_place = true;
             }
             else
             {
                 Program.logIt($"Device removal. ({g.MCvScalar.V0})");
+                device_in_place = false;
             }
+            return device_in_place;
         }
         static Bgr sample_color(Image<Bgr,Byte> img)
         {

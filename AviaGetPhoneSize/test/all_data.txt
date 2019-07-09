@@ -586,3 +586,119 @@ Color Temp: 4730 K - Lux: 865 - R: 1513 G: 1477 B: 1332 C: 4230
 Color Temp: 4731 K - Lux: 865 - R: 1513 G: 1477 B: 1332 C: 4231  
 Color Temp: 4731 K - Lux: 866 - R: 1513 G: 1478 B: 1332 C: 4232  
 Color Temp: 4730 K - Lux: 866 - R: 1513 G: 1478 B: 1332 C: 4231  
+
+
+
+'AviaGetPhoneSize.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_32\mscorlib\v4.0_4.0.0.0__b77a5c561934e089\mscorlib.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'AviaGetPhoneSize.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Users\qa\Source\Repos\chencen2000\AviaGetPhoneSize\AviaGetPhoneSize\bin\Debug\AviaGetPhoneSize.exe'. Symbols loaded.
+'AviaGetPhoneSize.exe' (CLR v4.0.30319: AviaGetPhoneSize.exe): Loaded 'C:\Users\qa\Source\Repos\chencen2000\AviaGetPhoneSize\AviaGetPhoneSize\bin\Debug\Emgu.CV.World.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'AviaGetPhoneSize.exe' (CLR v4.0.30319: AviaGetPhoneSize.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Drawing\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Drawing.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'AviaGetPhoneSize.exe' (CLR v4.0.30319: AviaGetPhoneSize.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'AviaGetPhoneSize.exe' (CLR v4.0.30319: AviaGetPhoneSize.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Xml\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'AviaGetPhoneSize.exe' (CLR v4.0.30319: AviaGetPhoneSize.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Configuration\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Configuration.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'AviaGetPhoneSize.exe' (CLR v4.0.30319: AviaGetPhoneSize.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Core\v4.0_4.0.0.0__b77a5c561934e089\System.Core.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+motion detected!
+motion stopped!
+motion detected!
+motion stopped!
+Device arrival. size: {Width=374, Height=860}, color: [37.62331002331,31.7668997668998,29.8993006993007] (19.0351064385757)
+iphone6S_Gray: size={Width=374, Height=860}, color=[37.62331002331,31.7668997668998,29.8993006993007]
+motion detected!
+motion stopped!
+Device removal. (1.50547653473626)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=375, Height=869}, color: [51.8,58.4717948717949,61.5552447552448] (18.8186145564769)
+iphone7_Gold: size={Width=375, Height=869}, color=[51.8,58.4717948717949,61.5552447552448]
+motion detected!
+motion stopped!
+Device removal. (1.55812965995401)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=375, Height=909}, color: [74.795337995338,70.9202797202797,61.4662004662005] (18.6286691693959)
+iphone6s_Silver: size={Width=375, Height=909}, color=[74.795337995338,70.9202797202797,61.4662004662005]
+motion detected!
+motion stopped!
+Device removal. (1.34592754860288)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=375, Height=869}, color: [34.8251748251748,35.9426573426573,56.6377622377622] (20.0129999651592)
+iphone7_RoseGold: size={Width=375, Height=869}, color=[34.8251748251748,35.9426573426573,56.6377622377622]
+motion detected!
+motion stopped!
+Device removal. (2.00003919587485)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=374, Height=836}, color: [37.5048951048951,31.6550116550117,29.6512820512821] (19.4216866420458)
+iphone6_Gray: size={Width=374, Height=836}, color=[37.5048951048951,31.6550116550117,29.6512820512821]
+motion detected!
+motion stopped!
+Device removal. (2.22981194690265)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=375, Height=922}, color: [43.4452214452214,50.8773892773893,56.6792540792541] (19.0721443627622)
+iphone7_Gold: size={Width=375, Height=922}, color=[43.4452214452214,50.8773892773893,56.6792540792541]
+motion detected!
+motion stopped!
+Device removal. (1.75519998606369)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=375, Height=869}, color: [43.6717948717949,50.1850815850816,54.5459207459207] (19.0681050101038)
+iphone7_Gold: size={Width=375, Height=869}, color=[43.6717948717949,50.1850815850816,54.5459207459207]
+motion detected!
+motion stopped!
+Device removal. (1.53204916033726)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=376, Height=868}, color: [79.97668997669,76.581351981352,66.2909090909091] (18.8040293359348)
+iphone7_silver: size={Width=376, Height=868}, color=[79.97668997669,76.581351981352,66.2909090909091]
+motion detected!
+motion stopped!
+Device removal. (1.42919047453139)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=435, Height=1002}, color: [49.7328671328671,59.3710955710956,63.4899766899767] (36.0288786495715)
+iphone6P_Gold: size={Width=435, Height=1002}, color=[49.7328671328671,59.3710955710956,63.4899766899767]
+motion detected!
+motion stopped!
+Device removal. (1.59744094488189)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=440, Height=1006}, color: [40.5240093240093,42.4703962703963,63.0988344988345] (35.9708970629224)
+iphone7P_RoseGold: size={Width=440, Height=1006}, color=[40.5240093240093,42.4703962703963,63.0988344988345]
+motion detected!
+motion stopped!
+Device removal. (5.16019571806843)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=376, Height=889}, color: [47.1757575757576,48.158041958042,66.9053613053613] (19.6448244024807)
+iphone6S_RoseGold: size={Width=376, Height=889}, color=[47.1757575757576,48.158041958042,66.9053613053613]
+motion detected!
+motion stopped!
+Device removal. (3.12623249250923)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=438, Height=1002}, color: [157.170629370629,152.754778554779,126.536130536131] (37.0913329210508)
+iphone8P_Gold: size={Width=438, Height=1002}, color=[157.170629370629,152.754778554779,126.536130536131]
+motion detected!
+motion stopped!
+Device removal. (1.4181023970455)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=375, Height=819}, color: [21.2638694638695,13.4424242424242,11.6083916083916] (25.5554621629155)
+iphone8_Gray: size={Width=375, Height=819}, color=[21.2638694638695,13.4424242424242,11.6083916083916]
+motion detected!
+motion stopped!
+Device removal. (1.70333731098878)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=438, Height=1003}, color: [173.663869463869,156.281585081585,110.188811188811] (38.4174774405965)
+iphone8P_Silver: size={Width=438, Height=1003}, color=[173.663869463869,156.281585081585,110.188811188811]
+motion detected!
+motion stopped!
+Device removal. (2.54170876593966)
+motion detected!
+motion stopped!
+Device arrival. size: {Width=375, Height=870}, color: [97.7501165501165,94.3589743589744,76.8624708624709] (21.0430958643997)
+iphone7_Silver: size={Width=375, Height=870}, color=[97.7501165501165,94.3589743589744,76.8624708624709]
+The program '[5596] AviaGetPhoneSize.exe' has exited with code 0 (0x0).
