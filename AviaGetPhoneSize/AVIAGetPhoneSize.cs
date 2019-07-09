@@ -222,15 +222,46 @@ namespace AviaGetPhoneSize
             Gray g = imgg.GetAverage();
             if (g.MCvScalar.V0 > 13)
             {
-                Program.logIt($"Device arrival. ({g.MCvScalar.V0})");
-                img1.Save($"temp_{idx}_2.jpg");
-                imgbg.Save($"temp_{idx}_1.jpg");
-                imgg.Save($"temp_{idx}_3.jpg");
+                Rectangle sz = detect_size(imgg);
+                Bgr rgb = sample_color(img1);
+                Program.logIt($"Device arrival. size: {sz.Size}, color: {rgb} ({g.MCvScalar.V0})");
+                //img1.Save($"temp_{idx}_2.jpg");
+                //imgbg.Save($"temp_{idx}_1.jpg");
+                //imgg.Save($"temp_{idx}_3.jpg");
             }
             else
             {
                 Program.logIt($"Device removal. ({g.MCvScalar.V0})");
             }
+        }
+        static Bgr sample_color(Image<Bgr,Byte> img)
+        {
+            Rectangle r = new Rectangle(112, 797, 65, 33);
+            Image<Bgr, Byte> i = img.Copy(r);
+            Bgr rgb = i.GetAverage();
+            return rgb;
+        }
+        static Rectangle detect_size(Image<Gray,Byte> img)
+        {
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+            Image<Gray, Byte> g = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            CvInvoke.Threshold(g, g, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+            Rectangle roi = Rectangle.Empty;
+            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+            {
+                CvInvoke.FindContours(g, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                int count = contours.Size;
+                for (int i = 0; i < count; i++)
+                {
+                    VectorOfPoint contour = contours[i];
+                    double a = CvInvoke.ContourArea(contour);
+                    Rectangle r = CvInvoke.BoundingRectangle(contour);
+                    if (roi.IsEmpty) roi = r;
+                    else roi = Rectangle.Union(roi, r);
+                }
+            }
+            return roi;
         }
     }
 }

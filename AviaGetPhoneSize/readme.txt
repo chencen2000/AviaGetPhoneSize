@@ -17,3 +17,5 @@ new Rectangle(517, 823, 152, 298);
 mode=0
 1944x2592
 Rectangle r = new Rectangle(334, 774, 452, 1016);
+sample color:
+Rectangle r = new Rectangle(112, 797, 65, 33);

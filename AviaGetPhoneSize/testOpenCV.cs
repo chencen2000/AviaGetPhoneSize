@@ -41,7 +41,7 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            //test_2();
+            test_2();
             //test_3();
             //test_4();
             //is_apple_device();
@@ -52,7 +52,7 @@ namespace AviaGetPhoneSize
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
             //test_5();
-            test_ss();
+            //test_ss();
             return 0;
         }
         static void test()
@@ -126,55 +126,74 @@ namespace AviaGetPhoneSize
         }
         static void test_1()
         {
-            string fn = @"temp_2_3.jpg";
-            //string fn = @"C:\Tools\avia\images\test.png";
-            Mat m = CvInvoke.Imread(fn);
-            Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
-            var histogram = new DenseHistogram(256, new RangeF(0.0f, 255.0f));
-            histogram.Calculate(new Image<Gray, Byte>[] { img}, true, null);
-            double norm = CvInvoke.Norm(img);
-            MCvScalar mean = new MCvScalar();
-            MCvScalar stdDev = new MCvScalar();
-            CvInvoke.MeanStdDev(img, ref mean, ref stdDev);
-            Gray g = img.GetAverage();
-            Gray g1 = new Gray();
-            MCvScalar m1 = new MCvScalar();
-            img.AvgSdv(out g1, out m1);
-            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
-            img = img.MorphologyEx(MorphOp.Erode, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
-            img.Save("temp_2.jpg");
+            //string fn = @"temp_2_3.jpg";
+            string[] fns = new string[] 
+            {
+                @"C:\Tools\avia\images\temp\temp_1_3.jpg",
+                @"C:\Tools\avia\images\temp\temp_3_3.jpg",
+                @"C:\Tools\avia\images\temp\temp_5_3.jpg",
+                @"C:\Tools\avia\images\temp\temp_7_3.jpg",
+            };
+            //string fn = @"C:\Tools\avia\images\temp\temp_1_3.jpg";
+            foreach (string fn in fns)
+            {
+                Mat m = CvInvoke.Imread(fn);
+                Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
+                var histogram = new DenseHistogram(256, new RangeF(0.0f, 255.0f));
+                histogram.Calculate(new Image<Gray, Byte>[] { img }, true, null);
+                double norm = CvInvoke.Norm(img);
+                MCvScalar mean = new MCvScalar();
+                MCvScalar stdDev = new MCvScalar();
+                CvInvoke.MeanStdDev(img, ref mean, ref stdDev);
+                Gray g = img.GetAverage();
+                Gray g1 = new Gray();
+                MCvScalar m1 = new MCvScalar();
+                img.AvgSdv(out g1, out m1);
+                Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+                //Rectangle r = new Rectangle(0, 0, img.Width, 984);
+                //img.ROI = r;
+                //img = img.MorphologyEx(MorphOp.Erode, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));            
+                CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+                img = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+                img.Save("temp_2.jpg");
+                CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+                img.Save("temp_2.jpg");
+                Rectangle roi = Rectangle.Empty;
+                using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+                {
+                    CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                    int count = contours.Size;
+                    for (int i = 0; i < count; i++)
+                    {
+                        VectorOfPoint contour = contours[i];
+                        double a = CvInvoke.ContourArea(contour);
+                        Rectangle r = CvInvoke.BoundingRectangle(contour);
+                        if (roi.IsEmpty) roi = r;
+                        else roi = Rectangle.Union(roi, r);
+                    }
+                }
+                Program.logIt($"{fn}: {roi}");
+            }
         }
         static void test_2()
         {
-            string fn = @"C:\Tools\avia\images\test.1\iphone_6\AP001-iphone6_gold\0123.1.bmp";
-            //string fn = @"C:\Tools\avia\images\test.1\iphone_x\iphoneX Silver_img\1136.1.bmp";
-            Mat m = CvInvoke.Imread(fn);
-            Image<Gray, Byte> img = m.ToImage<Gray, Byte>().Rotate(-90, new Gray(0), false);
-            Rectangle r =  AviaGetPhoneModel.found_device_image(img.Resize(0.1, Inter.Cubic));
-            Image<Gray, Byte> img1 = img.Copy(r);
-            img1.Save("temp_2.jpg");
-            r = new Rectangle(img1.Width / 4, img1.Height * 7 / 10, img1.Width / 2, img1.Height / 10);
-            Image<Gray, Byte> img_txt = img1.Copy(r);
-            img_txt.Save("temp_3.jpg");
-            double v = CvInvoke.Threshold(img_txt, img_txt, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
-            using (TesseractEngine TE = new TesseractEngine("tessdata", "eng", EngineMode.TesseractOnly))
+            Rectangle r = new Rectangle(112, 797, 65, 33);
+            string[] fns = new string[]
+{
+                @"C:\Tools\avia\images\temp\temp_1_2.jpg",
+                @"C:\Tools\avia\images\temp\temp_3_2.jpg",
+                @"C:\Tools\avia\images\temp\temp_5_2.jpg",
+                @"C:\Tools\avia\images\temp\temp_7_2.jpg",
+};
+            //string fn = @"C:\Tools\avia\images\temp\temp_1_2.jpg";
+            foreach (string fn in fns)
             {
-                //Bitmap b = new Bitmap(@"temp_text_3.jpg");
-                var p = TE.Process(img_txt.ToBitmap());
-                string s = p.GetText();
-                s = p.GetHOCRText(0);
+                Mat m = CvInvoke.Imread(fn);
+                Image<Bgr, byte> img = m.ToImage<Bgr, Byte>();
+                img.ROI = r;
+                Bgr rgb = img.GetAverage();
+                Program.logIt($"{fn}: RGB={rgb}");
             }
-
-            //img = img.Rotate(90, new Gray(0), false);
-            //CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);            
-            //Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
-            //img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
-            //img = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
-            //img.Save("temp_2.jpg");
-            //Rectangle r = new Rectangle(m.Width / 4, m.Height * 7 / 10, m.Width / 2, m.Height / 10);
-            //img = m.ToImage<Gray, Byte>();
-            //img.ROI = r;
-
         }
         static Rectangle found_device_image(Image<Gray, Byte> img, double ratio=10)
         {
