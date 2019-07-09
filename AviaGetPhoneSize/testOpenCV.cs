@@ -40,7 +40,7 @@ namespace AviaGetPhoneSize
         {
             //resize_image();
             //test();
-            test_1();
+            //test_1();
             //test_2();
             //test_3();
             //test_4();
@@ -52,7 +52,7 @@ namespace AviaGetPhoneSize
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
             //test_5();
-            //test_ss();
+            test_ss();
             return 0;
         }
         static void test()
@@ -803,9 +803,9 @@ namespace AviaGetPhoneSize
             {
                 bool b = false;
                 double db = vc.GetCaptureProperty(CapProp.Mode);
-                b = vc.SetCaptureProperty(CapProp.Mode, 1);
-                b = vc.SetCaptureProperty(CapProp.FrameHeight, 1080);
-                b = vc.SetCaptureProperty(CapProp.FrameWidth, 1920);
+                b = vc.SetCaptureProperty(CapProp.Mode, 0);
+                b = vc.SetCaptureProperty(CapProp.FrameHeight, 1944);
+                b = vc.SetCaptureProperty(CapProp.FrameWidth, 2592);
                 if (vc.Grab())
                 {
                     Mat m = new Mat();
@@ -816,6 +816,7 @@ namespace AviaGetPhoneSize
                 }
                 //VideoWriter v1 = new VideoWriter("test_1.mp4", (int)vc.GetCaptureProperty(CapProp.Fps), new Size((int)vc.GetCaptureProperty(CapProp.FrameWidth), (int)vc.GetCaptureProperty(CapProp.FrameHeight)), true);
                 //VideoWriter v2 = new VideoWriter("test_2.mp4", (int)vc.GetCaptureProperty(CapProp.Fps), new Size((int)vc.GetCaptureProperty(CapProp.FrameWidth), (int)vc.GetCaptureProperty(CapProp.FrameHeight)), true);
+                /*
                 BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
                 bool monition = false;
                 Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
@@ -853,6 +854,7 @@ namespace AviaGetPhoneSize
                         break;
                     }
                 }
+                */
             }
         }
     }

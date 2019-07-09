@@ -128,9 +128,10 @@ namespace AviaGetPhoneSize
             if (vc.IsOpened)
             {
                 double db = vc.GetCaptureProperty(CapProp.Mode);
-                bool b = vc.SetCaptureProperty(CapProp.Mode, 1);
-                b = vc.SetCaptureProperty(CapProp.FrameHeight, 1080);
-                b = vc.SetCaptureProperty(CapProp.FrameWidth, 1920);
+                //bool b = vc.SetCaptureProperty(CapProp.Mode, 1);
+                bool b = vc.SetCaptureProperty(CapProp.Mode, 0);
+                b = vc.SetCaptureProperty(CapProp.FrameHeight, 1944);
+                b = vc.SetCaptureProperty(CapProp.FrameWidth, 2592);
                 if (vc.Grab())
                 {
                     Mat m = new Mat();
@@ -212,22 +213,23 @@ namespace AviaGetPhoneSize
         }
         static void handle_motion(Image<Bgr, Byte> frane, Image<Gray,Byte> bg, int idx)
         {
-            Rectangle r = new Rectangle(196, 665, 269, 628);
+            //Rectangle r = new Rectangle(196, 665, 269, 628);
+            Rectangle r = new Rectangle(334, 774, 452, 1016);
             Image<Bgr, Byte> img1 = frane.Copy(r);
             Image<Gray, Byte> imgg = frane.Mat.ToImage<Gray, Byte>().Copy(r);
             Image<Gray, Byte> imgbg = bg.Copy(r);
             imgg = imgg.AbsDiff(imgbg);
             Gray g = imgg.GetAverage();
-            if (g.MCvScalar.V0 > 10)
+            if (g.MCvScalar.V0 > 13)
             {
-                Program.logIt("Device arrival.");
+                Program.logIt($"Device arrival. ({g.MCvScalar.V0})");
                 img1.Save($"temp_{idx}_2.jpg");
                 imgbg.Save($"temp_{idx}_1.jpg");
                 imgg.Save($"temp_{idx}_3.jpg");
             }
             else
             {
-                Program.logIt("Device removal.");
+                Program.logIt($"Device removal. ({g.MCvScalar.V0})");
             }
         }
     }
