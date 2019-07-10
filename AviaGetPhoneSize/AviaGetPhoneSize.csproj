@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>AviaGetPhoneSize.AVIAGetPhoneSize</StartupObject>
+    <StartupObject>AviaGetPhoneSize.AviaGetPhoneModel</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -112,6 +112,10 @@
     <Content Include="test\all_data.txt" />
     <Content Include="test\background.txt" />
     <Content Include="test\color_sensor_output.txt" />
+    <Content Include="test\iphone_color.txt" />
+    <Content Include="traindata\iPhone_color.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

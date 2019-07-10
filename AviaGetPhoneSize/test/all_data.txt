@@ -589,116 +589,203 @@ Color Temp: 4730 K - Lux: 866 - R: 1513 G: 1478 B: 1332 C: 4231
 
 
 
-'AviaGetPhoneSize.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_32\mscorlib\v4.0_4.0.0.0__b77a5c561934e089\mscorlib.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'AviaGetPhoneSize.exe' (CLR v4.0.30319: DefaultDomain): Loaded 'C:\Users\qa\Source\Repos\chencen2000\AviaGetPhoneSize\AviaGetPhoneSize\bin\Debug\AviaGetPhoneSize.exe'. Symbols loaded.
-'AviaGetPhoneSize.exe' (CLR v4.0.30319: AviaGetPhoneSize.exe): Loaded 'C:\Users\qa\Source\Repos\chencen2000\AviaGetPhoneSize\AviaGetPhoneSize\bin\Debug\Emgu.CV.World.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'AviaGetPhoneSize.exe' (CLR v4.0.30319: AviaGetPhoneSize.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Drawing\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Drawing.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'AviaGetPhoneSize.exe' (CLR v4.0.30319: AviaGetPhoneSize.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'AviaGetPhoneSize.exe' (CLR v4.0.30319: AviaGetPhoneSize.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Xml\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'AviaGetPhoneSize.exe' (CLR v4.0.30319: AviaGetPhoneSize.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Configuration\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Configuration.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-'AviaGetPhoneSize.exe' (CLR v4.0.30319: AviaGetPhoneSize.exe): Loaded 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Core\v4.0_4.0.0.0__b77a5c561934e089\System.Core.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
-motion detected!
-motion stopped!
-motion detected!
-motion stopped!
-Device arrival. size: {Width=374, Height=860}, color: [37.62331002331,31.7668997668998,29.8993006993007] (19.0351064385757)
-iphone6S_Gray: size={Width=374, Height=860}, color=[37.62331002331,31.7668997668998,29.8993006993007]
-motion detected!
-motion stopped!
-Device removal. (1.50547653473626)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=375, Height=869}, color: [51.8,58.4717948717949,61.5552447552448] (18.8186145564769)
-iphone7_Gold: size={Width=375, Height=869}, color=[51.8,58.4717948717949,61.5552447552448]
-motion detected!
-motion stopped!
-Device removal. (1.55812965995401)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=375, Height=909}, color: [74.795337995338,70.9202797202797,61.4662004662005] (18.6286691693959)
-iphone6s_Silver: size={Width=375, Height=909}, color=[74.795337995338,70.9202797202797,61.4662004662005]
-motion detected!
-motion stopped!
-Device removal. (1.34592754860288)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=375, Height=869}, color: [34.8251748251748,35.9426573426573,56.6377622377622] (20.0129999651592)
-iphone7_RoseGold: size={Width=375, Height=869}, color=[34.8251748251748,35.9426573426573,56.6377622377622]
-motion detected!
-motion stopped!
-Device removal. (2.00003919587485)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=374, Height=836}, color: [37.5048951048951,31.6550116550117,29.6512820512821] (19.4216866420458)
-iphone6_Gray: size={Width=374, Height=836}, color=[37.5048951048951,31.6550116550117,29.6512820512821]
-motion detected!
-motion stopped!
-Device removal. (2.22981194690265)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=375, Height=922}, color: [43.4452214452214,50.8773892773893,56.6792540792541] (19.0721443627622)
-iphone7_Gold: size={Width=375, Height=922}, color=[43.4452214452214,50.8773892773893,56.6792540792541]
-motion detected!
-motion stopped!
-Device removal. (1.75519998606369)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=375, Height=869}, color: [43.6717948717949,50.1850815850816,54.5459207459207] (19.0681050101038)
-iphone7_Gold: size={Width=375, Height=869}, color=[43.6717948717949,50.1850815850816,54.5459207459207]
-motion detected!
-motion stopped!
-Device removal. (1.53204916033726)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=376, Height=868}, color: [79.97668997669,76.581351981352,66.2909090909091] (18.8040293359348)
-iphone7_silver: size={Width=376, Height=868}, color=[79.97668997669,76.581351981352,66.2909090909091]
-motion detected!
-motion stopped!
-Device removal. (1.42919047453139)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=435, Height=1002}, color: [49.7328671328671,59.3710955710956,63.4899766899767] (36.0288786495715)
-iphone6P_Gold: size={Width=435, Height=1002}, color=[49.7328671328671,59.3710955710956,63.4899766899767]
-motion detected!
-motion stopped!
-Device removal. (1.59744094488189)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=440, Height=1006}, color: [40.5240093240093,42.4703962703963,63.0988344988345] (35.9708970629224)
-iphone7P_RoseGold: size={Width=440, Height=1006}, color=[40.5240093240093,42.4703962703963,63.0988344988345]
-motion detected!
-motion stopped!
-Device removal. (5.16019571806843)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=376, Height=889}, color: [47.1757575757576,48.158041958042,66.9053613053613] (19.6448244024807)
-iphone6S_RoseGold: size={Width=376, Height=889}, color=[47.1757575757576,48.158041958042,66.9053613053613]
-motion detected!
-motion stopped!
-Device removal. (3.12623249250923)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=438, Height=1002}, color: [157.170629370629,152.754778554779,126.536130536131] (37.0913329210508)
-iphone8P_Gold: size={Width=438, Height=1002}, color=[157.170629370629,152.754778554779,126.536130536131]
-motion detected!
-motion stopped!
-Device removal. (1.4181023970455)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=375, Height=819}, color: [21.2638694638695,13.4424242424242,11.6083916083916] (25.5554621629155)
-iphone8_Gray: size={Width=375, Height=819}, color=[21.2638694638695,13.4424242424242,11.6083916083916]
-motion detected!
-motion stopped!
-Device removal. (1.70333731098878)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=438, Height=1003}, color: [173.663869463869,156.281585081585,110.188811188811] (38.4174774405965)
-iphone8P_Silver: size={Width=438, Height=1003}, color=[173.663869463869,156.281585081585,110.188811188811]
-motion detected!
-motion stopped!
-Device removal. (2.54170876593966)
-motion detected!
-motion stopped!
-Device arrival. size: {Width=375, Height=870}, color: [97.7501165501165,94.3589743589744,76.8624708624709] (21.0430958643997)
-iphone7_Silver: size={Width=375, Height=870}, color=[97.7501165501165,94.3589743589744,76.8624708624709]
-The program '[5596] AviaGetPhoneSize.exe' has exited with code 0 (0x0).
+[ WARN:0] terminating async callback
+Camera is ready. Press Esc to exit.
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone8P_SpaceGray
+iphone8P_SpaceGray: size={Width=436, Height=961}, color=[21.2363636363636,12.9170163170163,11.7682983682984]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone6S_RoseGold
+iphone6S_RoseGold: size={Width=375, Height=868}, color=[54.0289044289044,56.3687645687646,74.0461538461538]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone8_Gold
+iphone8_Gold: size={Width=375, Height=868}, color=[162.327738927739,155.115617715618,127.38648018648]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone7_Gold
+iphone7_Gold: size={Width=381, Height=871}, color=[63.2573426573427,70.6881118881119,73.3184149184149]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone8P_Silver
+iphone8P_Silver: size={Width=437, Height=1002}, color=[180.816317016317,161.218181818182,114.581351981352]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone6S_Silver
+iphone6S_Silver: size={Width=375, Height=868}, color=[87.1869463869464,83.5254079254079,73.8554778554779]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone6_Silver
+iphone6_Silver: size={Width=373, Height=867}, color=[97.9659673659674,93.432634032634,79.2713286713287]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone7P_MatteBlack
+iphone7P_MatteBlack: size={Width=436, Height=957}, color=[10.2293706293706,6.82331002331002,7.07878787878788]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone6S_RoseGold
+iphone6S_RoseGold: size={Width=375, Height=868}, color=[55.5347319347319,57.009324009324,79.6275058275058]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone7_RoseGold
+iphone7_RoseGold: size={Width=375, Height=867}, color=[44.7799533799534,47.3585081585082,69.5300699300699]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone6_Gray
+iphone6_Gray: size={Width=372, Height=858}, color=[44.9780885780886,37.7920745920746,35.6815850815851]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone7_RoseGold
+iphone7_RoseGold: size={Width=375, Height=868}, color=[42.5184149184149,44.7501165501166,67.5477855477856]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone6S_Gray
+iphone6S_Gray: size={Width=374, Height=859}, color=[45.1771561771562,39.8410256410256,37.4881118881119]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone8P_Gray
+iphone8P_Gray: size={Width=436, Height=949}, color=[21.1006993006993,12.9617715617716,11.569696969697]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone6S_Silver
+iphone6S_Silver: size={Width=375, Height=868}, color=[87.3524475524476,84.4018648018648,74.3254079254079]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone8_Gray
+iphone8_Gray: size={Width=438, Height=960}, color=[19.3832167832168,11.82331002331,10.8051282051282]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone7P_MatteBlack
+iphone7P_MatteBlack: size={Width=437, Height=955}, color=[9.12121212121212,6.97668997668998,7]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone7P_RoseGold
+iphone7P_RoseGold: size={Width=436, Height=1008}, color=[47.041958041958,48.8727272727273,70.9118881118881]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone6P_Gold
+iphone6P_Gold: size={Width=434, Height=1002}, color=[55.7785547785548,67.7934731934732,71.5552447552448]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone7_Silver
+iphone7_Silver: size={Width=375, Height=906}, color=[92.6801864801865,89.0144522144522,77.9123543123543]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone7_Gold
+iphone7_Gold: size={Width=375, Height=885}, color=[50.593006993007,59.4568764568765,65.5342657342657]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone7_Gold
+iphone7_Gold: size={Width=375, Height=911}, color=[44.5342657342657,53.6475524475524,58.4731934731935]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone7_Silver
+iphone7_Silver: size={Width=377, Height=892}, color=[90.0904428904429,86.0638694638695,70.7934731934732]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone7_MatteBlack
+iphone7_MatteBlack: size={Width=374, Height=829}, color=[9,7,7]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone6S_RoseGold
+iphone6S_RoseGold: size={Width=376, Height=903}, color=[42.960372960373,43.7188811188811,60.9100233100233]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone8P_Gold
+iphone8P_Gold: size={Width=438, Height=1002}, color=[149.794405594406,143.179487179487,114.945454545455]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone8_Gray
+iphone8_Gray: size={Width=375, Height=816}, color=[19.827972027972,12.3048951048951,10.7123543123543]
+Detected montion.
+Montion stopped.
+Detected montion.
+Montion stopped.
+Enter device model and color:
+iphone8P_Silver
+iphone8P_Silver: size={Width=439, Height=1002}, color=[165.610256410256,146.930536130536,98.0820512820513]
+Detected montion.
+Montion stopped.

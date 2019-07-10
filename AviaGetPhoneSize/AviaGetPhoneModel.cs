@@ -29,7 +29,7 @@ namespace AviaGetPhoneSize
         static void extract_phone_image()
         {
             //string fn = @"C:\Tools\avia\images\test.1\iphone7 MatteBlack_img\0342.1.bmp";
-            foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test.1\iphone7 MatteBlack_img", "*.1.bmp", System.IO.SearchOption.AllDirectories))
+            foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final270.1", "*.1.bmp", System.IO.SearchOption.AllDirectories))
             {
                 Mat m = CvInvoke.Imread(fn);
                 string f = System.IO.Path.Combine("output", "temp", System.IO.Path.GetFileName(fn));
@@ -38,12 +38,17 @@ namespace AviaGetPhoneSize
                 if (!roi.IsEmpty)
                 {
                     Image<Gray, Byte> img0 = img.Copy(roi);
+                    if (System.IO.File.Exists(f))
+                        Program.logIt($"{f} already exists");
+                    else
+                        img0.Save(f);
                     //img0.Save(f);
                     //double norm = CvInvoke.Norm(img);
                     //MCvScalar mean = new MCvScalar();
                     //MCvScalar stdDev = new MCvScalar();
                     //CvInvoke.MeanStdDev(img, ref mean, ref stdDev);
                     //Program.logIt($"{fn}: norm={norm}, mean={mean.V0}, stdDev={stdDev.V0}");
+#if false
                     roi = found_apple_text_iPhone_7(img0);
                     if (!roi.IsEmpty)
                     {
@@ -63,8 +68,8 @@ namespace AviaGetPhoneSize
                         mean1 = new MCvScalar();
                         img_txt.AvgSdv(out g1, out mean1);
                         Program.logIt($"{fn}: norm={norm}, mean={g1}, stdDev={mean1.V0}");
-
                     }
+#endif
                 }
                 m = null;
                 GC.Collect();
