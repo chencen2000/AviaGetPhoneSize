@@ -268,14 +268,16 @@ namespace AviaGetPhoneSize
                     Console.WriteLine($"r={rgb.Red}");
                     Console.WriteLine($"g={rgb.Green}");
                     Console.WriteLine($"b={rgb.Blue}");
-                    NormalBayesClassifier classifier = new NormalBayesClassifier();
-                    classifier.Load(@"traindata/iPhone_color.xml");
-                    Matrix<float> test = new Matrix<float>(1, 3);
-                    test[0, 0] = (float)rgb.Blue;
-                    test[0, 1] = (float)rgb.Green;
-                    test[0, 2] = (float)rgb.Red;
-                    int l = (int)classifier.Predict(test);
-                    Console.WriteLine($"colorID={l}");
+                    using (SVM model = new SVM())
+                    {
+                        model.Load(@"traindata/iPhone_color.xml");
+                        Matrix<float> test = new Matrix<float>(1, 3);
+                        test[0, 0] = (float)rgb.Red;
+                        test[0, 1] = (float)rgb.Green;
+                        test[0, 2] = (float)rgb.Blue;
+                        int l = (int)model.Predict(test);
+                        Console.WriteLine($"colorID={l}");
+                    }
                 }
                 catch (Exception) { }
                 //Console.WriteLine("Enter device model and color:");
