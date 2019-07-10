@@ -263,6 +263,19 @@ namespace AviaGetPhoneSize
                 }
 
                 // for color
+                string[] color_note = new string[] 
+                {
+                    "NA",
+                    "Gray (iPhone 6/iPhone 6S)",
+                    "Gold (iPhone 6 Plus/iPhone 7)",
+                    "Rose Gold (iPhone 6S/iPhone 7/iPhone 7 Plus)",
+                    "Silver (iPhone 6/iPhone 6S/iPhone 7)",
+                    "Matte Black (iPhone 7/iPhone 7 Plus)",
+                    "Gold (iPhone 8/iPhone 8 Plus)",
+                    "Space Gray (iPhone 8/iPhone 8 Plus)",
+                    "Silver (iPhone 8 Plus)"
+                };
+
                 try
                 {
                     Console.WriteLine($"r={rgb.Red}");
@@ -277,6 +290,8 @@ namespace AviaGetPhoneSize
                         test[0, 2] = (float)rgb.Blue;
                         int l = (int)model.Predict(test);
                         Console.WriteLine($"colorID={l}");
+                        if(l>=0 && l<color_note.Length)
+                            Console.WriteLine($"colorNote={color_note[l]}");
                     }
                 }
                 catch (Exception) { }
