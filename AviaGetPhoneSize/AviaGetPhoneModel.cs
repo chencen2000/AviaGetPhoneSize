@@ -22,7 +22,8 @@ namespace AviaGetPhoneSize
             //test_check_apple_device();
             //test();
             //test_ocr();
-            extract_phone_image();
+            //extract_phone_image();
+            test_ml();
             return ret;
         }
 
@@ -339,6 +340,23 @@ namespace AviaGetPhoneSize
             double h = 0.07 * src.Height;
             Rectangle r = new Rectangle((int)x, (int)y, (int)w, (int)h);
             return r;
+        }
+        static void test_ml()
+        {
+            //foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final270.1", "*.1.bmp", System.IO.SearchOption.AllDirectories))
+            //{
+            //    string m = System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(fn));
+            //    string f = System.IO.Path.Combine("output", "train_data", $"{m}.{System.IO.Path.GetFileName(fn)}");
+            //    System.IO.File.Copy(fn, f);
+            //}
+            Dictionary<string, string> files = new Dictionary<string, string>();
+            foreach (string fn in System.IO.Directory.GetFiles(@"output\train_data", "*.1.bmp", System.IO.SearchOption.AllDirectories))
+            {
+                string f = System.IO.Path.GetFileName(fn);
+                string m = f.Split(' ')[0];
+                files.Add(fn, m);
+            }
+
         }
     }
 }
