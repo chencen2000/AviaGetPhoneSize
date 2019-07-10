@@ -43,8 +43,8 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            //test_2();
-            test_ML();
+            test_2();
+            //test_ML();
             //test_3();
             //test_4();
             //is_apple_device();
@@ -190,9 +190,9 @@ namespace AviaGetPhoneSize
                     Match m = re.Match(l);
                     if (m.Success)
                     {
-                        double r = Double.Parse(m.Groups[1].Value);
+                        double b = Double.Parse(m.Groups[1].Value);
                         double g = Double.Parse(m.Groups[2].Value);
-                        double b = Double.Parse(m.Groups[3].Value);
+                        double r = Double.Parse(m.Groups[3].Value);
                         int label = Int32.Parse(m.Groups[4].Value);
                         Tuple<double, double, double, int> d = new Tuple<double, double, double, int>(r, g, b, label);
                         datas.Add(d);
@@ -235,6 +235,12 @@ namespace AviaGetPhoneSize
                     }
                 }
 
+                // test
+                test[0, 0] = 8.96270396270396f;
+                test[0, 1] = 6.96270396270396f;
+                test[0, 2] = 6.96270396270396f;
+                int p = (int)classifier.Predict(test);
+                Program.logIt($"predict: {p} ");
             }
         }
 
@@ -291,7 +297,11 @@ namespace AviaGetPhoneSize
                         Program.logIt($"predict: {l} vs {datas[i].Item4}");
                     }
                 }
-
+                test[0, 0] = 8.96270396270396f;
+                test[0, 1] = 6.96270396270396f;
+                test[0, 2] = 6.96270396270396f;
+                int p = (int)classifier.Predict(test);
+                Program.logIt($"predict: {p} ");
             }
 
         }

@@ -1,5 +1,6 @@
 ﻿using Emgu.CV;
 using Emgu.CV.CvEnum;
+using Emgu.CV.ML;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using System;
@@ -187,7 +188,7 @@ namespace AviaGetPhoneSize
                             }
                             else
                             {
-                                device_in_place = handle_motion(cm.ToImage<Bgr, Byte>().Rotate(-90, new Bgr(0, 0, 0), false), bg_img, index++);
+                                device_in_place = handle_motion_V2(cm.ToImage<Bgr, Byte>().Rotate(-90, new Bgr(0, 0, 0), false), bg_img, index++);
                                 if(!device_in_place)
                                     bg_img = cm.ToImage<Gray, Byte>().Rotate(-90, new Gray(0), false);
                                 //Rectangle r = new Rectangle(196, 665, 269, 628);
@@ -227,6 +228,71 @@ namespace AviaGetPhoneSize
                     }
                 }
             }
+        }
+        static bool handle_motion_V2(Image<Bgr, Byte> frane, Image<Gray, Byte> bg, int idx)
+        {
+            bool device_in_place = false;
+            //Rectangle r = new Rectangle(196, 665, 269, 628);
+            Rectangle r = new Rectangle(334, 774, 452, 1016);
+            Image<Bgr, Byte> img1 = frane.Copy(r);
+            Image<Gray, Byte> imgg = frane.Mat.ToImage<Gray, Byte>().Copy(r);
+            Image<Gray, Byte> imgbg = bg.Copy(r);
+            imgg = imgg.AbsDiff(imgbg);
+            Gray g = imgg.GetAverage();
+            if (g.MCvScalar.V0 > 17)
+            {
+                Rectangle sz = detect_size(imgg);
+                Bgr rgb = sample_color(img1);
+                Program.logIt($"Device arrival. size: {sz.Size}, color: {rgb} ({g.MCvScalar.V0})");
+                // report 
+                Console.WriteLine($"Raw Data: size={sz.Size}, color={rgb}");
+                if (sz.Size.Width > 430)
+                {
+                    // it is plus mode
+                    Console.WriteLine($"sizeID=2");
+                }
+                else if (sz.Size.Width < 400)
+                {
+                    // it is plus mode
+                    Console.WriteLine($"sizeID=1");
+                }
+                else
+                {
+                    // error. unknown size
+                    Console.WriteLine($"sizeID=-1");
+                }
+
+                // for color
+                try
+                {
+                    Console.WriteLine($"r={rgb.Red}");
+                    Console.WriteLine($"g={rgb.Green}");
+                    Console.WriteLine($"b={rgb.Blue}");
+                    NormalBayesClassifier classifier = new NormalBayesClassifier();
+                    classifier.Load(@"traindata/iPhone_color.xml");
+                    Matrix<float> test = new Matrix<float>(1, 3);
+                    test[0, 0] = (float)rgb.Blue;
+                    test[0, 1] = (float)rgb.Green;
+                    test[0, 2] = (float)rgb.Red;
+                    int l = (int)classifier.Predict(test);
+                    Console.WriteLine($"colorID={l}");
+                }
+                catch (Exception) { }
+                //Console.WriteLine("Enter device model and color:");
+                //string info = System.Console.ReadLine();
+                //img1.Save($"temp_{info}_2.jpg");
+                //imgbg.Save($"temp_{info}_1.jpg");
+                //imgg.Save($"temp_{info}_3.jpg");
+                //Console.WriteLine($"{info}: size={sz.Size}, color={rgb}");
+                //Program.logIt($"{info}: size={sz.Size}, color={rgb}");
+                device_in_place = true;
+            }
+            else
+            {
+                Program.logIt($"Device removal. ({g.MCvScalar.V0})");
+                device_in_place = false;
+            }
+            return device_in_place;
         }
         static bool handle_motion(Image<Bgr, Byte> frane, Image<Gray,Byte> bg, int idx)
         {
