@@ -239,7 +239,7 @@ namespace AviaGetPhoneSize
             Image<Gray, Byte> imgbg = bg.Copy(r);
             imgg = imgg.AbsDiff(imgbg);
             Gray g = imgg.GetAverage();
-            if (g.MCvScalar.V0 > 17)
+            if (g.MCvScalar.V0 > 13)
             {
                 Rectangle sz = detect_size(imgg);
                 Bgr rgb = sample_color(img1);
