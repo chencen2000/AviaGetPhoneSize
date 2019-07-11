@@ -43,7 +43,7 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            test_2_1();
+            //test_2_1();
             //test_ML();
             //test_3();
             //test_4();
@@ -56,6 +56,7 @@ namespace AviaGetPhoneSize
             //test_ocr();
             //test_5();
             //test_ss();
+            test_6();
             return 0;
         }
         static void test()
@@ -1110,6 +1111,85 @@ namespace AviaGetPhoneSize
                 }
                 */
             }
+        }
+        static bool check_apple_icon(string filename, Tuple<VectorOfPoint, VectorOfPoint> apple_logo, double threhold=0.05)
+        {
+            bool ret = false;
+            Mat m = CvInvoke.Imread(filename);
+            RectangleF rf = new RectangleF(0.35f * m.Width, 0.18f * m.Height, 0.30f * m.Width, 0.20f * m.Height);
+            Image<Gray, Byte> img = m.ToImage<Gray, Byte>().Copy(Rectangle.Round(rf));
+            CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            img = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+            double score = 1.0;
+            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+            {
+                CvInvoke.FindContours(img, contours, null, RetrType.List, ChainApproxMethod.ChainApproxNone);
+                int count = contours.Size;
+                for (int i = 0; i < count; i++)
+                {
+                    VectorOfPoint contour = contours[i];
+                    double a = CvInvoke.ContourArea(contour);
+                    if (a > 10000)
+                    {
+                        double d1 = CvInvoke.MatchShapes(apple_logo.Item1, contours[i], ContoursMatchType.I1);
+                        double d2 = CvInvoke.MatchShapes(apple_logo.Item2, contours[i], ContoursMatchType.I1);
+                        if (d1 < score)
+                        {
+                            score = d1;
+                        }
+                        if (d2 < score)
+                        {
+                            score = d2;
+                        }
+                    }
+                }
+            }
+            if (score < threhold)
+                ret = true;
+            Program.logIt($"{filename}: ret={ret}, score={score}");
+            return ret;
+        }
+        static void test_6()
+        {
+            Tuple<VectorOfPoint, VectorOfPoint> apple_logo = get_apple_logo();
+            string fn = @"C:\Tools\avia\images\test\0342.1.bmp";
+            //check_apple_icon(fn, apple_logo);
+            //foreach (string f in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test\"))
+            //{
+            //    check_apple_icon(f, apple_logo);
+            //}            
+            foreach (string f in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test\"))
+            {
+                fn = f;
+                Mat m = CvInvoke.Imread(fn);
+                RectangleF rf = new RectangleF(0.35f * m.Width, 0.72f * m.Height, 0.30f * m.Width, 0.07f * m.Height);
+                Image<Gray, Byte> img = m.ToImage<Gray, Byte>().Copy(Rectangle.Round(rf));
+                //img.Save("temp_1.jpg");
+                //CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+                //img.Save("temp_2.jpg");
+                //Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+                //img = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+                //img.Save("temp_3.jpg");
+                //CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+                //img.Save("temp_4.jpg");
+                //img = img.MorphologyEx(MorphOp.Dilate, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+                //img.Save("temp_5.jpg");
+                string n = System.IO.Path.GetFileNameWithoutExtension(fn);
+                CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
+                img.Save(System.IO.Path.Combine("output","temp",$"{n}.jpg"));
+                using (TesseractEngine TE = new TesseractEngine("tessdata", "eng", EngineMode.TesseractOnly))
+                {
+                    //Bitmap b = new Bitmap(@"temp_text_3.jpg");
+                    var p = TE.Process(img.ToBitmap());
+                    string s = p.GetText();
+                    //s = p.GetHOCRText(0);
+                    Program.logIt($"{fn}: {s}");
+                }
+                GC.Collect();
+            }
+            
         }
     }
 }
