@@ -873,15 +873,24 @@ namespace AviaGetPhoneSize
             Mat b = CvInvoke.Imread(@"temp_1.jpg");
             //Mat b = CvInvoke.Imread(@"C:\projects\avia\pytest\temp_text_2.jpg");
             Image<Gray, Byte> img = b.ToImage<Gray, byte>();
+            //CvInvoke.FastNlMeansDenoising(img, img);
             CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
-            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
-            img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+            img = img.InRange(new Gray(85), new Gray(95));
             img.Save("temp_2.jpg");
-            //double v = CvInvoke.Threshold(img, img, 0, 255, ThresholdType.BinaryInv| ThresholdType.Otsu);
+            img._Dilate(3);
+            //CvInvoke.GaussianBlur(img, img, new Size(7, 7), 2.0, 2.0);
+            //Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
+            //img = img.MorphologyEx(MorphOp.Dilate, k, new Point(-1, -1), 2, BorderType.Default, new MCvScalar(0));
+            //img = img.MorphologyEx(MorphOp.Erode, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            //double v = CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+            //img.Save("temp_2.jpg");
+            //CvInvoke.GaussianBlur(img, img, new Size(7, 7), 2.0, 2.0);
+            //img = img.Dilate(2);
             //img = img.Erode(1);
-            //img = img.Dilate(1);
-            //img = img.MorphologyEx(MorphOp.Erode, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
-            img.Save("temp_2.jpg");
+            //img = img.MorphologyEx(MorphOp.Blackhat, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            img.Save("temp_3.jpg");
+
+#if true
             using (TesseractEngine TE = new TesseractEngine("tessdata", "eng", EngineMode.TesseractOnly))
             {
                 //Bitmap b = new Bitmap(@"temp_text_3.jpg");
@@ -889,6 +898,7 @@ namespace AviaGetPhoneSize
                 string s = p.GetText();
                 s = p.GetHOCRText(0);
             }
+#endif
         }
         static void found_text()
         {

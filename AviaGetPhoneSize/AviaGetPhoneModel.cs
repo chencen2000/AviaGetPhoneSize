@@ -633,7 +633,7 @@ namespace AviaGetPhoneSize
                 img1.Save("temp_1.jpg");
 
                 CvInvoke.GaussianBlur(img1, img1, new Size(3, 3), 0);
-                double v = CvInvoke.Threshold(img1, img1, 0, 255, ThresholdType.BinaryInv | ThresholdType.Otsu);
+                img1 = img1.InRange(new Gray(85), new Gray(95));
                 img1.Save("temp_2.jpg");
                 Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
                 img1 = img1.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
