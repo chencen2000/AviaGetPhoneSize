@@ -112,7 +112,13 @@
     <Content Include="test\all_data.txt" />
     <Content Include="test\background.txt" />
     <Content Include="test\color_sensor_output.txt" />
+    <Content Include="test\iphone_6.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="test\iphone_color.txt" />
+    <Content Include="test\iphone_layout.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="traindata\iPhone_color.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

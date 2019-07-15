@@ -1,0 +1,120 @@
+[
+  {
+    "id": 0,
+    "x": 550,
+    "y": 1297,
+    "width": 9925,
+    "height": 4988,
+    "xpath": "sensor_layout/node/sensor/region/"
+  },
+  {
+    "id": 1,
+    "x": 1287,
+    "y": 1160,
+    "width": 8486,
+    "height": 5280,
+    "xpath": "sensor_layout/node/node/sensor/region/region/"
+  },
+  {
+    "id": 2,
+    "x": 2677,
+    "y": 3344,
+    "width": 1221,
+    "height": 1007,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "logo",
+	"type": "match"
+  },
+  {
+    "id": 3,
+    "x": 7643,
+    "y": 3313,
+    "width": 386,
+    "height": 1099,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "maker",
+	"type": "ocr"
+  },
+  {
+    "id": 4,
+    "x": 8090,
+    "y": 3688,
+    "width": 270,
+    "height": 286,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "models",
+	"type": "ocr"
+  },
+  {
+    "id": 5,
+    "x": 8561,
+    "y": 2867,
+    "width": 305,
+    "height": 1959,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "model",
+	"type": "ocr"
+  },
+  {
+    "id": 6,
+    "x": 512,
+    "y": 1400,
+    "width": 1145,
+    "height": 3727,
+    "xpath": "sensor_layout/node/node/sensor/region/region/"
+  },
+  {
+    "id": 7,
+    "x": 944,
+    "y": 4422,
+    "width": 333,
+    "height": 333,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "flash",
+	"type": "match"
+  },
+  {
+    "id": 8,
+    "x": 1039,
+    "y": 4817,
+    "width": 159,
+    "height": 159,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "mic",
+	"type": "match"
+  },
+  {
+    "id": 9,
+    "x": 9380,
+    "y": 1336,
+    "width": 1221,
+    "height": 5077,
+    "xpath": "sensor_layout/node/node/sensor/region/"
+  },
+  {
+    "id": 10,
+    "x": 410,
+    "y": 5179,
+    "width": 1323,
+    "height": 865,
+    "xpath": "sensor_layout/node/node/sensor/region/"
+  },
+  {
+    "id": 11,
+    "x": 832,
+    "y": 5044,
+    "width": 609,
+    "height": 548,
+    "xpath": "sensor_layout/node/node/sensor/region/",
+	"name": "camera",
+	"type": "match"
+  },
+  {
+    "id": 12,
+    "x": 907,
+    "y": 5059,
+    "width": 509,
+    "height": 509,
+    "xpath": "sensor_layout/node/node/node/sensor/region/"
+  }
+]

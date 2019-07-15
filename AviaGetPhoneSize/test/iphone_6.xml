@@ -1,0 +1,803 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sensor_layout>
+  <node>
+    <sensor type="global_alignment_sensor" name="global_alignment_sensor_1">
+      <group></group>
+      <filter type="NULL"></filter>
+      <surface_code>2</surface_code>
+      <sort>1</sort>
+      <region type="rect_corner">
+        <corner_enabled>1</corner_enabled>
+        <corner_1>1138.96, 799.226</corner_1>
+        <corner_2>1180.17, 1278.36</corner_2>
+        <corner_3>1158.02, 989.852</corner_3>
+        <corner_4>1132.05, 832.033</corner_4>
+        <origin_enabled>0</origin_enabled>
+        <origin>100,100</origin>
+        <center>5551.88, 3592.19</center>
+        <width>9933</width>
+        <height>4722</height>
+        <angle>0</angle>
+        <is_mask>0</is_mask>
+        <transformation_matrix>
+          1, 0, 0,
+          0, 1, 0
+        </transformation_matrix>
+      </region>
+      <detector type="template_match">
+        <enabled>1</enabled>
+        <match_level>5</match_level>
+        <min_similarity>0.7</min_similarity>
+        <search_range>2, 2</search_range>
+        <search_angle>0</search_angle>
+        <check_enabled>0</check_enabled>
+        <max_offset>2, 2</max_offset>
+      </detector>
+      <result type="alignment_result">
+        <pass>1</pass>
+        <reason></reason>
+        <type>4</type>
+        <value>0</value>
+        <text></text>
+        <found>0</found>
+        <offset_x>0</offset_x>
+        <offset_y>0</offset_y>
+        <angle>0</angle>
+        <similarity>0</similarity>
+      </result>
+      <level>5</level>
+      <origin_enabled>0</origin_enabled>
+      <origin>100,100</origin>
+      <detail_align>
+        <detector type="template_match">
+          <enabled>1</enabled>
+          <match_level>4</match_level>
+          <min_similarity>0.7</min_similarity>
+          <search_range>1, 1</search_range>
+          <search_angle>0</search_angle>
+          <check_enabled>0</check_enabled>
+          <max_offset>10, 10</max_offset>
+        </detector>
+      </detail_align>
+    </sensor>
+    <node>
+      <sensor type="smooth_surface_sensor" name="smooth_surface_sensor_1">
+        <group></group>
+        <filter type="NULL"></filter>
+        <surface_code>2</surface_code>
+        <sort>1</sort>
+        <region type="auto">
+          <auto_region_mode>0</auto_region_mode>
+          <create_mode>0</create_mode>
+          <threshold_high>255</threshold_high>
+          <threshold_low>110</threshold_low>
+          <min_width>0</min_width>
+          <min_height>0</min_height>
+          <shrink>
+            <mode>1</mode>
+            <length>0.2</length>
+            <left>0</left>
+            <top>0</top>
+            <right>0</right>
+            <bottom>0</bottom>
+          </shrink>
+          <center>1108.05, 3546.74</center>
+          <width>812</width>
+          <height>4850</height>
+          <angle>0</angle>
+          <is_mask>0</is_mask>
+          <transformation_matrix>
+            1, 0, 0,
+            0, 1, 0
+          </transformation_matrix>
+        </region>
+        <detector type="smooth_surface">
+          <detect_result>0</detect_result>
+          <window_width>128</window_width>
+          <window_height>128</window_height>
+          <defect>
+            <item>
+              <enabled>1</enabled>
+              <color>0</color>
+              <threshold>20</threshold>
+              <defect_finder>
+                <sort>
+                  <type>-1</type>
+                  <general>
+                    <enabled>1</enabled>
+                    <sort>2</sort>
+                  </general>
+                  <scratch>
+                    <enabled>1</enabled>
+                    <sort>1</sort>
+                    <aspect_ratio>5</aspect_ratio>
+                  </scratch>
+                  <crack>
+                    <enabled>0</enabled>
+                    <sort>3</sort>
+                    <aspect_ratio>10</aspect_ratio>
+                    <max_gap>40</max_gap>
+                  </crack>
+                </sort>
+                <defect_unit>0</defect_unit>
+                <defect>
+                  <item>
+                    <length_defect>
+                      <min_length>0.5</min_length>
+                      <min_width>0.2</min_width>
+                      <min_count>1</min_count>
+                    </length_defect>
+                    <cluster>
+                      <enabled>0</enabled>
+                      <range>1</range>
+                    </cluster>
+                  </item>
+                </defect>
+              </defect_finder>
+            </item>
+          </defect>
+          <scratch></scratch>
+        </detector>
+        <result type="defect_result">
+          <pass>1</pass>
+          <reason></reason>
+          <type>0</type>
+          <value>0</value>
+          <text></text>
+        </result>
+        <child_sensor>
+          <enabled>0</enabled>
+        </child_sensor>
+      </sensor>
+    </node>
+    <node>
+      <sensor type="alignment_sensor" name="alignment_sensor_1">
+        <group></group>
+        <filter type="NULL"></filter>
+        <surface_code>0</surface_code>
+        <sort>1</sort>
+        <region type="rect">
+          <center>10054.5, 2838.19</center>
+          <width>324</width>
+          <height>340</height>
+          <angle>0</angle>
+          <is_mask>0</is_mask>
+          <transformation_matrix>
+            1, 0, 0,
+            0, 1, 0
+          </transformation_matrix>
+        </region>
+        <detector type="template_match">
+          <enabled>1</enabled>
+          <match_level>4</match_level>
+          <min_similarity>0</min_similarity>
+          <search_range>5, 5</search_range>
+          <search_angle>0</search_angle>
+          <check_enabled>0</check_enabled>
+          <max_offset>2, 2</max_offset>
+        </detector>
+        <result type="alignment_result">
+          <pass>1</pass>
+          <reason></reason>
+          <type>4</type>
+          <value>0</value>
+          <text></text>
+          <found>0</found>
+          <offset_x>0</offset_x>
+          <offset_y>0</offset_y>
+          <angle>0</angle>
+          <similarity>0</similarity>
+        </result>
+      </sensor>
+    </node>
+    <node>
+      <sensor type="smooth_surface_sensor" name="smooth_surface_sensor_2">
+        <group></group>
+        <filter type="NULL"></filter>
+        <surface_code>2</surface_code>
+        <sort>1</sort>
+        <region type="composite">
+          <region type="auto">
+            <auto_region_mode>0</auto_region_mode>
+            <create_mode>0</create_mode>
+            <threshold_high>255</threshold_high>
+            <threshold_low>110</threshold_low>
+            <min_width>0</min_width>
+            <min_height>0</min_height>
+            <shrink>
+              <mode>1</mode>
+              <length>0.3</length>
+              <left>0</left>
+              <top>0</top>
+              <right>0</right>
+              <bottom>0</bottom>
+            </shrink>
+            <center>5592.8, 3557.34</center>
+            <width>8241</width>
+            <height>4714</height>
+            <angle>0</angle>
+            <is_mask>0</is_mask>
+            <transformation_matrix>
+              1, 0, 0,
+              0, 1, 0
+            </transformation_matrix>
+          </region>
+          <region type="rect">
+            <center>2422.35, 3527.7</center>
+            <width>426</width>
+            <height>1925</height>
+            <angle>0</angle>
+            <is_mask>1</is_mask>
+            <transformation_matrix>
+              1, 0, 0,
+              0, 1, 0
+            </transformation_matrix>
+          </region>
+          <region type="rect">
+            <center>2808.05, 3568.47</center>
+            <width>360</width>
+            <height>2476</height>
+            <angle>0</angle>
+            <is_mask>1</is_mask>
+            <transformation_matrix>
+              1, 0, 0,
+              0, 1, 0
+            </transformation_matrix>
+          </region>
+          <region type="rect">
+            <center>3300.36, 3565.25</center>
+            <width>404</width>
+            <height>1087</height>
+            <angle>0</angle>
+            <is_mask>1</is_mask>
+            <transformation_matrix>
+              1, 0, 0,
+              0, 1, 0
+            </transformation_matrix>
+          </region>
+          <region type="rect">
+            <center>7876.05, 3564.38</center>
+            <width>1237</width>
+            <height>1009</height>
+            <angle>0</angle>
+            <is_mask>1</is_mask>
+            <transformation_matrix>
+              1, 0, 0,
+              0, 1, 0
+            </transformation_matrix>
+          </region>
+        </region>
+        <detector type="smooth_surface">
+          <detect_result>0</detect_result>
+          <window_width>128</window_width>
+          <window_height>128</window_height>
+          <defect>
+            <item>
+              <enabled>1</enabled>
+              <color>0</color>
+              <threshold>20</threshold>
+              <defect_finder>
+                <sort>
+                  <type>-1</type>
+                  <general>
+                    <enabled>1</enabled>
+                    <sort>2</sort>
+                  </general>
+                  <scratch>
+                    <enabled>1</enabled>
+                    <sort>1</sort>
+                    <aspect_ratio>5</aspect_ratio>
+                  </scratch>
+                  <crack>
+                    <enabled>0</enabled>
+                    <sort>3</sort>
+                    <aspect_ratio>10</aspect_ratio>
+                    <max_gap>40</max_gap>
+                  </crack>
+                </sort>
+                <defect_unit>0</defect_unit>
+                <defect>
+                  <item>
+                    <length_defect>
+                      <min_length>0.5</min_length>
+                      <min_width>0.2</min_width>
+                      <min_count>1</min_count>
+                    </length_defect>
+                    <cluster>
+                      <enabled>0</enabled>
+                      <range>1</range>
+                    </cluster>
+                  </item>
+                </defect>
+              </defect_finder>
+            </item>
+            <item>
+              <enabled>1</enabled>
+              <color>1</color>
+              <threshold>8</threshold>
+              <defect_finder>
+                <sort>
+                  <type>4</type>
+                  <general>
+                    <enabled>1</enabled>
+                    <sort>2</sort>
+                  </general>
+                  <scratch>
+                    <enabled>1</enabled>
+                    <sort>1</sort>
+                    <aspect_ratio>5</aspect_ratio>
+                  </scratch>
+                  <crack>
+                    <enabled>0</enabled>
+                    <sort>3</sort>
+                    <aspect_ratio>10</aspect_ratio>
+                    <max_gap>40</max_gap>
+                  </crack>
+                </sort>
+                <defect_unit>1</defect_unit>
+                <defect>
+                  <item>
+                    <area_defect>
+                      <area_unit>1</area_unit>
+                      <min_area>5</min_area>
+                      <min_area_mm>0.5</min_area_mm>
+                      <min_count>1</min_count>
+                    </area_defect>
+                    <cluster>
+                      <enabled>0</enabled>
+                      <range>1</range>
+                    </cluster>
+                  </item>
+                </defect>
+              </defect_finder>
+            </item>
+          </defect>
+          <scratch></scratch>
+        </detector>
+        <result type="defect_result">
+          <pass>1</pass>
+          <reason></reason>
+          <type>1</type>
+          <value>0</value>
+          <text></text>
+        </result>
+        <child_sensor>
+          <enabled>0</enabled>
+        </child_sensor>
+      </sensor>
+      <node>
+        <sensor type="brightness_sensor" name="brightness_sensor_1">
+          <group></group>
+          <filter type="NULL"></filter>
+          <surface_code>0</surface_code>
+          <sort>1</sort>
+          <region type="composite">
+            <region type="circle">
+              <center>7802.85, 3004.78</center>
+              <radius>47.2431</radius>
+              <is_mask>0</is_mask>
+              <transformation_matrix>
+                1, 0, 0,
+                0, 1, 0
+              </transformation_matrix>
+            </region>
+            <region type="circle">
+              <center>8258.17, 3465.16</center>
+              <radius>63.2477</radius>
+              <is_mask>0</is_mask>
+              <transformation_matrix>
+                1, 0, 0,
+                0, 1, 0
+              </transformation_matrix>
+            </region>
+            <region type="circle">
+              <center>7851.6, 3982.69</center>
+              <radius>64.4577</radius>
+              <is_mask>0</is_mask>
+              <transformation_matrix>
+                1, 0, 0,
+                0, 1, 0
+              </transformation_matrix>
+            </region>
+            <region type="circle">
+              <center>7276.05, 3588.49</center>
+              <radius>70.3175</radius>
+              <is_mask>0</is_mask>
+              <transformation_matrix>
+                1, 0, 0,
+                0, 1, 0
+              </transformation_matrix>
+            </region>
+          </region>
+          <detector type="brightness">
+            <threshold_high>255</threshold_high>
+            <threshold_low>0</threshold_low>
+          </detector>
+          <result type="detect_result">
+            <pass>1</pass>
+            <reason></reason>
+            <type>4</type>
+            <value>0</value>
+            <text></text>
+          </result>
+        </sensor>
+      </node>
+      <node>
+        <sensor type="brightness_sensor" name="brightness_sensor_2">
+          <group></group>
+          <filter type="NULL"></filter>
+          <surface_code>0</surface_code>
+          <sort>1</sort>
+          <region type="circle">
+            <center>9054.32, 2869.29</center>
+            <radius>77.0735</radius>
+            <is_mask>0</is_mask>
+            <transformation_matrix>
+              1, 0, 0,
+              0, 1, 0
+            </transformation_matrix>
+          </region>
+          <detector type="brightness">
+            <threshold_high>255</threshold_high>
+            <threshold_low>0</threshold_low>
+          </detector>
+          <result type="detect_result">
+            <pass>1</pass>
+            <reason></reason>
+            <type>4</type>
+            <value>0</value>
+            <text></text>
+          </result>
+        </sensor>
+      </node>
+    </node>
+    <node>
+      <sensor type="smooth_surface_sensor" name="smooth_surface_sensor_3">
+        <group></group>
+        <filter type="NULL"></filter>
+        <surface_code>2</surface_code>
+        <sort>1</sort>
+        <region type="composite">
+          <region type="auto">
+            <auto_region_mode>0</auto_region_mode>
+            <create_mode>0</create_mode>
+            <threshold_high>255</threshold_high>
+            <threshold_low>110</threshold_low>
+            <min_width>0</min_width>
+            <min_height>0</min_height>
+            <shrink>
+              <mode>1</mode>
+              <length>0.2</length>
+              <left>0</left>
+              <top>0</top>
+              <right>0</right>
+              <bottom>0</bottom>
+            </shrink>
+            <center>10072, 1757.24</center>
+            <width>678</width>
+            <height>897</height>
+            <angle>0</angle>
+            <is_mask>0</is_mask>
+            <transformation_matrix>
+              1, 0, 0,
+              0, 1, 0
+            </transformation_matrix>
+          </region>
+          <region type="circle">
+            <center>18810.1, 1974.29</center>
+            <radius>179.417</radius>
+            <is_mask>1</is_mask>
+            <transformation_matrix>
+              1, 0, 0,
+              0, 1, 0
+            </transformation_matrix>
+          </region>
+        </region>
+        <detector type="smooth_surface">
+          <detect_result>0</detect_result>
+          <window_width>128</window_width>
+          <window_height>128</window_height>
+          <defect>
+            <item>
+              <enabled>1</enabled>
+              <color>0</color>
+              <threshold>20</threshold>
+              <defect_finder>
+                <sort>
+                  <type>-1</type>
+                  <general>
+                    <enabled>1</enabled>
+                    <sort>2</sort>
+                  </general>
+                  <scratch>
+                    <enabled>1</enabled>
+                    <sort>1</sort>
+                    <aspect_ratio>5</aspect_ratio>
+                  </scratch>
+                  <crack>
+                    <enabled>0</enabled>
+                    <sort>3</sort>
+                    <aspect_ratio>10</aspect_ratio>
+                    <max_gap>40</max_gap>
+                  </crack>
+                </sort>
+                <defect_unit>0</defect_unit>
+                <defect>
+                  <item>
+                    <length_defect>
+                      <min_length>0.5</min_length>
+                      <min_width>0.2</min_width>
+                      <min_count>1</min_count>
+                    </length_defect>
+                    <cluster>
+                      <enabled>0</enabled>
+                      <range>1</range>
+                    </cluster>
+                  </item>
+                </defect>
+              </defect_finder>
+            </item>
+          </defect>
+          <scratch></scratch>
+        </detector>
+        <result type="defect_result">
+          <pass>1</pass>
+          <reason></reason>
+          <type>0</type>
+          <value>0</value>
+          <text></text>
+        </result>
+        <child_sensor>
+          <enabled>0</enabled>
+        </child_sensor>
+      </sensor>
+    </node>
+    <node>
+      <sensor type="smooth_surface_sensor" name="smooth_surface_sensor_4">
+        <group></group>
+        <filter type="NULL"></filter>
+        <surface_code>2</surface_code>
+        <sort>1</sort>
+        <region type="composite">
+          <region type="auto">
+            <auto_region_mode>0</auto_region_mode>
+            <create_mode>0</create_mode>
+            <threshold_high>255</threshold_high>
+            <threshold_low>110</threshold_low>
+            <min_width>0</min_width>
+            <min_height>0</min_height>
+            <shrink>
+              <mode>1</mode>
+              <length>0.2</length>
+              <left>0</left>
+              <top>0</top>
+              <right>0</right>
+              <bottom>0</bottom>
+            </shrink>
+            <center>10044.8, 4274.93</center>
+            <width>732</width>
+            <height>4004</height>
+            <angle>0</angle>
+            <is_mask>0</is_mask>
+            <transformation_matrix>
+              1, 0, 0,
+              0, 1, 0
+            </transformation_matrix>
+          </region>
+          <region type="circle">
+            <center>15282.9, 2118.62</center>
+            <radius>179.417</radius>
+            <is_mask>1</is_mask>
+            <transformation_matrix>
+              1, 0, 0,
+              0, 1, 0
+            </transformation_matrix>
+          </region>
+          <region type="circle">
+            <center>10054.6, 2533.78</center>
+            <radius>109.866</radius>
+            <is_mask>1</is_mask>
+            <transformation_matrix>
+              1, 0, 0,
+              0, 1, 0
+            </transformation_matrix>
+          </region>
+          <region type="circle">
+            <center>10054.2, 2832.14</center>
+            <radius>196.913</radius>
+            <is_mask>1</is_mask>
+            <transformation_matrix>
+              1, 0, 0,
+              0, 1, 0
+            </transformation_matrix>
+          </region>
+        </region>
+        <detector type="smooth_surface">
+          <detect_result>0</detect_result>
+          <window_width>128</window_width>
+          <window_height>128</window_height>
+          <defect>
+            <item>
+              <enabled>1</enabled>
+              <color>0</color>
+              <threshold>20</threshold>
+              <defect_finder>
+                <sort>
+                  <type>-1</type>
+                  <general>
+                    <enabled>1</enabled>
+                    <sort>2</sort>
+                  </general>
+                  <scratch>
+                    <enabled>1</enabled>
+                    <sort>1</sort>
+                    <aspect_ratio>5</aspect_ratio>
+                  </scratch>
+                  <crack>
+                    <enabled>0</enabled>
+                    <sort>3</sort>
+                    <aspect_ratio>10</aspect_ratio>
+                    <max_gap>40</max_gap>
+                  </crack>
+                </sort>
+                <defect_unit>0</defect_unit>
+                <defect>
+                  <item>
+                    <length_defect>
+                      <min_length>0.5</min_length>
+                      <min_width>0.2</min_width>
+                      <min_count>1</min_count>
+                    </length_defect>
+                    <cluster>
+                      <enabled>0</enabled>
+                      <range>1</range>
+                    </cluster>
+                  </item>
+                </defect>
+              </defect_finder>
+            </item>
+          </defect>
+          <scratch></scratch>
+        </detector>
+        <result type="defect_result">
+          <pass>1</pass>
+          <reason></reason>
+          <type>0</type>
+          <value>0</value>
+          <text></text>
+        </result>
+        <child_sensor>
+          <enabled>0</enabled>
+        </child_sensor>
+      </sensor>
+      <node>
+        <sensor type="brightness_sensor" name="brightness_sensor_3">
+          <group></group>
+          <filter type="NULL"></filter>
+          <surface_code>0</surface_code>
+          <sort>1</sort>
+          <region type="composite">
+            <region type="circle">
+              <center>10056.2, 2852.96</center>
+              <radius>232.528</radius>
+              <is_mask>0</is_mask>
+              <transformation_matrix>
+                1, 0, 0,
+                0, 1, 0
+              </transformation_matrix>
+            </region>
+            <region type="circle">
+              <center>10052.1, 2840.53</center>
+              <radius>157.456</radius>
+              <is_mask>1</is_mask>
+              <transformation_matrix>
+                1, 0, 0,
+                0, 1, 0
+              </transformation_matrix>
+            </region>
+          </region>
+          <detector type="brightness">
+            <threshold_high>255</threshold_high>
+            <threshold_low>0</threshold_low>
+          </detector>
+          <result type="detect_result">
+            <pass>1</pass>
+            <reason></reason>
+            <type>4</type>
+            <value>0</value>
+            <text></text>
+          </result>
+        </sensor>
+      </node>
+    </node>
+    <node>
+      <sensor type="alignment_sensor" name="alignment_sensor_2">
+        <group></group>
+        <filter type="NULL"></filter>
+        <surface_code>0</surface_code>
+        <sort>1</sort>
+        <region type="rect">
+          <center>10051.8, 2127.21</center>
+          <width>569</width>
+          <height>559</height>
+          <angle>0</angle>
+          <is_mask>0</is_mask>
+          <transformation_matrix>
+            1, 0, 0,
+            0, 1, 0
+          </transformation_matrix>
+        </region>
+        <detector type="template_match">
+          <enabled>1</enabled>
+          <match_level>4</match_level>
+          <min_similarity>0</min_similarity>
+          <search_range>5, 5</search_range>
+          <search_angle>0</search_angle>
+          <check_enabled>0</check_enabled>
+          <max_offset>2, 2</max_offset>
+        </detector>
+        <result type="alignment_result">
+          <pass>1</pass>
+          <reason></reason>
+          <type>4</type>
+          <value>0</value>
+          <text></text>
+          <found>0</found>
+          <offset_x>0</offset_x>
+          <offset_y>0</offset_y>
+          <angle>0</angle>
+          <similarity>0</similarity>
+        </result>
+      </sensor>
+    </node>
+  </node>
+  <node>
+    <sensor type="measure_table_sensor" name="measure_table_sensor_1">
+      <group></group>
+      <filter type="NULL"></filter>
+      <surface_code>2</surface_code>
+      <sort>1</sort>
+      <region type="icon">
+        <position>9222.28, 3253.37</position>
+        <icon_name>measure_table_sensor</icon_name>
+        <is_mask>0</is_mask>
+        <transformation_matrix>
+          1, 0, 0,
+          0, 1, 0
+        </transformation_matrix>
+      </region>
+      <result type="detect_result">
+        <pass>1</pass>
+        <reason></reason>
+        <type>0</type>
+        <value>0</value>
+        <text></text>
+      </result>
+      <measure_table>
+        <item>
+          <caption>Logo</caption>
+          <sensor_1>brightness_sensor_1</sensor_1>
+          <sensor_2>brightness_sensor_2</sensor_2>
+          <combine_method>2</combine_method>
+          <check_value>0</check_value>
+          <min_value>0</min_value>
+          <max_value>0</max_value>
+          <sort>0</sort>
+          <area></area>
+        </item>
+        <item>
+          <caption>Camera</caption>
+          <sensor_1>brightness_sensor_2</sensor_1>
+          <sensor_2>brightness_sensor_3</sensor_2>
+          <combine_method>2</combine_method>
+          <check_value>1</check_value>
+          <min_value>0</min_value>
+          <max_value>0</max_value>
+          <sort>0</sort>
+          <area></area>
+        </item>
+      </measure_table>
+    </sensor>
+  </node>
+</sensor_layout>
+

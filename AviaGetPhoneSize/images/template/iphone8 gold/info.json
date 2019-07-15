@@ -1,0 +1,90 @@
+[
+  {
+    "id": 0,
+    "x": 671,
+    "y": 1475,
+    "width": 9852,
+    "height": 4705,
+    "xpath": "sensor_layout/node/sensor/region/"
+  },
+  {
+    "id": 1,
+    "x": 684,
+    "y": 1223,
+    "width": 10079,
+    "height": 5139,
+    "xpath": "sensor_layout/node/node/sensor/region/region/"
+  },
+  {
+    "id": 2,
+    "x": 2879,
+    "y": 3326,
+    "width": 1234,
+    "height": 1043,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "logo",
+	"type": "match"
+  },
+  {
+    "id": 3,
+    "x": 7912,
+    "y": 3292,
+    "width": 345,
+    "height": 1072,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "maker",
+	"type": "ocr"
+  },
+  {
+    "id": 4,
+    "x": 1320,
+    "y": 4889,
+    "width": 200,
+    "height": 200,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "mic",
+	"type": "match"
+  },
+  {
+    "id": 5,
+    "x": 1244,
+    "y": 4491,
+    "width": 343,
+    "height": 343,
+    "xpath": "sensor_layout/node/node/sensor/region/region/"
+  },
+  {
+    "id": 6,
+    "x": 954,
+    "y": 5078,
+    "width": 964,
+    "height": 964,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "camera",
+	"type": "match"
+  },
+  {
+    "id": 7,
+    "x": 1110,
+    "y": 5206,
+    "width": 690,
+    "height": 683,
+    "xpath": "sensor_layout/node/node/node/sensor/region/"
+  },
+  {
+    "id": 8,
+    "x": 1163,
+    "y": 5234,
+    "width": 627,
+    "height": 642,
+    "xpath": "sensor_layout/node/node/node/node/sensor/region/"
+  },
+  {
+    "id": 9,
+    "x": 1238,
+    "y": 4480,
+    "width": 347,
+    "height": 345,
+    "xpath": "sensor_layout/node/node/sensor/region/"
+  }
+]

@@ -1,0 +1,474 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<iphone_layout>
+  <model name="iPhone 6">
+    <rectangle id="model" type="ocr">
+      <x>8236</x>
+      <y>2601</y>
+      <width>293</width>
+      <height>2480</height>
+    </rectangle>
+    <rectangle id="maker" type="ocr">
+      <x>7709</x>
+      <y>3344</y>
+      <width>384</width>
+      <height>1009</height>
+    </rectangle>
+    <rectangle id="logo" type="match">
+      <x>2701</x>
+      <y>3374</y>
+      <width>1315</width>
+      <height>1019</height>
+    </rectangle>
+    <rectangle id="corner" type="match">
+      <x>9782</x>
+      <y>5828</y>
+      <width>358</width>
+      <height>358</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>1104</x>
+      <y>4795</y>
+      <width>190</width>
+      <height>190</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>993</x>
+      <y>4400</y>
+      <width>393</width>
+      <height>393</height>
+    </rectangle>
+    <rectangle id="camera" type="match">
+      <x>1058</x>
+      <y>5156</y>
+      <width>317</width>
+      <height>317</height>
+    </rectangle>
+  </model>
+  <model name="iPhone 6S">
+    <rectangle id="model" type="ocr">
+      <x>8627</x>
+      <y>2890</y>
+      <width>293</width>
+      <height>1893</height>
+    </rectangle>
+    <rectangle id="maker" type="ocr">
+      <x>7701</x>
+      <y>3344</y>
+      <width>384</width>
+      <height>1009</height>
+    </rectangle>
+    <rectangle id="logo_s" type="match">
+      <x>8140</x>
+      <y>3664</y>
+      <width>292</width>
+      <height>355</height>
+    </rectangle>
+    <rectangle id="logo" type="match">
+      <x>2693</x>
+      <y>3374</y>
+      <width>1315</width>
+      <height>1019</height>
+    </rectangle>
+    <rectangle id="corner" type="match">
+      <x>9774</x>
+      <y>5827</y>
+      <width>358</width>
+      <height>358</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>1095</x>
+      <y>4796</y>
+      <width>190</width>
+      <height>190</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>985</x>
+      <y>4401</y>
+      <width>393</width>
+      <height>393</height>
+    </rectangle>
+    <rectangle id="camera" type="match">
+      <x>1072</x>
+      <y>5152</y>
+      <width>317</width>
+      <height>317</height>
+    </rectangle>
+  </model>
+  <model name="iPhone 6 Plus">
+    <rectangle id="model" type="ocr">
+      <x>9456</x>
+      <y>2620</y>
+      <width>267</width>
+      <height>2432</height>
+    </rectangle>
+    <rectangle id="maker" type="ocr">
+      <x>8878</x>
+      <y>3284</y>
+      <width>404</width>
+      <height>1087</height>
+    </rectangle>
+    <rectangle id="logo" type="match">
+      <x>3040</x>
+      <y>3304</y>
+      <width>1363</width>
+      <height>1105</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>1116</x>
+      <y>5019</y>
+      <width>219</width>
+      <height>219</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>1034</x>
+      <y>4591</y>
+      <width>374</width>
+      <height>374</height>
+    </rectangle>
+    <rectangle id="camera" type="match">
+      <x>1089</x>
+      <y>5476</y>
+      <width>320</width>
+      <height>320</height>
+    </rectangle>
+  </model>
+  <model name="iPhone 6S Plus">
+    <rectangle id="model" type="ocr">
+      <x>9740</x>
+      <y>2876</y>
+      <width>333</width>
+      <height>1979</height>
+    </rectangle>
+    <rectangle id="maker" type="ocr">
+      <x>8867</x>
+      <y>3293</y>
+      <width>384</width>
+      <height>1076</height>
+    </rectangle>
+    <rectangle id="logo" type="match">
+      <x>2948</x>
+      <y>3242</y>
+      <width>1473</width>
+      <height>1191</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>1116</x>
+      <y>5056</y>
+      <width>160</width>
+      <height>160</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>1018</x>
+      <y>4605</y>
+      <width>374</width>
+      <height>374</height>
+    </rectangle>
+  </model>
+  <model name="iPhone 7">
+    <rectangle id="model" type="ocr">
+      <x>8236</x>
+      <y>2601</y>
+      <width>293</width>
+      <height>2480</height>
+    </rectangle>
+    <rectangle id="maker" type="ocr">
+      <x>7709</x>
+      <y>3344</y>
+      <width>384</width>
+      <height>1009</height>
+    </rectangle>
+    <rectangle id="logo" type="match">
+      <x>2701</x>
+      <y>3374</y>
+      <width>1315</width>
+      <height>1019</height>
+    </rectangle>
+    <rectangle id="corner" type="match">
+      <x>9782</x>
+      <y>5828</y>
+      <width>358</width>
+      <height>358</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>1104</x>
+      <y>4795</y>
+      <width>190</width>
+      <height>190</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>993</x>
+      <y>4400</y>
+      <width>393</width>
+      <height>393</height>
+    </rectangle>
+    <rectangle id="camera" type="match">
+      <x>1058</x>
+      <y>5156</y>
+      <width>317</width>
+      <height>317</height>
+    </rectangle>
+  </model>
+  <model name="iPhone 7 Plus" color="Red">
+    <rectangle id="model" type="ocr">
+      <x>9989</x>
+      <y>2749</y>
+      <width>365</width>
+      <height>2178</height>
+    </rectangle>
+    <rectangle id="color" type="ocr">
+      <x>9546</x>
+      <y>3308</y>
+      <width>351</width>
+      <height>883</height>
+    </rectangle>
+    <rectangle id="maker" type="ocr">
+      <x>9085</x>
+      <y>3351</y>
+      <width>314</width>
+      <height>1029</height>
+    </rectangle>
+    <rectangle id="logo" type="match">
+      <x>3011</x>
+      <y>3282</y>
+      <width>1363</width>
+      <height>1105</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>1306</x>
+      <y>4496</y>
+      <width>194</width>
+      <height>194</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>1238</x>
+      <y>4079</y>
+      <width>388</width>
+      <height>388</height>
+    </rectangle>
+    <rectangle id="camera" type="match">
+      <x>1290</x>
+      <y>5019</y>
+      <width>359</width>
+      <height>359</height>
+    </rectangle>
+  </model>
+  <model name="iPhone 7 Plus">
+    <rectangle id="model" type="ocr">
+      <x>9581</x>
+      <y>2779</y>
+      <width>320</width>
+      <height>2202</height>
+    </rectangle>
+    <rectangle id="maker" type="ocr">
+      <x>9091</x>
+      <y>3351</y>
+      <width>374</width>
+      <height>1043</height>
+    </rectangle>
+    <rectangle id="logo" type="match">
+      <x>3011</x>
+      <y>3282</y>
+      <width>1363</width>
+      <height>1105</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>1342</x>
+      <y>4519</y>
+      <width>171</width>
+      <height>171</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>1238</x>
+      <y>4079</y>
+      <width>388</width>
+      <height>388</height>
+    </rectangle>
+    <rectangle id="camera" type="match">
+      <x>1290</x>
+      <y>5019</y>
+      <width>359</width>
+      <height>359</height>
+    </rectangle>
+  </model>
+  <model name="iPhone 8">
+    <rectangle id="maker" type="ocr">
+      <x>7912</x>
+      <y>3292</y>
+      <width>345</width>
+      <height>1072</height>
+    </rectangle>
+    <rectangle id="logo" type="match">
+      <x>2879</x>
+      <y>3326</y>
+      <width>1234</width>
+      <height>1043</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>1320</x>
+      <y>4889</y>
+      <width>200</width>
+      <height>200</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>1244</x>
+      <y>4491</y>
+      <width>343</width>
+      <height>343</height>
+    </rectangle>
+    <rectangle id="camera" type="match">
+      <x>954</x>
+      <y>5078</y>
+      <width>964</width>
+      <height>964</height>
+    </rectangle>
+  </model>
+  <model name="iPhone 8" color="gold">
+    <rectangle id="maker" type="ocr">
+      <x>7912</x>
+      <y>3292</y>
+      <width>345</width>
+      <height>1072</height>
+    </rectangle>
+    <rectangle id="logo" type="match">
+      <x>2879</x>
+      <y>3326</y>
+      <width>1234</width>
+      <height>1043</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>1320</x>
+      <y>4889</y>
+      <width>200</width>
+      <height>200</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>1244</x>
+      <y>4491</y>
+      <width>343</width>
+      <height>343</height>
+    </rectangle>
+    <rectangle id="camera" type="match">
+      <x>954</x>
+      <y>5078</y>
+      <width>964</width>
+      <height>964</height>
+    </rectangle>
+  </model>
+  <model name="iPhone 8 Plus">
+    <rectangle id="maker" type="ocr">
+      <x>9003</x>
+      <y>3279</y>
+      <width>436</width>
+      <height>1096</height>
+    </rectangle>
+    <rectangle id="logo" type="match">
+      <x>3186</x>
+      <y>3295</y>
+      <width>1352</width>
+      <height>1103</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>1304</x>
+      <y>4466</y>
+      <width>228</width>
+      <height>228</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>1197</x>
+      <y>4063</y>
+      <width>388</width>
+      <height>388</height>
+    </rectangle>
+  </model>
+  <model name="iPhone 8 Plus" color="Silver">
+    <rectangle id="maker" type="ocr">
+      <x>9003</x>
+      <y>3279</y>
+      <width>436</width>
+      <height>1096</height>
+    </rectangle>
+    <rectangle id="logo" type="match">
+      <x>3186</x>
+      <y>3295</y>
+      <width>1352</width>
+      <height>1103</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>1304</x>
+      <y>4466</y>
+      <width>228</width>
+      <height>228</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>1197</x>
+      <y>4063</y>
+      <width>388</width>
+      <height>388</height>
+    </rectangle>
+  </model>
+  <model name="iPhone X">
+    <rectangle id="maker" type="ocr">
+      <x>8247</x>
+      <y>3266</y>
+      <width>347</width>
+      <height>1145</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>2257</x>
+      <y>5305</y>
+      <width>132</width>
+      <height>132</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>1923</x>
+      <y>5386</y>
+      <width>370</width>
+      <height>370</height>
+    </rectangle>
+    <rectangle id="camera" type="match">
+      <x>1446</x>
+      <y>5395</y>
+      <width>353</width>
+      <height>353</height>
+    </rectangle>
+    <rectangle id="camera2" type="match">
+      <x>2402</x>
+      <y>5386</y>
+      <width>360</width>
+      <height>360</height>
+    </rectangle>
+  </model>
+  <model name="iPhone X" color="Slive">
+    <rectangle id="maker" type="ocr">
+      <x>8247</x>
+      <y>3266</y>
+      <width>347</width>
+      <height>1145</height>
+    </rectangle>
+    <rectangle id="mic" type="match">
+      <x>2257</x>
+      <y>5305</y>
+      <width>132</width>
+      <height>132</height>
+    </rectangle>
+    <rectangle id="flash" type="match">
+      <x>1923</x>
+      <y>5386</y>
+      <width>370</width>
+      <height>370</height>
+    </rectangle>
+    <rectangle id="camera" type="match">
+      <x>1446</x>
+      <y>5395</y>
+      <width>353</width>
+      <height>353</height>
+    </rectangle>
+    <rectangle id="camera2" type="match">
+      <x>2402</x>
+      <y>5386</y>
+      <width>360</width>
+      <height>360</height>
+    </rectangle>
+  </model>
+
+</iphone_layout>

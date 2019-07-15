@@ -1,0 +1,135 @@
+[
+  {
+    "id": 0,
+    "x": 670,
+    "y": 1165,
+    "width": 11292,
+    "height": 5381,
+    "xpath": "sensor_layout/node/sensor/region/"
+  },
+  {
+    "id": 1,
+    "x": 766,
+    "y": 911,
+    "width": 11226,
+    "height": 5694,
+    "xpath": "sensor_layout/node/node/sensor/region/region/"
+  },
+  {
+    "id": 2,
+    "x": 9575,
+    "y": 2765,
+    "width": 320,
+    "height": 2202,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "model",
+	"type": "ocr",
+	"regex": "[A]?[-]?[1lI]6[68]1|[A]?[-]?[1lI]784|[A]?[-]?[1lI]785"
+  },
+  {
+    "id": 3,
+    "x": 9085,
+    "y": 3337,
+    "width": 374,
+    "height": 1043,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "maker",
+	"type": "ocr"
+  },
+  {
+    "id": 4,
+    "x": 3006,
+    "y": 3281,
+    "width": 1363,
+    "height": 1105,
+    "xpath": "sensor_layout/node/node/sensor/region/region/"
+  },
+  {
+    "id": 5,
+    "x": 1338,
+    "y": 4522,
+    "width": 171,
+    "height": 171,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "mic",
+	"type": "match"
+  },
+  {
+    "id": 6,
+    "x": 1233,
+    "y": 4083,
+    "width": 388,
+    "height": 388,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "flash",
+	"type": "match"
+  },
+  {
+    "id": 7,
+    "x": 1123,
+    "y": 4044,
+    "width": 571,
+    "height": 464,
+    "xpath": "sensor_layout/node/node/node/sensor/region/region/"
+  },
+  {
+    "id": 8,
+    "x": 1238,
+    "y": 4092,
+    "width": 352,
+    "height": 352,
+    "xpath": "sensor_layout/node/node/node/sensor/region/region/"
+  },
+  {
+    "id": 9,
+    "x": 1154,
+    "y": 4846,
+    "width": 637,
+    "height": 1365,
+    "xpath": "sensor_layout/node/node/sensor/region/"
+  },
+  {
+    "id": 10,
+    "x": 1180,
+    "y": 4873,
+    "width": 627,
+    "height": 1357,
+    "xpath": "sensor_layout/node/node/node/sensor/region/region/",
+	"name": "camera",
+	"type": "match"
+  },
+  {
+    "id": 11,
+    "x": 1273,
+    "y": 4976,
+    "width": 403,
+    "height": 403,
+    "xpath": "sensor_layout/node/node/node/sensor/region/region/"
+  },
+  {
+    "id": 12,
+    "x": 1303,
+    "y": 5709,
+    "width": 369,
+    "height": 369,
+    "xpath": "sensor_layout/node/node/node/sensor/region/region/"
+  },
+  {
+    "id": 13,
+    "x": 2939,
+    "y": 3063,
+    "width": 1505,
+    "height": 1505,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "logo",
+	"type": "match"
+  },
+  {
+    "id": 14,
+    "x": 1544,
+    "y": 2549,
+    "width": 938,
+    "height": 372,
+    "xpath": "sensor_layout/node/node/sensor/region/"
+  }
+]

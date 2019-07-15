@@ -53,10 +53,10 @@ namespace AviaGetPhoneSize
             //Tuple<Mat, Mat> r = prepare_image(@"C:\Tools\avia\images\test.1\iphone6 Gold\0123.1.bmp");
             //r.Item1.Save("temp_1.jpg");
             //r.Item2.Save("temp_2.jpg");
-            //test_ocr();
+            test_ocr();
             //test_5();
             //test_ss();
-            test_6();
+            //test_6();
             return 0;
         }
         static void test()
@@ -874,11 +874,13 @@ namespace AviaGetPhoneSize
             //Mat b = CvInvoke.Imread(@"C:\projects\avia\pytest\temp_text_2.jpg");
             Image<Gray, Byte> img = b.ToImage<Gray, byte>();
             CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
-            //Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
-            //img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 5, BorderType.Default, new MCvScalar(0));
-            double v = CvInvoke.Threshold(img, img, 0, 255, ThresholdType.BinaryInv| ThresholdType.Otsu);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
+            img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+            img.Save("temp_2.jpg");
+            //double v = CvInvoke.Threshold(img, img, 0, 255, ThresholdType.BinaryInv| ThresholdType.Otsu);
             //img = img.Erode(1);
             //img = img.Dilate(1);
+            //img = img.MorphologyEx(MorphOp.Erode, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
             img.Save("temp_2.jpg");
             using (TesseractEngine TE = new TesseractEngine("tessdata", "eng", EngineMode.TesseractOnly))
             {

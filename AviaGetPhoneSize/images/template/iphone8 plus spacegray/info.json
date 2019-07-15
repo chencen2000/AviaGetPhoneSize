@@ -1,0 +1,76 @@
+[
+  {
+    "id": 0,
+    "x": 650,
+    "y": 1116,
+    "width": 11292,
+    "height": 5381,
+    "xpath": "sensor_layout/node/sensor/region/"
+  },
+  {
+    "id": 1,
+    "x": 718,
+    "y": 950,
+    "width": 11226,
+    "height": 5694,
+    "xpath": "sensor_layout/node/node/sensor/region/region/"
+  },
+  {
+    "id": 2,
+    "x": 9003,
+    "y": 3279,
+    "width": 436,
+    "height": 1096,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "maker",
+	"type": "ocr"
+  },
+  {
+    "id": 3,
+    "x": 3186,
+    "y": 3295,
+    "width": 1352,
+    "height": 1103,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "logo",
+	"type": "match"
+  },
+  {
+    "id": 4,
+    "x": 1333,
+    "y": 4495,
+    "width": 171,
+    "height": 171,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "mic",
+	"type": "match"
+  },
+  {
+    "id": 5,
+    "x": 1197,
+    "y": 4063,
+    "width": 388,
+    "height": 388,
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "flash",
+	"type": "match"
+  },
+  {
+    "id": 6,
+    "x": 1120,
+    "y": 4783,
+    "width": 681,
+    "height": 1433,
+    "xpath": "sensor_layout/node/node/sensor/region/",
+	"name": "camera",
+	"type": "match"
+  },
+  {
+    "id": 7,
+    "x": 1161,
+    "y": 4824,
+    "width": 627,
+    "height": 1357,
+    "xpath": "sensor_layout/node/node/node/sensor/region/"
+  }
+]
