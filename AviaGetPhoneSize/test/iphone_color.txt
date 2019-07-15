@@ -1,55 +1,29 @@
-﻿iphone6S_Gray: size={Width=374, Height=860}, color=[37.62331002331,31.7668997668998,29.8993006993007], label=1
-iphone6S_Gray: size={Width=374, Height=859}, color=[45.1771561771562,39.8410256410256,37.4881118881119], label=1
-iphone6_Gray: size={Width=374, Height=836}, color=[37.5048951048951,31.6550116550117,29.6512820512821], label=1
-iphone6_Gray: size={Width=372, Height=858}, color=[44.9780885780886,37.7920745920746,35.6815850815851], label=1
-
-iphone7_Gold: size={Width=375, Height=885}, color=[50.593006993007,59.4568764568765,65.5342657342657], label=2
-iphone7_Gold: size={Width=375, Height=911}, color=[44.5342657342657,53.6475524475524,58.4731934731935], label=2
-iphone7_Gold: size={Width=381, Height=871}, color=[63.2573426573427,70.6881118881119,73.3184149184149], label=2
-iphone7_Gold: size={Width=375, Height=869}, color=[51.8,58.4717948717949,61.5552447552448], label=2
-iphone7_Gold: size={Width=375, Height=922}, color=[43.4452214452214,50.8773892773893,56.6792540792541], label=2
-iphone7_Gold: size={Width=375, Height=869}, color=[43.6717948717949,50.1850815850816,54.5459207459207], label=2
-iphone6P_Gold: size={Width=435, Height=1002}, color=[49.7328671328671,59.3710955710956,63.4899766899767], label=2
-iphone6P_Gold: size={Width=434, Height=1002}, color=[55.7785547785548,67.7934731934732,71.5552447552448], label=2
-
-iphone6_Silver: size={Width=373, Height=867}, color=[97.9659673659674,93.432634032634,79.2713286713287], label=4
-iphone6S_Silver: size={Width=375, Height=868}, color=[87.1869463869464,83.5254079254079,73.8554778554779], label=4
-iphone6s_Silver: size={Width=375, Height=909}, color=[74.795337995338,70.9202797202797,61.4662004662005], label=4
-iphone6S_Silver: size={Width=375, Height=868}, color=[87.3524475524476,84.4018648018648,74.3254079254079], label=4
-iphone7_silver: size={Width=376, Height=868}, color=[79.97668997669,76.581351981352,66.2909090909091], label=4
-iphone7_Silver: size={Width=375, Height=870}, color=[97.7501165501165,94.3589743589744,76.8624708624709], label=4
-iphone7_Silver: size={Width=375, Height=906}, color=[92.6801864801865,89.0144522144522,77.9123543123543], label=4
-iphone7_Silver: size={Width=377, Height=892}, color=[90.0904428904429,86.0638694638695,70.7934731934732], label=4
-
-iphone7_RoseGold: size={Width=375, Height=867}, color=[44.7799533799534,47.3585081585082,69.5300699300699], label=3
-iphone7_RoseGold: size={Width=375, Height=869}, color=[34.8251748251748,35.9426573426573,56.6377622377622], label=3
-iphone7_RoseGold: size={Width=375, Height=868}, color=[42.5184149184149,44.7501165501166,67.5477855477856], label=3
-iphone7P_RoseGold: size={Width=440, Height=1006}, color=[40.5240093240093,42.4703962703963,63.0988344988345], label=3
-iphone7P_RoseGold: size={Width=436, Height=1008}, color=[47.041958041958,48.8727272727273,70.9118881118881], label=3
-iphone6S_RoseGold: size={Width=376, Height=889}, color=[47.1757575757576,48.158041958042,66.9053613053613], label=3
-iphone6S_RoseGold: size={Width=375, Height=868}, color=[54.0289044289044,56.3687645687646,74.0461538461538], label=3
-iphone6S_RoseGold: size={Width=375, Height=868}, color=[55.5347319347319,57.009324009324,79.6275058275058], label=3
-iphone6S_RoseGold: size={Width=376, Height=903}, color=[42.960372960373,43.7188811188811,60.9100233100233], label=3
+﻿iPhone XR Blue: size={Width=498, Height=988}, color=[222.344252873563,151.407931034483,41.8228735632184], label=1
+iPhone XR Blue: size={Width=498, Height=987}, color=[222.527586206897,151.951264367816,41.2126436781609], label=1
+iPhone XR Blue: size={Width=498, Height=987}, color=[222.261034482759,150.982873563218,39.561724137931], label=1
+iPhone XR Blue: size={Width=499, Height=987}, color=[221.399310344828,152.221609195402,42.356091954023], label=1
+iPhone XR Blue: size={Width=576, Height=990}, color=[222.123563218391,150.883333333333,39.9325287356322], label=1
 
 
-iphone7P_MatteBlack: size={Width=436, Height=957}, color=[10.2293706293706,6.82331002331002,7.07878787878788], label=5
-iphone7P_MatteBlack: size={Width=437, Height=955}, color=[9.12121212121212,6.97668997668998,7], label=5
-iphone7_MatteBlack: size={Width=374, Height=829}, color=[9,7,7], label=5
+iPhone 8 Plus Gray: size={Width=515, Height=1037}, color=[14.5936781609195,11.9605747126437,14.7049425287356], label=2
+iPhone 8 Plus Gray: size={Width=514, Height=1036}, color=[14.4390804597701,11.2466666666667,14.1958620689655], label=2
+iPhone 8 Plus Gray: size={Width=514, Height=1037}, color=[14.2826436781609,11.1451724137931,13.3879310344828], label=2
+iPhone 8 Plus Gray: size={Width=515, Height=1037}, color=[14.9031034482759,12.1957471264368,15.1918390804598], label=2
+iPhone 8 Plus Gray: size={Width=515, Height=1037}, color=[14.6396551724138,11.8566666666667,14.726091954023], label=2
 
-iphone8P_Gold: size={Width=438, Height=1002}, color=[157.170629370629,152.754778554779,126.536130536131], label=6
-iphone8P_Gold: size={Width=438, Height=1002}, color=[149.794405594406,143.179487179487,114.945454545455], label=6
-iphone8_Gold: size={Width=375, Height=868}, color=[162.327738927739,155.115617715618,127.38648018648], label=6
 
-iphone8_Gray: size={Width=375, Height=816}, color=[19.827972027972,12.3048951048951,10.7123543123543], label=7
-iphone8_Gray: size={Width=438, Height=960}, color=[19.3832167832168,11.82331002331,10.8051282051282], label=7
-iphone8_Gray: size={Width=375, Height=819}, color=[21.2638694638695,13.4424242424242,11.6083916083916], label=7
-iphone8P_Gray: size={Width=436, Height=949}, color=[21.1006993006993,12.9617715617716,11.569696969697], label=7
-iphone8P_SpaceGray: size={Width=436, Height=961}, color=[21.2363636363636,12.9170163170163,11.7682983682984], label=7
-
-iphone8P_Silver: size={Width=438, Height=1003}, color=[173.663869463869,156.281585081585,110.188811188811], label=8
-iphone8P_Silver: size={Width=437, Height=1002}, color=[180.816317016317,161.218181818182,114.581351981352], label=8
-iphone8P_Silver: size={Width=439, Height=1002}, color=[165.610256410256,146.930536130536,98.0820512820513], label=8
+iPhone 8 Plus Red: size={Width=516, Height=1035}, color=[0.559770114942529,8.67264367816092,103.167126436782], label=3
+iPhone 8 Plus Red: size={Width=516, Height=1035}, color=[0.829885057471264,8.51977011494253,99.4611494252873], label=3
+iPhone 8 Plus Red: size={Width=516, Height=1038}, color=[0.784942528735632,8.50701149425287,99.5651724137931], label=3
+iPhone 8 Plus Red: size={Width=516, Height=1035}, color=[0.720919540229885,8.69252873563218,103.012298850575], label=3
+iPhone 8 Plus Red: size={Width=525, Height=1035}, color=[0.899425287356322,7.52965517241379,92.4832183908046], label=3
+iPhone 8 Plus Red: size={Width=517, Height=1038}, color=[0.866551724137931,8.24264367816092,95.6527586206897], label=3
+iPhone 8 Plus Red: size={Width=515, Height=1036}, color=[1.01758620689655,8.04022988505747,95.9314942528736], label=3
 
 
 
-
+iPhone 8 Plus Silver: size={Width=514, Height=1031}, color=[185.150804597701,182.759540229885,163.54], label=4
+iPhone 8 Plus Silver: size={Width=515, Height=1029}, color=[185.117356321839,182.814367816092,163.49275862069], label=4
+iPhone 8 Plus Silver: size={Width=514, Height=1031}, color=[185.235172413793,182.494712643678,163.119540229885], label=4
+iPhone 8 Plus Silver: size={Width=514, Height=1034}, color=[185.925862068966,183.46908045977,163.47], label=4
+iPhone 8 Plus Silver: size={Width=515, Height=1032}, color=[184.832183908046,182.466666666667,162.678620689655], label=4

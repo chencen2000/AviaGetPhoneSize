@@ -41,9 +41,9 @@ namespace AviaGetPhoneSize
         static int Main(string[] args)
         {
             //resize_image();
-            test();
+            //test();
             //test_1();
-            //test_2_1();
+            test_2_1();
             //test_ML();
             //test_3();
             //test_4();

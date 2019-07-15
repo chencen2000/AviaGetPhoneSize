@@ -173,6 +173,14 @@ namespace AviaGetPhoneSize
                             }
                         }
                     }
+
+                    GC.Collect();
+                    if (System.Console.KeyAvailable)
+                    {
+                        ConsoleKeyInfo ki = Console.ReadKey();
+                        if (ki.Key == ConsoleKey.Escape)
+                            break;
+                    }
                 }
             }
         }
@@ -282,6 +290,19 @@ namespace AviaGetPhoneSize
                 }
             }
         }
+        static bool check_device_inplace(Image<Bgr, Byte> diff)
+        {
+            bool ret = false;
+            Program.logIt("check_device_inplace: ++");
+            Image<Gray, Byte> img = diff.Mat.ToImage<Gray, Byte>();
+            Gray gv = img.GetAverage();
+            if (gv.MCvScalar.V0 >= 17)
+            {
+                ret = true;
+            }
+            Program.logIt($"check_device_inplace: -- {ret}");
+            return ret;
+        }
         static bool handle_motion(Image<Bgr, Byte> frane, Image<Bgr, Byte> bg)
         {
             bool ret = false;
@@ -289,9 +310,18 @@ namespace AviaGetPhoneSize
             Image<Bgr, Byte> img0 = bg.Copy(roi);
             Image<Bgr, Byte> img1 = frane.Copy(roi);
             img0 = img1.AbsDiff(img0);
-            Bgr bgr = img0.GetAverage();
-            Program.logIt($"bgr");
-
+            ret = check_device_inplace(img0);
+            if (ret)
+            {
+                Program.logIt("Device Arrival");
+                Size sz = detect_size(img0.Mat.ToImage<Gray, Byte>());
+                Bgr rgb = sample_color(img1);
+                Program.logIt($"device: size={sz}, color={rgb}");
+            }
+            else
+            {
+                Program.logIt("Device Removal");
+            }
             return ret;
         }
         static bool handle_motion_V2(Image<Bgr, Byte> frane, Image<Gray, Byte> bg, int idx)
@@ -306,7 +336,7 @@ namespace AviaGetPhoneSize
             Gray g = imgg.GetAverage();
             if (g.MCvScalar.V0 > 13)
             {
-                Rectangle sz = detect_size(imgg);
+                Rectangle sz = detect_size_old(imgg);
                 Bgr rgb = sample_color(img1);
                 Program.logIt($"Device arrival. size: {sz.Size}, color: {rgb} ({g.MCvScalar.V0})");
                 // report 
@@ -331,14 +361,10 @@ namespace AviaGetPhoneSize
                 string[] color_note = new string[] 
                 {
                     "NA",
-                    "Gray (iPhone 6/iPhone 6S)",
-                    "Gold (iPhone 6 Plus/iPhone 7)",
-                    "Rose Gold (iPhone 6S/iPhone 7/iPhone 7 Plus)",
-                    "Silver (iPhone 6/iPhone 6S/iPhone 7)",
-                    "Matte Black (iPhone 7/iPhone 7 Plus)",
-                    "Gold (iPhone 8/iPhone 8 Plus)",
-                    "Space Gray (iPhone 8/iPhone 8 Plus)",
-                    "Silver (iPhone 8 Plus)"
+                    "Blue (iPhone XR)",
+                    "Gray (iPhone 8 Plus)",
+                    "Red (iPhone 8 Plus)",
+                    "Silver (iPhone 8/iPhone 8 Plus)",
                 };
 
                 try
@@ -388,7 +414,7 @@ namespace AviaGetPhoneSize
             Gray g = imgg.GetAverage();
             if (g.MCvScalar.V0 > 17)
             {
-                Rectangle sz = detect_size(imgg);
+                Rectangle sz = detect_size_old(imgg);
                 Bgr rgb = sample_color(img1);
                 Program.logIt($"Device arrival. size: {sz.Size}, color: {rgb} ({g.MCvScalar.V0})");
                 Console.WriteLine("Enter device model and color:");
@@ -409,14 +435,42 @@ namespace AviaGetPhoneSize
         }
         static Bgr sample_color(Image<Bgr,Byte> img)
         {
-            Rectangle r = new Rectangle(112, 797, 65, 33);
+            //Rectangle r = new Rectangle(112, 797, 65, 33);
+            Rectangle r = new Rectangle(20, 810, 290, 30);
             Image<Bgr, Byte> i = img.Copy(r);
             Bgr rgb = i.GetAverage();
             return rgb;
         }
-        static Rectangle detect_size(Image<Gray, Byte> img)
+        static Size detect_size(Image<Gray, Byte> img)
         {
-            return Rectangle.Empty;
+            Program.logIt("detect_size: ++");
+            Mat m = new Mat();
+            CvInvoke.Threshold(img, m, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+            Image<Gray, Byte> img1 = m.ToImage<Gray, Byte>();
+            img1._Erode(2);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            img1._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            Rectangle roi = Rectangle.Empty;
+            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+            {
+                CvInvoke.FindContours(img1, contours, null, RetrType.List, ChainApproxMethod.ChainApproxSimple);
+                int count = contours.Size;
+                for (int i = 0; i < count; i++)
+                {
+                    VectorOfPoint contour = contours[i];
+                    double a = CvInvoke.ContourArea(contour);
+                    Rectangle r = CvInvoke.BoundingRectangle(contour);
+                    //if (a > 10.0)
+                    {
+                        //Program.logIt($"area: {a}, {r}");
+                        if (roi.IsEmpty) roi = r;
+                        else roi = Rectangle.Union(roi, r);
+                    }
+                }
+            }
+            Size sz = new Size(roi.X + roi.Width, roi.Y + roi.Height);
+            Program.logIt($"detect_size: -- {sz}");
+            return sz;
         }
         static Rectangle detect_size_old(Image<Gray,Byte> img)
         {
