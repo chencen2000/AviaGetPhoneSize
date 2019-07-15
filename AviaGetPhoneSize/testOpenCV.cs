@@ -41,7 +41,7 @@ namespace AviaGetPhoneSize
         static int Main(string[] args)
         {
             //resize_image();
-            //test();
+            test();
             //test_1();
             //test_2_1();
             //test_ML();
@@ -53,7 +53,7 @@ namespace AviaGetPhoneSize
             //Tuple<Mat, Mat> r = prepare_image(@"C:\Tools\avia\images\test.1\iphone6 Gold\0123.1.bmp");
             //r.Item1.Save("temp_1.jpg");
             //r.Item2.Save("temp_2.jpg");
-            test_ocr();
+            //test_ocr();
             //test_5();
             //test_ss();
             //test_6();
@@ -61,72 +61,65 @@ namespace AviaGetPhoneSize
         }
         static void test()
         {
-            //string fn = @"C:\Tools\avia\images\Final270\iphone6 Gold\0123.1.bmp";
-            //string fn = @"C:\Tools\avia\images\test.1\iphoneX SpaceGray_img\1873.1.jpg";
-            string fn = @"C:\Tools\avia\images\test.1\iphone6 Plus Gold\1473.1.jpg";
-            //string fn = @"temp_1.jpg";
-            Mat m = CvInvoke.Imread(fn);
-            Image<Gray, Byte> img = m.ToImage<Gray, Byte>(); //.GetSubRect(new Rectangle(new Point(5, 5), new Size(m.Width - 10, m.Height - 10))).Resize(0.1, Inter.Cubic);
-            img = img.Rotate(90, new Gray(0), false);
-            //img=img.Dilate(7);
-            img = img.Erode(3);
-            img = img.Dilate(5);
-            //img = img.Erode(5);
-            img.Save("temp_1.jpg");
-            CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
-            double otsu = CvInvoke.Threshold(img, new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
-            double sigma = 0.25;
-            double lower = Math.Max(1, (1.0 - sigma) * otsu);
-            double upper = Math.Min(255, (1.0 + sigma) * otsu);
-            CvInvoke.Canny(img, img, lower, upper);
-            img.Save("temp_1.jpg");
-
-            //VectorOfPoint apple_logo = test_3();
-            Tuple<VectorOfPoint, VectorOfPoint> apple_logo = get_apple_logo();
-            //VectorOfPoint apple_iphone = test_4();
-            Mat n = new Mat(m.Rows, m.Cols, DepthType.Cv8U, 1);
-            VectorOfVectorOfPoint vvp = new VectorOfVectorOfPoint();
-            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+            Rectangle r0 = new Rectangle(744, 266, 576, 1116);
+            string fn0 = @"C:\Tools\avia\images\temp\background.jpg";
+            string fn1 = @"C:\Tools\avia\images\temp\iphone_8p_black.jpg";
+            string[] tf = new string[]
             {
-                CvInvoke.FindContours(img, contours, null, RetrType.List, ChainApproxMethod.ChainApproxNone);
-                int count = contours.Size;
-                for(int i=0; i<count; i++)
+                @"C:\Tools\avia\images\temp\iphone_8p_black.jpg",
+                @"C:\Tools\avia\images\temp\iphone_8p_gray.jpg",
+                @"C:\Tools\avia\images\temp\iphone_8p_red.jpg",
+                @"C:\Tools\avia\images\temp\iphone_xr_blue.jpg",
+            };
+            foreach (string fn in tf)
+            {
+                string tn = System.IO.Path.GetFileNameWithoutExtension(fn);
+                Program.logIt($"preocess: {tn}");
+                Mat m0 = CvInvoke.Imread(fn0);
+                Mat m1 = CvInvoke.Imread(fn);
+
+                CvInvoke.Rotate(m0, m0, RotateFlags.Rotate90CounterClockwise);
+                CvInvoke.Rotate(m1, m1, RotateFlags.Rotate90CounterClockwise);
+
+                Image<Bgr, Byte> img0 = m0.ToImage<Bgr, Byte>().Copy(r0);
+                Image<Bgr, Byte> img1 = m1.ToImage<Bgr, Byte>().Copy(r0);
+
+                img0 = img1.AbsDiff(img0);
+                //img1.Save($"temp_{tn}_1.jpg");
+                //img0.Save($"temp_{tn}_2.jpg");
+                Image<Gray, Byte> img = img0.Mat.ToImage<Gray, Byte>();
+                CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+                img._Erode(2);
+                Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+                img._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+                //img.Save($"temp_{tn}_3.jpg");
+
+                Rectangle roi = Rectangle.Empty;
+                using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
                 {
-                    double a = CvInvoke.ContourArea(contours[i]);
-                    if(a> 1000.0)
+                    CvInvoke.FindContours(img, contours, null, RetrType.List, ChainApproxMethod.ChainApproxSimple);
+                    int count = contours.Size;
+                    for (int i = 0; i < count; i++)
                     {
-                        double d1 = CvInvoke.MatchShapes(apple_logo.Item1, contours[i], ContoursMatchType.I1);
-                        double d2 = CvInvoke.MatchShapes(apple_logo.Item2, contours[i], ContoursMatchType.I1);
-                        if (d1<0.05 || d2<0.05)
+                        VectorOfPoint contour = contours[i];
+                        double a = CvInvoke.ContourArea(contour);
+                        Rectangle r = CvInvoke.BoundingRectangle(contour);
+                        //if (a > 10.0)
                         {
-                            vvp.Push(contours[i]);
+                            //Program.logIt($"area: {a}, {r}");
+                            if (roi.IsEmpty) roi = r;
+                            else roi = Rectangle.Union(roi, r);
                         }
                     }
-                    //if (a > 100.0)
-                    //{
-                    //    double d1 = CvInvoke.MatchShapes(apple_iphone, contours[i], ContoursMatchType.I1);
-                    //    if (d1 < 0.1)
-                    //    {
-                    //        vvp.Push(contours[i]);
-                    //    }
-                    //}
                 }
+                Size sz = new Size(roi.X + roi.Width, roi.Y + roi.Height);
+
+                Rectangle rc = new Rectangle(20, 810, 290, 30);
+                Image<Bgr, Byte> imgc = img1.Copy(rc);
+                Bgr bgr = imgc.GetAverage();
+
+                Program.logIt($"{tn}: size={sz} r={bgr.Red} g={bgr.Green} b={bgr.Blue}");
             }
-            CvInvoke.DrawContours(n, vvp, -1, new MCvScalar(255));
-            n.Save("temp_2.jpg");
-            /*
-            CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
-            Mat dx = new Mat();
-            Mat dy = new Mat();
-            CvInvoke.Sobel(img, dx, DepthType.Cv16S, 1, 0);
-            CvInvoke.Sobel(img, dy, DepthType.Cv16S, 0, 1);
-            CvInvoke.ConvertScaleAbs(dx, dx, 1, 0);
-            CvInvoke.ConvertScaleAbs(dy, dy, 1, 0);
-            CvInvoke.AddWeighted(dx, 0.5, dy, 0.5, 0, img);
-            //dx.Save("temp_x.jpg");
-            //dy.Save("temp_y.jpg");
-            img.Save("temp_2.jpg");
-            */
         }
         static void test_1()
         {

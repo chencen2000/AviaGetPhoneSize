@@ -128,6 +128,59 @@ namespace AviaGetPhoneSize
             VideoCapture vc = new VideoCapture(0);
             if (vc.IsOpened)
             {
+                bool b = vc.SetCaptureProperty(CapProp.Mode, 0);
+                b = vc.SetCaptureProperty(CapProp.FrameHeight, 1944);
+                b = vc.SetCaptureProperty(CapProp.FrameWidth, 2592);
+                BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
+                bool monition = false;
+                Image<Bgr, Byte> bg_img = null;
+                while (true)
+                {
+                    Mat cm = new Mat();
+                    vc.Read(cm);
+                    Mat mask = new Mat();
+                    bgs.Apply(cm, mask);
+                    Image<Gray, Byte> g = mask.ToImage<Gray, Byte>();
+                    Gray ga = g.GetAverage();
+                    if(ga.MCvScalar.V0 > 17)
+                    {
+                        // montion 
+                        if (!monition)
+                        {
+                            Program.logIt("motion detected!");
+                            Console.WriteLine("Detected montion.");
+                            monition = true;
+                        }
+
+                    }
+                    else
+                    {
+                        // no montion
+                        if (monition)
+                        {
+                            Program.logIt("motion stopped!");
+                            Console.WriteLine("Montion stopped.");
+                            monition = false;
+
+                            CvInvoke.Rotate(cm, cm, RotateFlags.Rotate90CounterClockwise);
+                            if (bg_img == null)
+                            {
+                                bg_img = cm.ToImage<Bgr, Byte>();
+                            }
+                            if(!handle_motion(cm.ToImage<Bgr, Byte>(), bg_img))
+                            {
+                                bg_img = cm.ToImage<Bgr, Byte>();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        static void montion_detect_1()
+        {
+            VideoCapture vc = new VideoCapture(0);
+            if (vc.IsOpened)
+            {
                 double db = vc.GetCaptureProperty(CapProp.Mode);
                 //bool b = vc.SetCaptureProperty(CapProp.Mode, 1);
                 bool b = vc.SetCaptureProperty(CapProp.Mode, 0);
@@ -228,6 +281,18 @@ namespace AviaGetPhoneSize
                     }
                 }
             }
+        }
+        static bool handle_motion(Image<Bgr, Byte> frane, Image<Bgr, Byte> bg)
+        {
+            bool ret = false;
+            Rectangle roi = new Rectangle(744, 266, 576, 1116);
+            Image<Bgr, Byte> img0 = bg.Copy(roi);
+            Image<Bgr, Byte> img1 = frane.Copy(roi);
+            img0 = img1.AbsDiff(img0);
+            Bgr bgr = img0.GetAverage();
+            Program.logIt($"bgr");
+
+            return ret;
         }
         static bool handle_motion_V2(Image<Bgr, Byte> frane, Image<Gray, Byte> bg, int idx)
         {
@@ -349,7 +414,11 @@ namespace AviaGetPhoneSize
             Bgr rgb = i.GetAverage();
             return rgb;
         }
-        static Rectangle detect_size(Image<Gray,Byte> img)
+        static Rectangle detect_size(Image<Gray, Byte> img)
+        {
+            return Rectangle.Empty;
+        }
+        static Rectangle detect_size_old(Image<Gray,Byte> img)
         {
             Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
             CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);

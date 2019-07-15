@@ -597,7 +597,7 @@ namespace AviaGetPhoneSize
         static void test_1()
         {
 #if !false
-            string fn1 = @"C:\Tools\avia\images\final_270\iphone7 Plus Red\0656.1.bmp";
+            string fn1 = @"C:\Tools\avia\images\final270.1\iphone7Plus Red\0656.1.bmp";
             is_iPhone_7PlusRed(fn1);
 #else
             foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone7 Plus Red"))
