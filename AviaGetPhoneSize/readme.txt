@@ -20,8 +20,12 @@ Rectangle r = new Rectangle(334, 774, 452, 1016);
 sample color:
 Rectangle r = new Rectangle(112, 797, 65, 33);
 
+green backgroud:
+mask = img1.InRange(new Bgr(38, 58, 39), new Bgr(90, 120, 70));
+
 iphone icon:
 RectangleF rf = new RectangleF(0.35f * m.Width, 0.18f * m.Height, 0.30f * m.Width, 0.20f * m.Height);
+
 
 
 AviaGetPhoneSize.exe

@@ -290,17 +290,18 @@ namespace AviaGetPhoneSize
                 }
             }
         }
-        static bool check_device_inplace(Image<Bgr, Byte> diff)
+        static bool check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.3)
         {
             bool ret = false;
             Program.logIt("check_device_inplace: ++");
-            Image<Gray, Byte> img = diff.Mat.ToImage<Gray, Byte>();
-            Gray gv = img.GetAverage();
-            if (gv.MCvScalar.V0 >= 17)
+            Image<Gray, Byte> mask = diff.InRange(new Bgr(38, 58, 39), new Bgr(90, 120, 70));
+            int[] area = mask.CountNonzero();
+            double r = (double)area[0] / (mask.Width * mask.Height);
+            if (r > threshold)
             {
                 ret = true;
             }
-            Program.logIt($"check_device_inplace: -- {ret}");
+            Program.logIt($"check_device_inplace: -- {ret}, score={r}");
             return ret;
         }
         static bool handle_motion(Image<Bgr, Byte> frane, Image<Bgr, Byte> bg)
@@ -435,8 +436,8 @@ namespace AviaGetPhoneSize
         }
         static Bgr sample_color(Image<Bgr,Byte> img)
         {
-            //Rectangle r = new Rectangle(112, 797, 65, 33);
-            Rectangle r = new Rectangle(20, 810, 290, 30);
+            //Rectangle r = new Rectangle(20, 810, 290, 30);
+            Rectangle r = new Rectangle(387, 106, 43, 267);
             Image<Bgr, Byte> i = img.Copy(r);
             Bgr rgb = i.GetAverage();
             return rgb;

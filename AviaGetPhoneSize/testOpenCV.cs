@@ -42,7 +42,7 @@ namespace AviaGetPhoneSize
         {
             //resize_image();
             //test();
-            //test_1();
+            test_1();
             //train_iphone_color_data();
             //test_ML();
             //test_3();
@@ -66,10 +66,11 @@ namespace AviaGetPhoneSize
             string fn1 = @"C:\Tools\avia\images\temp\iphone_8p_black.jpg";
             string[] tf = new string[]
             {
-                @"C:\Tools\avia\images\temp\iphone_8p_black.jpg",
-                @"C:\Tools\avia\images\temp\iphone_8p_gray.jpg",
-                @"C:\Tools\avia\images\temp\iphone_8p_red.jpg",
-                @"C:\Tools\avia\images\temp\iphone_xr_blue.jpg",
+                //@"C:\Tools\avia\images\temp\iphone_8p_black.jpg",
+                //@"C:\Tools\avia\images\temp\iphone_8p_gray.jpg",
+                //@"C:\Tools\avia\images\temp\iphone_8p_red.jpg",
+                //@"C:\Tools\avia\images\temp\iphone_xr_blue.jpg",
+                @"C:\Tools\avia\images\temp\iphone_6_rosegold.jpg",
             };
             foreach (string fn in tf)
             {
@@ -83,16 +84,17 @@ namespace AviaGetPhoneSize
 
                 Image<Bgr, Byte> img0 = m0.ToImage<Bgr, Byte>().Copy(r0);
                 Image<Bgr, Byte> img1 = m1.ToImage<Bgr, Byte>().Copy(r0);
-
+                
                 img0 = img1.AbsDiff(img0);
-                //img1.Save($"temp_{tn}_1.jpg");
-                //img0.Save($"temp_{tn}_2.jpg");
+                img1.Save($"temp_{tn}_1.jpg");
+                img0.Save($"temp_{tn}_2.jpg");
                 Image<Gray, Byte> img = img0.Mat.ToImage<Gray, Byte>();
+                Gray gv = img.GetAverage();
                 CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
                 img._Erode(2);
                 Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
                 img._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
-                //img.Save($"temp_{tn}_3.jpg");
+                img.Save($"temp_{tn}_3.jpg");
 
                 Rectangle roi = Rectangle.Empty;
                 using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
@@ -123,54 +125,30 @@ namespace AviaGetPhoneSize
         }
         static void test_1()
         {
-            //string fn = @"temp_2_3.jpg";
-            string[] fns = new string[] 
-            {
-                @"C:\Tools\avia\images\temp\temp_1_3.jpg",
-                @"C:\Tools\avia\images\temp\temp_3_3.jpg",
-                @"C:\Tools\avia\images\temp\temp_5_3.jpg",
-                @"C:\Tools\avia\images\temp\temp_7_3.jpg",
-            };
-            //string fn = @"C:\Tools\avia\images\temp\temp_1_3.jpg";
-            foreach (string fn in fns)
-            {
-                Mat m = CvInvoke.Imread(fn);
-                Image<Gray, Byte> img = m.ToImage<Gray, Byte>();
-                var histogram = new DenseHistogram(256, new RangeF(0.0f, 255.0f));
-                histogram.Calculate(new Image<Gray, Byte>[] { img }, true, null);
-                double norm = CvInvoke.Norm(img);
-                MCvScalar mean = new MCvScalar();
-                MCvScalar stdDev = new MCvScalar();
-                CvInvoke.MeanStdDev(img, ref mean, ref stdDev);
-                Gray g = img.GetAverage();
-                Gray g1 = new Gray();
-                MCvScalar m1 = new MCvScalar();
-                img.AvgSdv(out g1, out m1);
-                Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
-                //Rectangle r = new Rectangle(0, 0, img.Width, 984);
-                //img.ROI = r;
-                //img = img.MorphologyEx(MorphOp.Erode, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));            
-                CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
-                img = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
-                img.Save("temp_2.jpg");
-                CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
-                img.Save("temp_2.jpg");
-                Rectangle roi = Rectangle.Empty;
-                using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
-                {
-                    CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
-                    int count = contours.Size;
-                    for (int i = 0; i < count; i++)
-                    {
-                        VectorOfPoint contour = contours[i];
-                        double a = CvInvoke.ContourArea(contour);
-                        Rectangle r = CvInvoke.BoundingRectangle(contour);
-                        if (roi.IsEmpty) roi = r;
-                        else roi = Rectangle.Union(roi, r);
-                    }
-                }
-                Program.logIt($"{fn}: {roi}");
-            }
+            string fn0 = @"C:\Tools\avia\images\temp\position_finish_bg.jpg";
+            string fn1 = @"C:\Tools\avia\images\temp\position_finish_w_phone.jpg";
+            Rectangle r0 = new Rectangle(744, 266, 576, 1116);
+
+            Mat m0 = CvInvoke.Imread(fn0);
+            Mat m1 = CvInvoke.Imread(fn1);
+
+            CvInvoke.Rotate(m0, m0, RotateFlags.Rotate90CounterClockwise);
+            CvInvoke.Rotate(m1, m1, RotateFlags.Rotate90CounterClockwise);
+
+            Image<Bgr, Byte> img0 = m0.ToImage<Bgr, Byte>().Copy(r0);
+            Image<Bgr, Byte> img1 = m1.ToImage<Bgr, Byte>().Copy(r0);
+
+            img0.Save("temp_1.jpg");
+            img1.Save("temp_2.jpg");
+
+            Image<Gray,Byte> mask = img0.InRange(new Bgr(38,58,39), new Bgr(90,120,70));
+            //mask.Save("temp_2.jpg");
+            int[] area = mask.CountNonzero();
+            Program.logIt($"{(double)area[0]/(mask.Width*mask.Height):P}");
+
+            mask = img1.InRange(new Bgr(38, 58, 39), new Bgr(90, 120, 70));
+            area = mask.CountNonzero();
+            Program.logIt($"{(double)area[0] / (mask.Width * mask.Height):P}");
         }
         static void test_2()
         {
