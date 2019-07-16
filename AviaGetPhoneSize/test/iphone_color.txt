@@ -1,29 +1,29 @@
-﻿iPhone XR Blue: size={Width=498, Height=988}, color=[222.344252873563,151.407931034483,41.8228735632184], label=1
-iPhone XR Blue: size={Width=498, Height=987}, color=[222.527586206897,151.951264367816,41.2126436781609], label=1
-iPhone XR Blue: size={Width=498, Height=987}, color=[222.261034482759,150.982873563218,39.561724137931], label=1
-iPhone XR Blue: size={Width=499, Height=987}, color=[221.399310344828,152.221609195402,42.356091954023], label=1
-iPhone XR Blue: size={Width=576, Height=990}, color=[222.123563218391,150.883333333333,39.9325287356322], label=1
+﻿iPhone XR Blue: size={Width=498, Height=988}, color=[222.344252873563,151.407931034483,41.8228735632184], label=1, size_label=1
+iPhone XR Blue: size={Width=498, Height=987}, color=[222.527586206897,151.951264367816,41.2126436781609], label=1, size_label=1
+iPhone XR Blue: size={Width=498, Height=987}, color=[222.261034482759,150.982873563218,39.561724137931], label=1, size_label=1
+iPhone XR Blue: size={Width=499, Height=987}, color=[221.399310344828,152.221609195402,42.356091954023], label=1, size_label=1
+iPhone XR Blue: size={Width=576, Height=990}, color=[222.123563218391,150.883333333333,39.9325287356322], label=1, size_label=1
 
 
-iPhone 8 Plus Gray: size={Width=515, Height=1037}, color=[14.5936781609195,11.9605747126437,14.7049425287356], label=2
-iPhone 8 Plus Gray: size={Width=514, Height=1036}, color=[14.4390804597701,11.2466666666667,14.1958620689655], label=2
-iPhone 8 Plus Gray: size={Width=514, Height=1037}, color=[14.2826436781609,11.1451724137931,13.3879310344828], label=2
-iPhone 8 Plus Gray: size={Width=515, Height=1037}, color=[14.9031034482759,12.1957471264368,15.1918390804598], label=2
-iPhone 8 Plus Gray: size={Width=515, Height=1037}, color=[14.6396551724138,11.8566666666667,14.726091954023], label=2
+iPhone 8 Plus Gray: size={Width=515, Height=1037}, color=[14.5936781609195,11.9605747126437,14.7049425287356], label=2, size_label=2
+iPhone 8 Plus Gray: size={Width=514, Height=1036}, color=[14.4390804597701,11.2466666666667,14.1958620689655], label=2, size_label=2
+iPhone 8 Plus Gray: size={Width=514, Height=1037}, color=[14.2826436781609,11.1451724137931,13.3879310344828], label=2, size_label=2
+iPhone 8 Plus Gray: size={Width=515, Height=1037}, color=[14.9031034482759,12.1957471264368,15.1918390804598], label=2, size_label=2
+iPhone 8 Plus Gray: size={Width=515, Height=1037}, color=[14.6396551724138,11.8566666666667,14.726091954023], label=2, size_label=2
 
 
-iPhone 8 Plus Red: size={Width=516, Height=1035}, color=[0.559770114942529,8.67264367816092,103.167126436782], label=3
-iPhone 8 Plus Red: size={Width=516, Height=1035}, color=[0.829885057471264,8.51977011494253,99.4611494252873], label=3
-iPhone 8 Plus Red: size={Width=516, Height=1038}, color=[0.784942528735632,8.50701149425287,99.5651724137931], label=3
-iPhone 8 Plus Red: size={Width=516, Height=1035}, color=[0.720919540229885,8.69252873563218,103.012298850575], label=3
-iPhone 8 Plus Red: size={Width=525, Height=1035}, color=[0.899425287356322,7.52965517241379,92.4832183908046], label=3
-iPhone 8 Plus Red: size={Width=517, Height=1038}, color=[0.866551724137931,8.24264367816092,95.6527586206897], label=3
-iPhone 8 Plus Red: size={Width=515, Height=1036}, color=[1.01758620689655,8.04022988505747,95.9314942528736], label=3
+iPhone 8 Plus Red: size={Width=516, Height=1035}, color=[0.559770114942529,8.67264367816092,103.167126436782], label=3, size_label=2
+iPhone 8 Plus Red: size={Width=516, Height=1035}, color=[0.829885057471264,8.51977011494253,99.4611494252873], label=3, size_label=2
+iPhone 8 Plus Red: size={Width=516, Height=1038}, color=[0.784942528735632,8.50701149425287,99.5651724137931], label=3, size_label=2
+iPhone 8 Plus Red: size={Width=516, Height=1035}, color=[0.720919540229885,8.69252873563218,103.012298850575], label=3, size_label=2
+iPhone 8 Plus Red: size={Width=525, Height=1035}, color=[0.899425287356322,7.52965517241379,92.4832183908046], label=3, size_label=2
+iPhone 8 Plus Red: size={Width=517, Height=1038}, color=[0.866551724137931,8.24264367816092,95.6527586206897], label=3, size_label=2
+iPhone 8 Plus Red: size={Width=515, Height=1036}, color=[1.01758620689655,8.04022988505747,95.9314942528736], label=3, size_label=2
 
 
 
-iPhone 8 Plus Silver: size={Width=514, Height=1031}, color=[185.150804597701,182.759540229885,163.54], label=4
-iPhone 8 Plus Silver: size={Width=515, Height=1029}, color=[185.117356321839,182.814367816092,163.49275862069], label=4
-iPhone 8 Plus Silver: size={Width=514, Height=1031}, color=[185.235172413793,182.494712643678,163.119540229885], label=4
-iPhone 8 Plus Silver: size={Width=514, Height=1034}, color=[185.925862068966,183.46908045977,163.47], label=4
-iPhone 8 Plus Silver: size={Width=515, Height=1032}, color=[184.832183908046,182.466666666667,162.678620689655], label=4
+iPhone 8 Plus Silver: size={Width=514, Height=1031}, color=[185.150804597701,182.759540229885,163.54], label=4, size_label=2
+iPhone 8 Plus Silver: size={Width=515, Height=1029}, color=[185.117356321839,182.814367816092,163.49275862069], label=4, size_label=2
+iPhone 8 Plus Silver: size={Width=514, Height=1031}, color=[185.235172413793,182.494712643678,163.119540229885], label=4, size_label=2
+iPhone 8 Plus Silver: size={Width=514, Height=1034}, color=[185.925862068966,183.46908045977,163.47], label=4, size_label=2
+iPhone 8 Plus Silver: size={Width=515, Height=1032}, color=[184.832183908046,182.466666666667,162.678620689655], label=4, size_label=2

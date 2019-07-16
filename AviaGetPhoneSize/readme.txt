@@ -22,3 +22,44 @@ Rectangle r = new Rectangle(112, 797, 65, 33);
 
 iphone icon:
 RectangleF rf = new RectangleF(0.35f * m.Width, 0.18f * m.Height, 0.30f * m.Width, 0.20f * m.Height);
+
+
+AviaGetPhoneSize.exe
+
+command line:
+-wait -timeout=60
+-wait, wait for device inplace and detect the device size and color.
+-timeout=60, optional, default is 60 seconds, 
+return:
+0, device in place
+1, device not present
+2, other error
+stdout:
+device=ready
+size=1, size id, 1, 2, 3...
+color=1, color id, 1, 2, 3...
+
+color id:
+1: Blue (iPhone XR)
+2: Gray (iPhone 8 Plus)
+3: Red (iPhone 8 Plus)
+4: Silver (iPhone 8 Plus)
+
+size id:
+1: 75.7x150.9 (iPhone XR)
+2: 78.1x158.4 (iPhone 8 Plus)
+
+
+command line:
+-detect -image=<full path of image> -color=id -size=id
+-detect, to do model recognize,
+-image=<full path of image>, the device back image file fullpath in BMP format.
+-color=id, return by fist command
+-size=id, return by fist command
+return:
+0, model detect success
+1, model detect failed
+stdout
+model=iPhone 8 Plus
+or
+model=iPhone XR

@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>AviaGetPhoneSize.testOpenCV</StartupObject>
+    <StartupObject>AviaGetPhoneSize.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -110,6 +110,7 @@
     <Content Include="License-LGPL.txt" />
     <Content Include="readme.txt" />
     <Content Include="test\all_data.txt" />
+    <Content Include="test\AviaGetPhoneSizeDebugOutput.xml" />
     <Content Include="test\background.txt" />
     <Content Include="test\color_sensor_output.txt" />
     <Content Include="test\iphone_6.xml">

@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace AviaGetPhoneSize
 {
@@ -16,6 +17,24 @@ namespace AviaGetPhoneSize
         public static void logIt(string msg)
         {
             System.Diagnostics.Trace.WriteLine(msg);
+        }
+        public static string getCurrentExeFilename()
+        {
+            return System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+        }
+        public static XmlDocument getDebugOutputXml()
+        {
+            XmlDocument doc = new XmlDocument();
+            try
+            {
+                string fn = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(getCurrentExeFilename()), "AviaGetPhoneSizeDebugOutput.xml");
+                if (System.IO.File.Exists(fn))
+                {
+                    doc.Load(fn);
+                }
+            }
+            catch (Exception) { }
+            return doc;
         }
         static int Main(string[] args)
         {
@@ -26,10 +45,58 @@ namespace AviaGetPhoneSize
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
             }
+            if (_args.IsParameterTrue("wait"))
+            {
+                Tuple<bool, int> res = run_debug("wait");
+                if (res.Item1)
+                {
+                    ret = res.Item2;
+                }
+                else
+                {
+                    // do real work
+                }
+            }
+            else if (_args.IsParameterTrue("detect"))
+            {
+                Tuple<bool, int> res = run_debug("detect");
+                if (res.Item1)
+                {
+                    ret = res.Item2;
+                }
+                else
+                {
+                    // do real work
+                }
+            }
 
             return ret;
         }
 
+        static Tuple<bool,int> run_debug(string command)
+        {
+            bool ret = false;
+            int i = -1;
+            XmlDocument doc = getDebugOutputXml();
+            if (doc.DocumentElement != null)
+            {
+                ret = true;
+                XmlNode node = doc.DocumentElement[command];
+                if (node != null)
+                {
+                    try
+                    {
+                        i = Int32.Parse(node["exitcode"]?.InnerText);
+                        foreach(XmlNode n in node["stdout"]?.ChildNodes)
+                        {
+                            System.Console.WriteLine(n.InnerText);
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            }
+            return new Tuple<bool, int>(ret, i);
+        }
         static public Dictionary<string, object> parse_hocr_title(string title)
         {
             Dictionary<string, object> ret = new Dictionary<string, object>();

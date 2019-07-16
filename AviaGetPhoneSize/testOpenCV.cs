@@ -43,7 +43,7 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            test_2_1();
+            //train_iphone_color_data();
             //test_ML();
             //test_3();
             //test_4();
@@ -237,7 +237,7 @@ namespace AviaGetPhoneSize
                 Program.logIt($"predict: {p} ");
             }
         }
-        static void test_2_1()
+        static void train_iphone_color_data()
         {
             string fn = @"../../test/iphone_color.txt";
             Regex re = new Regex(@"^.+color=\[([\d\.]*),([\d\.]*),([\d\.]*)\], label=(\d+).*$");
@@ -361,6 +361,102 @@ namespace AviaGetPhoneSize
                 Program.logIt($"predict: {p} ");
             }
             */
+        }
+        static void train_iphone_size_data()
+        {
+            string fn = @"../../test/iphone_color.txt";
+            Regex re = new Regex(@"^.+color=\[([\d\.]*),([\d\.]*),([\d\.]*)\], label=(\d+).*$");
+            List<Tuple<double, double, double, int>> datas = new List<Tuple<double, double, double, int>>();
+            foreach (string l in System.IO.File.ReadAllLines(fn))
+            {
+                if (!string.IsNullOrEmpty(l))
+                {
+                    Match m = re.Match(l);
+                    if (m.Success)
+                    {
+                        double b = Double.Parse(m.Groups[1].Value);
+                        double g = Double.Parse(m.Groups[2].Value);
+                        double r = Double.Parse(m.Groups[3].Value);
+                        int label = Int32.Parse(m.Groups[4].Value);
+                        Tuple<double, double, double, int> d = new Tuple<double, double, double, int>(r, g, b, label);
+                        datas.Add(d);
+                    }
+                }
+            }
+            foreach (var v in datas)
+            {
+                Program.logIt($"R={v.Item1}, G={v.Item2}, B={v.Item3}, label={v.Item4}");
+            }
+
+            int trainSampleCount = datas.Count;
+            Matrix<float> trainData = new Matrix<float>(trainSampleCount, 3);
+            Matrix<int> trainClasses = new Matrix<int>(trainSampleCount, 1);
+            for (int i = 0; i < datas.Count; i++)
+            {
+                trainData[i, 0] = (float)datas[i].Item1;
+                trainData[i, 1] = (float)datas[i].Item2;
+                trainData[i, 2] = (float)datas[i].Item3;
+                trainClasses[i, 0] = datas[i].Item4;
+            }
+            TrainData td = new TrainData(trainData, Emgu.CV.ML.MlEnum.DataLayoutType.RowSample, trainClasses);
+            using (SVM model = new SVM())
+            {
+                if (System.IO.File.Exists("iPhone_color.xml"))
+                {
+                    model.Load("iPhone_color.xml");
+
+                    Matrix<float> test = new Matrix<float>(1, 3);
+                    for (int i = 0; i < datas.Count; i++)
+                    {
+                        test[0, 0] = (float)datas[i].Item1;
+                        test[0, 1] = (float)datas[i].Item2;
+                        test[0, 2] = (float)datas[i].Item3;
+                        int l = (int)model.Predict(test);
+                        if (l != datas[i].Item4)
+                        {
+                            Program.logIt($"predict: {l} vs {datas[i].Item4}");
+                        }
+                    }
+
+                    // test
+                    test[0, 0] = 8.96270396270396f;
+                    test[0, 1] = 6.96270396270396f;
+                    test[0, 2] = 6.96270396270396f;
+                    int p = (int)model.Predict(test);
+                    Program.logIt($"predict: {p} ");
+                }
+                else
+                {
+                    model.TermCriteria = new MCvTermCriteria(100, 0.00001);
+                    model.C = 1;
+                    model.Type = SVM.SvmType.CSvc;
+                    model.SetKernel(SVM.SvmKernelType.Linear);
+                    //bool trained = model.TrainAuto(trainData, trainClasses, null, null, p.MCvSVMParams, 5);
+                    bool trained = model.Train(td);
+
+                    model.Save("iPhone_color.xml");
+
+                    Matrix<float> test = new Matrix<float>(1, 3);
+                    for (int i = 0; i < datas.Count; i++)
+                    {
+                        test[0, 0] = (float)datas[i].Item1;
+                        test[0, 1] = (float)datas[i].Item2;
+                        test[0, 2] = (float)datas[i].Item3;
+                        int l = (int)model.Predict(test);
+                        if (l != datas[i].Item4)
+                        {
+                            Program.logIt($"predict: {l} vs {datas[i].Item4}");
+                        }
+                    }
+
+                    // test
+                    test[0, 0] = 8.96270396270396f;
+                    test[0, 1] = 6.96270396270396f;
+                    test[0, 2] = 6.96270396270396f;
+                    int p = (int)model.Predict(test);
+                    Program.logIt($"predict: {p} ");
+                }
+            }
         }
 
         static void test_ML()
