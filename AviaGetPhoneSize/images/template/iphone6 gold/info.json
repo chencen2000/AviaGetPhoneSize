@@ -124,7 +124,9 @@
     "y": 5828,
     "width": 358,
     "height": 358,
-    "xpath": "sensor_layout/node/node/sensor/region/region/"
+    "xpath": "sensor_layout/node/node/sensor/region/region/",
+	"name": "corner",
+	"type": "match"
   },
   {
     "id": 15,

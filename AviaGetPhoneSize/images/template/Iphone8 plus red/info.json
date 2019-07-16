@@ -61,7 +61,7 @@
     "height": 942,
     "xpath": "sensor_layout/node/node/sensor/region/region/",
 	"name": "modelred",
-	"type": "ocr"
+	"type": "match"
   },
   {
     "id": 7,

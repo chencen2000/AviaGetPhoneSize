@@ -597,17 +597,87 @@ namespace AviaGetPhoneSize
         static void test_1()
         {
 #if !false
-            string fn1 = @"C:\Tools\avia\images\final270.1\iphone7Plus Red\0656.1.bmp";
-            is_iPhone_7PlusRed(fn1);
+            string fn1 = @"C:\Tools\avia\images\final_270\iphone6 Gold\0123.1.bmp";
+            is_iPhone_6_gold(fn1);
 #else
-            foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone7 Plus Red"))
+            foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone6 Gray"))
             {
-                if (!is_iPhone_7PlusRed(fn))
+                if (!is_iPhone_6_gold(fn))
                 {
-                    Program.logIt($"{fn} is not iPhone 7 Plus");
+                    Program.logIt($"{fn} is not iPhone 6");
                 }
             }
 #endif
+        }
+        static bool is_iPhone_8Plus_spacegray(string filename, double threshold=0.60)
+        {
+            bool ret = false;
+            double score = 0.0;
+            string root = @"images\template\iphone8 plus spacegray";
+            Program.logIt($"is_iPhone_8Plus_spacegray: ++ {filename}");
+            //foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone6 Gold"))
+            {
+                string test_img = filename;
+                Image<Gray, Byte> img = new Image<Gray, byte>(test_img);
+                List<Dictionary<string, object>> data = null;
+                try
+                {
+                    string s = System.IO.File.ReadAllText(System.IO.Path.Combine(root, @"info.json"));
+                    var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    data = jss.Deserialize<List<Dictionary<string, object>>>(s);
+                }
+                catch (Exception) { }
+
+                var area_data = data.Where(x => x.ContainsKey("type") && x["type"].ToString() == "match");
+                List<double> scores = new List<double>();
+                foreach (var a in area_data)
+                {
+                    Rectangle r = new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]);
+                    Mat m = CvInvoke.Imread(System.IO.Path.Combine(root, $"temp_{a["id"]}.jpg"), ImreadModes.Grayscale);
+                    //a.Add("image", m);
+                    Image<Gray, Byte> img_t = img.Copy(r);
+                    Image<Gray, float> mm = img_t.MatchTemplate(m.ToImage<Gray,Byte>(), TemplateMatchingType.CcoeffNormed);
+                    double[] minValues, maxValues;
+                    Point[] minLocations, maxLocations;
+                    mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+                    Program.logIt($"id: {a["name"]}, match: {maxValues[0]}");
+                    scores.Add(maxValues[0]);
+                }
+                score = scores.Average();
+                if (score > threshold)
+                    ret = true;
+            }
+            Program.logIt($"is_iPhone_8Plus_spacegray: -- {ret} score={score}");
+            return ret;
+
+        }
+        static bool is_iPhone_8PlusRed(string filename)
+        {
+            bool ret = false;
+            Program.logIt($"is_iPhone_8PlusRed: ++ {filename}");
+            //foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone6 Gold"))
+            {
+                string test_img = filename;
+                Image<Gray, Byte> img = new Image<Gray, byte>(test_img);
+                List<Dictionary<string, object>> data = null;
+                try
+                {
+                    string s = System.IO.File.ReadAllText(@"images\template\Iphone8 plus Red\info.json");
+                    var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    data = jss.Deserialize<List<Dictionary<string, object>>>(s);
+                }
+                catch (Exception) { }
+
+                var area_data = data.Where(x => x.ContainsKey("type") && x["type"].ToString() == "match");
+                foreach(var a in area_data)
+                {
+                    a.Add("rectangle", new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]));
+                    Mat m = CvInvoke.Imread($@"images\template\Iphone8 plus Red\temp_{a["id"]}.jpg");
+                    a.Add("image", m);
+                }
+            }
+            Program.logIt($"is_iPhone_8PlusRed: -- {ret}");
+            return ret;
         }
         static bool is_iPhone_7PlusRed(string filename)
         {
@@ -922,6 +992,44 @@ namespace AviaGetPhoneSize
             Program.logIt($"is_iPhone_6: -- {ret}");
             return ret;
         }
-
+        static bool is_iPhone_6_gold(string filename, double threshold = 0.60)
+        {
+            bool ret = false;
+            double score = 0.0;
+            string root = @"images\template\iphone6 gold";
+            Program.logIt($"is_iPhone_6_gold: ++ {filename}, threshold={threshold}");
+            {
+                string test_img = filename;
+                Image<Gray, Byte> img = new Image<Gray, byte>(test_img);
+                List<Dictionary<string, object>> data = null;
+                try
+                {
+                    string s = System.IO.File.ReadAllText(System.IO.Path.Combine(root,@"info.json"));
+                    var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    data = jss.Deserialize<List<Dictionary<string, object>>>(s);
+                }
+                catch (Exception) { }
+                var area_data = data.Where(x => x.ContainsKey("type") && x["type"].ToString() == "match");
+                List<double> scores = new List<double>();
+                foreach (var a in area_data)
+                {
+                    Rectangle r = new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]);
+                    Mat m = CvInvoke.Imread(System.IO.Path.Combine(root, $"temp_{a["id"]}.jpg"), ImreadModes.Grayscale);
+                    //a.Add("image", m);
+                    Image<Gray, Byte> img_t = img.Copy(r);
+                    Image<Gray, float> mm = img_t.MatchTemplate(m.ToImage<Gray, Byte>(), TemplateMatchingType.CcoeffNormed);
+                    double[] minValues, maxValues;
+                    Point[] minLocations, maxLocations;
+                    mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+                    Program.logIt($"id: {a["name"]}, match: {maxValues[0]}");
+                    scores.Add(maxValues[0]);
+                }
+                score = scores.Average();
+                if (score > threshold)
+                    ret = true;
+            }
+            Program.logIt($"is_iPhone_6_gold: -- {ret} score={score}");
+            return ret;
+        }
     }
 }
