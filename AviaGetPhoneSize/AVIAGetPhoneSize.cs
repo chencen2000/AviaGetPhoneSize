@@ -297,7 +297,7 @@ namespace AviaGetPhoneSize
             Image<Gray, Byte> mask = diff.InRange(new Bgr(38, 58, 39), new Bgr(90, 120, 70));
             int[] area = mask.CountNonzero();
             double r = (double)area[0] / (mask.Width * mask.Height);
-            if (r > threshold)
+            if (r < threshold)
             {
                 ret = true;
             }
@@ -311,19 +311,56 @@ namespace AviaGetPhoneSize
             Image<Bgr, Byte> img0 = bg.Copy(roi);
             Image<Bgr, Byte> img1 = frane.Copy(roi);
             img0 = img1.AbsDiff(img0);
-            ret = check_device_inplace(img0);
+            ret = check_device_inplace(img1);
             if (ret)
             {
                 Program.logIt("Device Arrival");
                 Size sz = detect_size(img0.Mat.ToImage<Gray, Byte>());
                 Bgr rgb = sample_color(img1);
                 Program.logIt($"device: size={sz}, color={rgb}");
+                Tuple<bool, int, int> res = predict_color_and_size(rgb, sz);
+                if (res.Item1)
+                {
+                    Console.WriteLine($"colorid={res.Item2}");
+                    Console.WriteLine($"sizeid={res.Item3}");
+                }
             }
             else
             {
                 Program.logIt("Device Removal");
             }
             return ret;
+        }
+        static Tuple<bool, int,int> predict_color_and_size(Bgr rgb, Size sz)
+        {
+            bool retb = false;
+            int color_id = -1;
+            int size_id = -1;
+            try
+            {
+                using (SVM model = new SVM())
+                {
+                    model.Load(@"traindata/iPhone_color.xml");
+                    Matrix<float> test = new Matrix<float>(1, 3);
+                    test[0, 0] = (float)rgb.Red;
+                    test[0, 1] = (float)rgb.Green;
+                    test[0, 2] = (float)rgb.Blue;
+                    color_id = (int)model.Predict(test);
+                    Program.logIt($"prodict: colorID={color_id}");
+                }
+                using (SVM model = new SVM())
+                {
+                    model.Load(@"traindata/iPhone_size.xml");
+                    Matrix<float> test = new Matrix<float>(1, 2);
+                    test[0, 0] = (float)sz.Width;
+                    test[0, 1] = (float)sz.Height;
+                    size_id = (int)model.Predict(test);
+                    Program.logIt($"prodict: colorID={size_id}");
+                }
+                retb = true;
+            }
+            catch (Exception) { }
+            return new Tuple<bool, int, int>(retb, color_id, size_id);
         }
         static bool handle_motion_V2(Image<Bgr, Byte> frane, Image<Gray, Byte> bg, int idx)
         {
