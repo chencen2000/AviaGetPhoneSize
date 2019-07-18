@@ -44,7 +44,7 @@ namespace AviaGetPhoneSize
             //test();
             //test_1();
             //train_iphone_color_data();
-            train_iphone_size_data();
+            //train_iphone_size_data();
             //test_ML();
             //test_3();
             //test_4();
@@ -55,7 +55,7 @@ namespace AviaGetPhoneSize
             //r.Item1.Save("temp_1.jpg");
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
-            //test_5();
+            test_5();
             //test_ss();
             //test_6();
             return 0;
@@ -1073,34 +1073,12 @@ namespace AviaGetPhoneSize
         }
         static void test_5()
         {
-            /*
-            Rectangle roi = new Rectangle(new Point(1050,910), new Size(500,270));
-            Mat img0 = CvInvoke.Imread(@"C:\Tools\avia\images\0702\background.jpg");
-            Image<Bgr, Byte> img = img0.ToImage<Bgr, Byte>();
-            img.ROI = roi;
-            img.Save("temp_1.jpg");
-            Mat img1 = CvInvoke.Imread(@"C:\Tools\avia\images\0702\WIN_20190702_17_21_22_Pro.jpg");
-            img = img1.ToImage<Bgr, Byte>();
-            img.ROI = roi;
-            img.Save("temp_2.jpg");
-            Mat img2 = CvInvoke.Imread(@"C:\Tools\avia\images\0702\WIN_20190702_17_20_54_Pro.jpg");
-            img = img2.ToImage<Bgr, Byte>();
-            img.ROI = roi;
-            img.Save("temp_3.jpg");
-            */
-
-            Mat m0 = CvInvoke.Imread(@"temp_1.jpg");
-            Mat m2 = CvInvoke.Imread(@"temp_2.jpg");
-            Mat m3 = CvInvoke.Imread(@"temp_3.jpg");
-            Mat dm = new Mat();
-            CvInvoke.AbsDiff(m0, m2, dm);
-            CvInvoke.Imwrite("temp_5.jpg", dm);
-            Image<Gray, Byte> img = dm.ToImage<Gray, Byte>();
-            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(-1, -1));
-            img = img.MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
-            img.Save("temp_5.jpg");
-            img = img.MorphologyEx(MorphOp.Close, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
-            img.Save("temp_5.jpg");
+            Mat m = CvInvoke.Imread("temp_1.jpg");
+            Image<Bgr, Byte> img = m.ToImage<Bgr, Byte>();
+            Image<Gray, Byte> mask = img.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70));
+            int[] area = mask.CountNonzero();
+            double r = (double)area[0] / (mask.Width * mask.Height);
+            mask.Save("temp_3.jpg");
         }
         static void test_ss()
         {

@@ -294,13 +294,20 @@ namespace AviaGetPhoneSize
         {
             bool ret = false;
             Program.logIt("check_device_inplace: ++");
-            Image<Gray, Byte> mask = diff.InRange(new Bgr(38, 58, 39), new Bgr(90, 120, 70));
-            int[] area = mask.CountNonzero();
-            double r = (double)area[0] / (mask.Width * mask.Height);
-            if (r < threshold)
+            int[] all = diff.CountNonzero();
+            double r = 0;
+            if (all[0] > 0 && all[1]>0 && all[2]>0)
             {
-                ret = true;
+                //diff.Save("temp_2.jpg");
+                Image<Gray, Byte> mask = diff.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70)); //img.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70));
+                int[] area = mask.CountNonzero();
+                r = (double)area[0] / (mask.Width * mask.Height);
+                if (r < threshold)
+                {
+                    ret = true;
+                }
             }
+            //mask.Save("temp_3.jpg");
             Program.logIt($"check_device_inplace: -- {ret}, score={r}");
             return ret;
         }
@@ -310,6 +317,7 @@ namespace AviaGetPhoneSize
             Rectangle roi = new Rectangle(744, 266, 576, 1116);
             Image<Bgr, Byte> img0 = bg.Copy(roi);
             Image<Bgr, Byte> img1 = frane.Copy(roi);
+            //img1.Save("temp_1.jpg");
             img0 = img1.AbsDiff(img0);
             ret = check_device_inplace(img1);
             if (ret)
