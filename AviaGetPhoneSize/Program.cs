@@ -45,9 +45,9 @@ namespace AviaGetPhoneSize
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
             }
-            if (_args.IsParameterTrue("wait"))
+            if (_args.IsParameterTrue("QueryISP"))
             {
-                Tuple<bool, int> res = run_debug("wait");
+                Tuple<bool, int> res = run_debug("QueryISP");
                 if (res.Item1)
                 {
                     ret = res.Item2;

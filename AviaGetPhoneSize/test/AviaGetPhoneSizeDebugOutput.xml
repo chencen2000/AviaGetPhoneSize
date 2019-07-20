@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <aviagetphonesizedebugoutput>
-  <wait>
+  <QueryISP>
     <exitcode>0</exitcode>
     <stdout>
       <line>device=ready</line>
-      <line>size=1</line>
-      <line>color=1</line>
+      <line>sizeid=1</line>
+      <line>colorid=1</line>
     </stdout>
-  </wait>
+  </QueryISP>
   <detect>
     <exitcode>0</exitcode>
     <stdout>
