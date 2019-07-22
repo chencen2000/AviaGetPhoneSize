@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>AviaGetPhoneSize.Program</StartupObject>
+    <StartupObject>AviaGetPhoneSize.AviaGetPhoneModel</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -138,8 +138,4 @@
     <Error Condition="!Exists('..\packages\Tesseract.3.3.0\build\Tesseract.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Tesseract.3.3.0\build\Tesseract.targets'))" />
   </Target>
   <Import Project="..\packages\Tesseract.3.3.0\build\Tesseract.targets" Condition="Exists('..\packages\Tesseract.3.3.0\build\Tesseract.targets')" />
-  <PropertyGroup>
-    <PostBuildEvent>copy /Y $(TargetPath) %25FDHOME%25\AVIA\
-copy /Y $(ProjectDir)test\AviaGetPhoneSizeDebugOutput.xml %25FDHOME%25\AVIA\</PostBuildEvent>
-  </PropertyGroup>
 </Project>

@@ -25,10 +25,10 @@ namespace AviaGetPhoneSize
             //test_ocr();
             //extract_phone_image();
             //test_ml();
-            test_1();
+            //test_1();
             //test_2();
             //test_3();
-            //save_template_image();
+            save_template_image();
             return ret;
         }
 
@@ -445,7 +445,7 @@ namespace AviaGetPhoneSize
         }
         static void save_template_image()
         {
-            string folder = @"C:\Tools\avia\20190607-VZW-Model-Loose-270";
+            string folder = @"C:\Tools\avia\M2\Profile";
             //string[] models = System.IO.Directory.GetDirectories(folder);
             foreach(string mf in System.IO.Directory.GetDirectories(folder))
             {

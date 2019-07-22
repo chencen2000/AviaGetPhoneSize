@@ -1,34 +1,32 @@
 [
   {
     "id": 0,
-    "x": 650,
-    "y": 1116,
+    "x": 640,
+    "y": 1114,
     "width": 11292,
     "height": 5381,
     "xpath": "sensor_layout/node/sensor/region/"
   },
   {
     "id": 1,
-    "x": 541,
-    "y": 951,
-    "width": 11402,
-    "height": 5808,
+    "x": 718,
+    "y": 950,
+    "width": 11226,
+    "height": 5694,
     "xpath": "sensor_layout/node/node/sensor/region/region/"
   },
   {
     "id": 2,
-    "x": 9003,
-    "y": 3279,
+    "x": 8993,
+    "y": 3285,
     "width": 436,
     "height": 1096,
-    "xpath": "sensor_layout/node/node/sensor/region/region/",
-	"name": "maker",
-	"type": "ocr"
+    "xpath": "sensor_layout/node/node/sensor/region/region/"
   },
   {
     "id": 3,
-    "x": 3186,
-    "y": 3295,
+    "x": 3176,
+    "y": 3287,
     "width": 1352,
     "height": 1103,
     "xpath": "sensor_layout/node/node/sensor/region/region/",
@@ -37,18 +35,18 @@
   },
   {
     "id": 4,
-    "x": 1304,
-    "y": 4466,
-    "width": 228,
-    "height": 228,
+    "x": 1274,
+    "y": 4488,
+    "width": 196,
+    "height": 196,
     "xpath": "sensor_layout/node/node/sensor/region/region/",
 	"name": "mic",
 	"type": "match"
   },
   {
     "id": 5,
-    "x": 1197,
-    "y": 4063,
+    "x": 1185,
+    "y": 4049,
     "width": 388,
     "height": 388,
     "xpath": "sensor_layout/node/node/sensor/region/region/",
@@ -57,17 +55,17 @@
   },
   {
     "id": 6,
-    "x": 1020,
-    "y": 4777,
-    "width": 817,
-    "height": 1497,
+    "x": 1089,
+    "y": 4778,
+    "width": 681,
+    "height": 1433,
     "xpath": "sensor_layout/node/node/sensor/region/",
 	"name": "camera",
 	"type": "match"
   },
   {
     "id": 7,
-    "x": 1178,
+    "x": 1161,
     "y": 4824,
     "width": 627,
     "height": 1357,

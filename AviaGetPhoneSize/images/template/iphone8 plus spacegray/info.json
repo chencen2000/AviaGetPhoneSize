@@ -21,9 +21,7 @@
     "y": 3279,
     "width": 436,
     "height": 1096,
-    "xpath": "sensor_layout/node/node/sensor/region/region/",
-	"name": "maker",
-	"type": "ocr"
+    "xpath": "sensor_layout/node/node/sensor/region/region/"
   },
   {
     "id": 3,
