@@ -1,106 +1,130 @@
-﻿
-iphne xr blue
-device: size={Width=499, Height=989}, color=[177.772493685219,111.293876839997,37.462067764132], clabel=1, slabel=1
-device: size={Width=499, Height=987}, color=[178.203205295706,112.173678251023,38.4831460674157], clabel=1, slabel=1
-device: size={Width=499, Height=978}, color=[177.617193624249,111.503179165578,37.702552042505], clabel=1, slabel=1
-device: size={Width=499, Height=988}, color=[177.728420869262,111.55064889818,38.7473216618761], clabel=1, slabel=1
-device: size={Width=499, Height=988}, color=[178.178468774497,112.878059402491,39.4229596725024], clabel=1, slabel=1
+﻿#
+#iphne xr blue
+#device: size={Width=499, Height=989}, color=[177.772493685219,111.293876839997,37.462067764132], clabel=1, slabel=1
+#device: size={Width=499, Height=987}, color=[178.203205295706,112.173678251023,38.4831460674157], clabel=1, slabel=1
+#device: size={Width=499, Height=978}, color=[177.617193624249,111.503179165578,37.702552042505], clabel=1, slabel=1
+#device: size={Width=499, Height=988}, color=[177.728420869262,111.55064889818,38.7473216618761], clabel=1, slabel=1
+#device: size={Width=499, Height=988}, color=[178.178468774497,112.878059402491,39.4229596725024], clabel=1, slabel=1
+#
+device: size={Width=481, Height=995}, color=[232.766833333333,169.0455,54.7505], clabel=1, slabel=1
+device: size={Width=481, Height=995}, color=[233.771833333333,170.194833333333,53.5365], clabel=1, slabel=1
+device: size={Width=482, Height=995}, color=[233.2445,169.961833333333,54.6771666666667], clabel=1, slabel=1
+device: size={Width=482, Height=995}, color=[233.274833333333,170.285666666667,55.18], clabel=1, slabel=1
+device: size={Width=481, Height=995}, color=[233.508833333333,169.9195,53.7251666666667], clabel=1, slabel=1
 
+#
+#iphone 8 plus red
+#device: size={Width=515, Height=1036}, color=[5.11697587318178,9.34892430972912,65.3794094591064], clabel=2, slabel=2
+#device: size={Width=515, Height=1036}, color=[4.64698197021165,8.96350492117411,65.3513631216793], clabel=2, slabel=2
+#device: size={Width=515, Height=1036}, color=[4.08535841825625,8.99747408762303,66.9107220625381], clabel=2, slabel=2
+#device: size={Width=515, Height=1036}, color=[4.32514589321488,9.34108527131783,68.8907760648027], clabel=2, slabel=2
+#device: size={Width=515, Height=1036}, color=[4.54585837470604,9.41294312342131,64.5330546119676], clabel=2, slabel=2
+#
+device: size={Width=499, Height=1054}, color=[0,0,79.1338333333333], clabel=2, slabel=2
+device: size={Width=498, Height=1051}, color=[0,0,83.5811666666667], clabel=2, slabel=2
+device: size={Width=500, Height=1052}, color=[0,0,85.7403333333333], clabel=2, slabel=2
+device: size={Width=500, Height=1049}, color=[0,0,85.4445], clabel=2, slabel=2
+device: size={Width=504, Height=1049}, color=[0,0,82.7075], clabel=2, slabel=2
 
-iphone 8 plus red
-device: size={Width=515, Height=1036}, color=[5.11697587318178,9.34892430972912,65.3794094591064], clabel=2, slabel=2
-device: size={Width=515, Height=1036}, color=[4.64698197021165,8.96350492117411,65.3513631216793], clabel=2, slabel=2
-device: size={Width=515, Height=1036}, color=[4.08535841825625,8.99747408762303,66.9107220625381], clabel=2, slabel=2
-device: size={Width=515, Height=1036}, color=[4.32514589321488,9.34108527131783,68.8907760648027], clabel=2, slabel=2
-device: size={Width=515, Height=1036}, color=[4.54585837470604,9.41294312342131,64.5330546119676], clabel=2, slabel=2
+#
+#iphone 8 plus gray
+#device: size={Width=516, Height=1038}, color=[13.4993467467991,11.7415730337079,18.1462416165839], clabel=3, slabel=2
+#device: size={Width=515, Height=1037}, color=[13.018029788346,11.3918648201376,17.786342653079], clabel=3, slabel=2
+#device: size={Width=514, Height=1037}, color=[12.9747408762303,11.1628777981012,17.6841738524519], clabel=3, slabel=2
+#device: size={Width=514, Height=1037}, color=[13.5804372441425,11.5214702552043,17.8918212699242], clabel=3, slabel=2
+#device: size={Width=516, Height=1037}, color=[13.8706558662137,11.5153732253288,18.074557965334], clabel=3, slabel=2
+#device: size={Width=516, Height=1036}, color=[14.1049560142845,11.369915512586,17.7607351276021], clabel=3, slabel=2
+#device: size={Width=515, Height=1037}, color=[13.1944952530267,11.7831199372877,18.0697674418605], clabel=3, slabel=2
+#
+device: size={Width=498, Height=1053}, color=[0.0175,0,0.0005], clabel=3, slabel=2
+device: size={Width=498, Height=1054}, color=[0.05,0,0.00233333333333333], clabel=3, slabel=2
+device: size={Width=498, Height=1051}, color=[0.0438333333333333,0,0.000666666666666667], clabel=3, slabel=2
+device: size={Width=499, Height=1053}, color=[0.0155,0,0.00133333333333333], clabel=3, slabel=2
+device: size={Width=498, Height=1052}, color=[0.0283333333333333,0,0.002], clabel=3, slabel=2
 
+#iphone 8 gray
+#device: size={Width=444, Height=909}, color=[14.3619022733211,13.3234909851058,19.8514066718927], clabel=3, slabel=3
+#
+#
+#iphone 8 plus silver
+#device: size={Width=514, Height=1032}, color=[151.89600209041,147.320442470168,138.52512847313], clabel=4, slabel=2
+#device: size={Width=515, Height=1032}, color=[151.044159916384,146.472606915774,137.464506576082], clabel=4, slabel=2
+#device: size={Width=515, Height=1032}, color=[151.544377667451,147.107307725808,137.98641233342], clabel=4, slabel=2
+#device: size={Width=514, Height=1034}, color=[152.324623290654,147.737740614929,138.410504311471], clabel=4, slabel=2
+#device: size={Width=514, Height=1032}, color=[151.702987544639,147.318613361205,138.482536364428], clabel=4, slabel=2
+#device: size={Width=515, Height=1033}, color=[151.21775106698,146.803501437157,137.886856545597], clabel=4, slabel=2
+#device: size={Width=515, Height=1032}, color=[151.419562755857,147.341782074732,138.011497256337], clabel=4, slabel=2
+#
+device: size={Width=500, Height=1035}, color=[199.951,199.495333333333,186.986666666667], clabel=4, slabel=2
+device: size={Width=500, Height=1034}, color=[199.581666666667,199.153666666667,186.663333333333], clabel=4, slabel=2
+device: size={Width=501, Height=1034}, color=[199.851166666667,199.672833333333,187.413166666667], clabel=4, slabel=2
+device: size={Width=499, Height=1036}, color=[200.525166666667,199.872166666667,187.089833333333], clabel=4, slabel=2
+device: size={Width=499, Height=1034}, color=[199.702666666667,199.220666666667,186.727333333333], clabel=4, slabel=2
 
-iphone 8 plus gray
-device: size={Width=516, Height=1038}, color=[13.4993467467991,11.7415730337079,18.1462416165839], clabel=3, slabel=2
-device: size={Width=515, Height=1037}, color=[13.018029788346,11.3918648201376,17.786342653079], clabel=3, slabel=2
-device: size={Width=514, Height=1037}, color=[12.9747408762303,11.1628777981012,17.6841738524519], clabel=3, slabel=2
-device: size={Width=514, Height=1037}, color=[13.5804372441425,11.5214702552043,17.8918212699242], clabel=3, slabel=2
-device: size={Width=516, Height=1037}, color=[13.8706558662137,11.5153732253288,18.074557965334], clabel=3, slabel=2
-device: size={Width=516, Height=1036}, color=[14.1049560142845,11.369915512586,17.7607351276021], clabel=3, slabel=2
-device: size={Width=515, Height=1037}, color=[13.1944952530267,11.7831199372877,18.0697674418605], clabel=3, slabel=2
-
-iphone 8 gray
-device: size={Width=444, Height=909}, color=[14.3619022733211,13.3234909851058,19.8514066718927], clabel=3, slabel=3
-
-
-iphone 8 plus silver
-device: size={Width=514, Height=1032}, color=[151.89600209041,147.320442470168,138.52512847313], clabel=4, slabel=2
-device: size={Width=515, Height=1032}, color=[151.044159916384,146.472606915774,137.464506576082], clabel=4, slabel=2
-device: size={Width=515, Height=1032}, color=[151.544377667451,147.107307725808,137.98641233342], clabel=4, slabel=2
-device: size={Width=514, Height=1034}, color=[152.324623290654,147.737740614929,138.410504311471], clabel=4, slabel=2
-device: size={Width=514, Height=1032}, color=[151.702987544639,147.318613361205,138.482536364428], clabel=4, slabel=2
-device: size={Width=515, Height=1033}, color=[151.21775106698,146.803501437157,137.886856545597], clabel=4, slabel=2
-device: size={Width=515, Height=1032}, color=[151.419562755857,147.341782074732,138.011497256337], clabel=4, slabel=2
-
-
-iphone 8 plus gold
-device: size={Width=514, Height=1029}, color=[137.548558487937,143.266527305984,150.413204424702], clabel=5, slabel=2
-
-iphone 8 gold
-device: size={Width=444, Height=898}, color=[135.640884940336,140.842957930494,148.521383154777], clabel=5, slabel=3
-
-
-
-
-iphone 6 silver
-device: size={Width=442, Height=899}, color=[90.8119501785559,93.9527044682519,98.1490288302413], clabel=6, slabel=3
-
-iphone 6s silver
-device: size={Width=444, Height=901}, color=[90.7238916470691,95.1925790436373,101.994338472259], clabel=6, slabel=3
-device: size={Width=442, Height=899}, color=[87.6338298057661,92.1660134134657,99.4042330807421], clabel=6, slabel=3
-
-iphone 7 silver
-device: size={Width=442, Height=900}, color=[93.2221931887466,96.3202682693145,101.141886595244], clabel=6, slabel=3
-device: size={Width=442, Height=900}, color=[94.3748802369132,97.7568156083965,101.681560839648], clabel=6, slabel=3
-
-
-iphone 6 gray
-device: size={Width=440, Height=905}, color=[46.7832941381413,49.5622332549429,61.6777284208693], clabel=7, slabel=3
-
-iphone 6s Gray
-device: size={Width=442, Height=906}, color=[46.893998780594,49.7143977005487,60.9930319658566], clabel=7, slabel=3
-
-
-iphone 6s rosegold
-device: size={Width=442, Height=899}, color=[46.0010452051215,56.5717272014633,95.2434456928839], clabel=8, slabel=3
-device: size={Width=443, Height=900}, color=[53.8259733472694,62.9223064193015,100.07168365125], clabel=8, slabel=3
-device: size={Width=443, Height=899}, color=[52.3149551432802,62.5351450222106,101.460674157303], clabel=8, slabel=3
-
-iphone 7 plus rosegold
-device: size={Width=514, Height=1032}, color=[48.8839822315129,58.4253984844526,96.5693754899399], clabel=8, slabel=2
-
-iphone 7 rosegold
-device: size={Width=443, Height=900}, color=[40.4540545248672,50.1702813343785,90.3830676770316], clabel=8, slabel=3
-device: size={Width=443, Height=900}, color=[46.6092674854107,57.5313126034318,96.9593241006881], clabel=8, slabel=3
-
-
-
-iphone 6 plus gold
-device: size={Width=512, Height=1031}, color=[52.4572772406585,70.4522254159045,95.9934674679906], clabel=9
-
-
-iphone 7 gold
-device: size={Width=443, Height=900}, color=[47.937984496124,65.0508666492466,91.5908892953575], clabel=9
-device: size={Width=443, Height=900}, color=[47.7184043201812,64.6992422262869,89.9299712568592], clabel=9
-device: size={Width=443, Height=900}, color=[52.8624684260953,68.7078651685393,95.1792526783381], clabel=9
-
-
-iphone 7 silver
-device: size={Width=442, Height=900}, color=[93.2221931887466,96.3202682693145,101.141886595244], clabel=10
-device: size={Width=442, Height=900}, color=[94.3748802369132,97.7568156083965,101.681560839648], clabel=10
-
-
-iphone 7 matteblack
-device: size={Width=443, Height=908}, color=[10.0475568330285,8.6530790000871,15.6798188311123], clabel=11
-
-iphone 7 plus matteblack
-device: size={Width=514, Height=1037}, color=[9.66361815172894,8.45867084748715,14.8189182126992], clabel=11
-device: size={Width=576, Height=1037}, color=[8.7819005313126,7.97334726940162,12.9546206776413], clabel=11
+#
+#iphone 8 plus gold
+#device: size={Width=514, Height=1029}, color=[137.548558487937,143.266527305984,150.413204424702], clabel=5, slabel=2
+#
+#iphone 8 gold
+#device: size={Width=444, Height=898}, color=[135.640884940336,140.842957930494,148.521383154777], clabel=5, slabel=3
+#
+#
+#
+#
+#iphone 6 silver
+#device: size={Width=442, Height=899}, color=[90.8119501785559,93.9527044682519,98.1490288302413], clabel=6, slabel=3
+#
+#iphone 6s silver
+#device: size={Width=444, Height=901}, color=[90.7238916470691,95.1925790436373,101.994338472259], clabel=6, slabel=3
+#device: size={Width=442, Height=899}, color=[87.6338298057661,92.1660134134657,99.4042330807421], clabel=6, slabel=3
+#
+#iphone 7 silver
+#device: size={Width=442, Height=900}, color=[93.2221931887466,96.3202682693145,101.141886595244], clabel=6, slabel=3
+#device: size={Width=442, Height=900}, color=[94.3748802369132,97.7568156083965,101.681560839648], clabel=6, slabel=3
+#
+#
+#iphone 6 gray
+#device: size={Width=440, Height=905}, color=[46.7832941381413,49.5622332549429,61.6777284208693], clabel=7, slabel=3
+#
+#iphone 6s Gray
+#device: size={Width=442, Height=906}, color=[46.893998780594,49.7143977005487,60.9930319658566], clabel=7, slabel=3
+#
+#
+#iphone 6s rosegold
+#device: size={Width=442, Height=899}, color=[46.0010452051215,56.5717272014633,95.2434456928839], clabel=8, slabel=3
+#device: size={Width=443, Height=900}, color=[53.8259733472694,62.9223064193015,100.07168365125], clabel=8, slabel=3
+#device: size={Width=443, Height=899}, color=[52.3149551432802,62.5351450222106,101.460674157303], clabel=8, slabel=3
+#
+#iphone 7 plus rosegold
+#device: size={Width=514, Height=1032}, color=[48.8839822315129,58.4253984844526,96.5693754899399], clabel=8, slabel=2
+#
+#iphone 7 rosegold
+#device: size={Width=443, Height=900}, color=[40.4540545248672,50.1702813343785,90.3830676770316], clabel=8, slabel=3
+#device: size={Width=443, Height=900}, color=[46.6092674854107,57.5313126034318,96.9593241006881], clabel=8, slabel=3
+#
+#
+#
+#iphone 6 plus gold
+#device: size={Width=512, Height=1031}, color=[52.4572772406585,70.4522254159045,95.9934674679906], clabel=9
+#
+#
+#iphone 7 gold
+#device: size={Width=443, Height=900}, color=[47.937984496124,65.0508666492466,91.5908892953575], clabel=9
+#device: size={Width=443, Height=900}, color=[47.7184043201812,64.6992422262869,89.9299712568592], clabel=9
+#device: size={Width=443, Height=900}, color=[52.8624684260953,68.7078651685393,95.1792526783381], clabel=9
+#
+#
+#iphone 7 silver
+#device: size={Width=442, Height=900}, color=[93.2221931887466,96.3202682693145,101.141886595244], clabel=10
+#device: size={Width=442, Height=900}, color=[94.3748802369132,97.7568156083965,101.681560839648], clabel=10
+#
+#
+#iphone 7 matteblack
+#device: size={Width=443, Height=908}, color=[10.0475568330285,8.6530790000871,15.6798188311123], clabel=11
+#
+#iphone 7 plus matteblack
+#device: size={Width=514, Height=1037}, color=[9.66361815172894,8.45867084748715,14.8189182126992], clabel=11
+#device: size={Width=576, Height=1037}, color=[8.7819005313126,7.97334726940162,12.9546206776413], clabel=11
 
 
 

@@ -43,8 +43,8 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            //train_iphone_color_data();
-            //train_iphone_size_data();
+            train_iphone_color_data();
+            train_iphone_size_data();
             //test_ML();
             //test_3();
             //test_4();
@@ -55,7 +55,7 @@ namespace AviaGetPhoneSize
             //r.Item1.Save("temp_1.jpg");
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
-            test_5();
+            //test_5();
             //test_ss();
             //test_6();
             return 0;
@@ -218,22 +218,29 @@ namespace AviaGetPhoneSize
         }
         static void train_iphone_color_data()
         {
-            string fn = @"../../test/iphone_color.txt";
+            string fn = @"../../../test/iphone_color.txt";
             Regex re = new Regex(@"^.+color=\[([\d\.]*),([\d\.]*),([\d\.]*)\], clabel=(\d+).*$");
             List<Tuple<double, double, double, int>> datas = new List<Tuple<double, double, double, int>>();
             foreach (string l in System.IO.File.ReadAllLines(fn))
             {
                 if (!string.IsNullOrEmpty(l))
                 {
-                    Match m = re.Match(l);
-                    if (m.Success)
+                    if (l.StartsWith("#"))
                     {
-                        double b = Double.Parse(m.Groups[1].Value);
-                        double g = Double.Parse(m.Groups[2].Value);
-                        double r = Double.Parse(m.Groups[3].Value);
-                        int label = Int32.Parse(m.Groups[4].Value);
-                        Tuple<double, double, double, int> d = new Tuple<double, double, double, int>(r, g, b, label);
-                        datas.Add(d);
+                        // comment line
+                    }
+                    else
+                    {
+                        Match m = re.Match(l);
+                        if (m.Success)
+                        {
+                            double b = Double.Parse(m.Groups[1].Value);
+                            double g = Double.Parse(m.Groups[2].Value);
+                            double r = Double.Parse(m.Groups[3].Value);
+                            int label = Int32.Parse(m.Groups[4].Value);
+                            Tuple<double, double, double, int> d = new Tuple<double, double, double, int>(r, g, b, label);
+                            datas.Add(d);
+                        }
                     }
                 }
             }
@@ -343,21 +350,28 @@ namespace AviaGetPhoneSize
         }
         static void train_iphone_size_data()
         {
-            string fn = @"../../test/iphone_color.txt";
+            string fn = @"../../../test/iphone_color.txt";
             Regex re = new Regex(@"^.+size={Width=([\d\.]*), Height=([\d\.]*)},.+slabel=(\d+).*$");
             List<Tuple<double, double, int>> datas = new List<Tuple<double, double, int>>();
             foreach (string l in System.IO.File.ReadAllLines(fn))
             {
                 if (!string.IsNullOrEmpty(l))
                 {
-                    Match m = re.Match(l);
-                    if (m.Success)
+                    if (l.StartsWith("#"))
                     {
-                        double w = Double.Parse(m.Groups[1].Value);
-                        double h = Double.Parse(m.Groups[2].Value);
-                        int label = Int32.Parse(m.Groups[3].Value);
-                        Tuple<double, double, int> d = new Tuple<double, double, int>(w, h, label);
-                        datas.Add(d);
+                        // comment line
+                    }
+                    else
+                    {
+                        Match m = re.Match(l);
+                        if (m.Success)
+                        {
+                            double w = Double.Parse(m.Groups[1].Value);
+                            double h = Double.Parse(m.Groups[2].Value);
+                            int label = Int32.Parse(m.Groups[3].Value);
+                            Tuple<double, double, int> d = new Tuple<double, double, int>(w, h, label);
+                            datas.Add(d);
+                        }
                     }
                 }
             }

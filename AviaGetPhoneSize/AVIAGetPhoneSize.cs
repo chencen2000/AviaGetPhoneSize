@@ -21,7 +21,8 @@ namespace AviaGetPhoneSize
             //Rectangle r1 = get_rectangle_by_sobel(@"C:\Tools\avia\images\Final270\iphone6 Gold\0123.6.bmp");
             //Console.WriteLine($"Sobel: {r1} and {toFloat(r1)}");
             //test();
-            montion_detect();
+            //montion_detect();
+            start(null);
             return 0;
 
         }
@@ -31,19 +32,11 @@ namespace AviaGetPhoneSize
         }
         static void test()
         {
-            string folder = @"C:\Tools\avia\images\Final270";
-            foreach(string fn in System.IO.Directory.GetFiles(folder, "*.6.bmp", System.IO.SearchOption.AllDirectories))
-            {
-                GC.Collect();
-                Console.WriteLine(fn);
-                DateTime _start = DateTime.Now;
-                Rectangle r = get_rectangle_by_canny(fn);
-                Console.WriteLine($"Detect size: {toFloat(r)}");
-                //Console.WriteLine($"Canny: {r} and {toFloat(r)}, took: {DateTime.Now-_start}");
-                //_start = DateTime.Now;
-                //Rectangle r1 = get_rectangle_by_sobel(fn);
-                //Console.WriteLine($"Sobel: {r1} and {toFloat(r1)}, took: {DateTime.Now - _start}");
-            }
+            string fn = @"temp_2.jpg";
+            Mat m = CvInvoke.Imread(fn);
+            Size sz = detect_size(m.ToImage<Gray, Byte>());
+            Image<Bgr, Byte> img1 = new Image<Bgr, byte>("temp_1.jpg");
+            Bgr rgb = sample_color(img1);
         }
         static RectangleF toFloat(Rectangle r, float ratio= 0.0139339f)
         {
@@ -154,6 +147,7 @@ namespace AviaGetPhoneSize
                             Program.logIt("motion detected!");
                             Console.WriteLine("Detected montion.");
                             monition = true;
+                            System.Threading.Thread.Sleep(500);
                         }
 
                     }
@@ -165,7 +159,7 @@ namespace AviaGetPhoneSize
                             Program.logIt("motion stopped!");
                             Console.WriteLine("Montion stopped.");
                             monition = false;
-
+                            vc.Read(cm);
                             CvInvoke.Rotate(cm, cm, RotateFlags.Rotate90CounterClockwise);
                             if (bg_img == null)
                             {
@@ -305,9 +299,10 @@ namespace AviaGetPhoneSize
                 }
             }
         }
-        static bool check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.3)
+        static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.3)
         {
             bool ret = false;
+            bool device_inplace = false;
             Program.logIt("check_device_inplace: ++");
             int[] all = diff.CountNonzero();
             double r = 0;
@@ -321,12 +316,13 @@ namespace AviaGetPhoneSize
                 r = (double)area[0] / (mask.Width * mask.Height);
                 if (r < threshold)
                 {
-                    ret = true;
+                    device_inplace = true;
                 }
+                ret = true;
             }
             //mask.Save("temp_3.jpg");
-            Program.logIt($"check_device_inplace: -- {ret}, score={r}");
-            return ret;
+            Program.logIt($"check_device_inplace: -- {ret}, inplace={device_inplace} score={r}");
+            return new Tuple<bool, bool>(ret, device_inplace);
         }
         static bool handle_motion(Image<Bgr, Byte> frane, Image<Bgr, Byte> bg)
         {
@@ -336,25 +332,29 @@ namespace AviaGetPhoneSize
             Image<Bgr, Byte> img1 = frane.Copy(roi);
             //img1.Save("temp_1.jpg");
             img0 = img1.AbsDiff(img0);
-            ret = check_device_inplace(img1);
-            if (ret)
+            Tuple<bool, bool> device_inplace = check_device_inplace(img1);
+            if (device_inplace.Item1)
             {
-                Program.logIt("Device Arrival");
-                Size sz = detect_size(img0.Mat.ToImage<Gray, Byte>());
-                Bgr rgb = sample_color(img1);
-                Program.logIt($"device: size={sz}, color={rgb}");
-                Tuple<bool, int, int> res = predict_color_and_size(rgb, sz);
-                if (res.Item1)
+                ret = device_inplace.Item2;
+                if (ret)
                 {
-                    Console.WriteLine($"device=ready");
-                    Console.WriteLine($"colorid={res.Item2}");
-                    Console.WriteLine($"sizeid={res.Item3}");
+                    Program.logIt("Device Arrival");
+                    Size sz = detect_size(img0.Mat.ToImage<Gray, Byte>());
+                    Bgr rgb = sample_color(img1);
+                    Program.logIt($"device: size={sz}, color={rgb}");
+                    Tuple<bool, int, int> res = predict_color_and_size(rgb, sz);
+                    if (res.Item1)
+                    {
+                        Console.WriteLine($"device=ready");
+                        Console.WriteLine($"colorid={res.Item2}");
+                        Console.WriteLine($"sizeid={res.Item3}");
+                    }
                 }
-            }
-            else
-            {
-                Program.logIt("Device Removal");
-                Console.WriteLine($"device=removed");
+                else
+                {
+                    Program.logIt("Device Removal");
+                    Console.WriteLine($"device=removed");
+                }
             }
             return ret;
         }
@@ -503,7 +503,8 @@ namespace AviaGetPhoneSize
         static Bgr sample_color(Image<Bgr,Byte> img)
         {
             //Rectangle r = new Rectangle(20, 810, 290, 30);
-            Rectangle r = new Rectangle(387, 106, 43, 267);
+            //Rectangle r = new Rectangle(387, 106, 43, 267);
+            Rectangle r = new Rectangle(375, 450, 30, 200);
             Image<Bgr, Byte> i = img.Copy(r);
             Bgr rgb = i.GetAverage();
             return rgb;
