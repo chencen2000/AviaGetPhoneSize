@@ -478,7 +478,7 @@ namespace AviaGetPhoneSize
         }
         static void save_template_image()
         {
-            string folder = @"D:\M2_Models\TMobile";
+            string folder = @"D:\log\m2_profile";
             //string[] models = System.IO.Directory.GetDirectories(folder);
             foreach(string mf in System.IO.Directory.GetDirectories(folder))
             {
@@ -567,28 +567,25 @@ namespace AviaGetPhoneSize
         }
         static void test_2()
         {
-            string imgfile = @"C:\Tools\avia\A07- NEW2.4.3.3\Allmodels\AP001\work_station_1\image.bmp";
-            string xmlfile = @"C:\Tools\avia\A07- NEW2.4.3.3\Allmodels\AP001\work_station_1\layout.xml";
-            Tuple<Rectangle, bool, string>[] area = retrieve_area_by_filename(xmlfile);
-            Rectangle rm = Rectangle.Empty;
-            foreach (Tuple<Rectangle, bool,string> a in area)
-            {
-                if (a.Item1.Width * a.Item1.Height > rm.Height * rm.Width)
-                    rm = a.Item1;
-            }
-            Image<Gray, Byte> img0 = new Image<Gray, byte>(imgfile).Copy(rm).Rotate(180, new Gray(0), false);
+            string fn0 = @"D:\M2_Models\TMobile\V2\iphone8 plus red_M2_N\work_station_1\image.bmp";
+            string fn1 = @"D:\log\m2_image\BACK-IPhone8-Plus-Red-2516.bmp";
+            string fn2 = @"D:\projects\avia\AviaGetPhoneSize\AviaGetPhoneSize\bin\Debug\images\template\Iphone8 plus red\temp_0.jpg";
 
-            //string fn = @"C:\Tools\avia\images\final_270\iphone6s Gray\1580.1.bmp";
-            foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone6 Gold"))
-            {
-                Image<Gray, Byte> img1 = new Image<Gray, byte>(fn);
-                //Image<Gray, Byte> img = m1.ToImage<Gray, Byte>().Copy(rm);
-                Image<Gray, float> res = img1.MatchTemplate(img0, TemplateMatchingType.CcoeffNormed);
-                double[] minValues, maxValues;
-                Point[] minLocations, maxLocations;
-                res.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
-                Program.logIt($"simi={maxValues[0]}, {maxLocations[0]}");
-            }
+            //Mat m0 = CvInvoke.Imread(fn0);
+            //Mat m2 = CvInvoke.Imread(fn2);
+            Image<Gray, Byte> img0 = new Image<Gray, byte>(fn0);
+            Image<Gray, Byte> img1 = new Image<Gray, byte>(fn1);
+            Image<Gray, Byte> img2 = new Image<Gray, byte>(fn2);
+
+            Image<Gray, float> mm = img0.MatchTemplate(img2, TemplateMatchingType.CcoeffNormed);
+            double[] minValues, maxValues;
+            Point[] minLocations, maxLocations;
+            mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+            Program.logIt($"match={maxValues[0]}, location={maxLocations[0]}");
+
+            mm = img1.MatchTemplate(img2, TemplateMatchingType.CcoeffNormed);
+            mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+            Program.logIt($"match={maxValues[0]}, location={maxLocations[0]}");
         }
         static Tuple<Rectangle, string, string>[] get_roi_area(string model, string color="")
         {
@@ -628,10 +625,10 @@ namespace AviaGetPhoneSize
         static void test_1()
         {
 #if !false
-            string fn1 = @"C:\ProgramData\FutureDial\AVIA\BACK.bmp";
+            string fn1 = @"D:\log\m2_image\BACK-IPhoneXR-Blue-8938.bmp";
             //is_iPhone_6_gold(fn1);
-            //Image<Gray, Byte> img = new Image<Gray, byte>(fn1);
-            //Task<Tuple<bool,double>>[] tasks = new Task<Tuple<bool, double>>[]
+            Image<Gray, Byte> img = new Image<Gray, byte>(fn1);
+            //Task<Tuple<bool, double>>[] tasks = new Task<Tuple<bool, double>>[]
             //{
             //    Task.Run(()=>{ return is_iPhone_XR_blue(img); }),
             //    Task.Run(()=>{ return is_iPhone_8Plus_spacegray(img); }),
@@ -642,6 +639,12 @@ namespace AviaGetPhoneSize
             //is_iPhone_8Plus_spacegray(img);
             //is_iPhone_8Plus_silver(img);
             //is_iPhone_8PlusRed(img);
+            //start(fn1);
+            Tuple<bool, double, string> res1 = is_iPhone_8PlusRed(img);
+            Tuple<bool, double, string> res2 = is_iPhone_8Plus_spacegray(img);
+            Tuple<bool, double, string> res3 = is_iPhone_8Plus_silver(img);
+            Tuple<bool, double, string> res4 = is_iPhone_XR_blue(img);
+
 #else
             foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone6 Gray"))
             {
@@ -659,6 +662,19 @@ namespace AviaGetPhoneSize
             double score = 0.0;
             string root = @"images\template\iphoneXR blue_M2_N";
             Program.logIt($"is_iPhone_XR_blue: ++ ");
+            Point p0 = new Point(650, 1116);
+            Point p1 = new Point(650, 1116);
+            // alignment
+            {
+                Image<Gray, Byte> img0 = new Image<Gray, byte>(System.IO.Path.Combine(root, @"temp_0.jpg"));
+                Image<Gray, float> mm = img.MatchTemplate(img0, TemplateMatchingType.CcoeffNormed);
+                double[] minValues, maxValues;
+                Point[] minLocations, maxLocations;
+                mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+                Program.logIt($"alignment: match={maxValues[0]}, locatin={maxLocations[0]}, temp={p0}");
+                p1 = maxLocations[0];
+                GC.Collect();
+            }
             //foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone6 Gold"))
             {
                 //string test_img = filename;
@@ -676,7 +692,14 @@ namespace AviaGetPhoneSize
                 List<double> scores = new List<double>();
                 foreach (var a in area_data)
                 {
-                    Rectangle r = new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]);
+                    int x = (int)a["x"];
+                    int y = (int)a["y"];
+                    x -= p0.X;
+                    y -= p0.Y;
+                    x += p1.X;
+                    y += p1.Y;
+                    Rectangle r = new Rectangle(x, y, (int)a["width"], (int)a["height"]);
+                    //Rectangle r = new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]);
                     Mat m = CvInvoke.Imread(System.IO.Path.Combine(root, $"temp_{a["id"]}.jpg"), ImreadModes.Grayscale);
                     //a.Add("image", m);
                     Image<Gray, Byte> img_t = img.Copy(r);
@@ -701,6 +724,19 @@ namespace AviaGetPhoneSize
             double score = 0.0;
             string root = @"images\template\iphone8 plus spacegray";
             Program.logIt($"is_iPhone_8Plus_spacegray: ++ ");
+            Point p0 = new Point(650, 1116);
+            Point p1 = new Point(650, 1116);
+            // alignment
+            {
+                Image<Gray, Byte> img0 = new Image<Gray, byte>(System.IO.Path.Combine(root, @"temp_0.jpg"));
+                Image<Gray, float> mm = img.MatchTemplate(img0, TemplateMatchingType.CcoeffNormed);
+                double[] minValues, maxValues;
+                Point[] minLocations, maxLocations;
+                mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+                Program.logIt($"alignment: match={maxValues[0]}, locatin={maxLocations[0]}, temp={p0}");
+                p1 = maxLocations[0];
+                GC.Collect();
+            }
             //foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone6 Gold"))
             {
                 //string test_img = filename;
@@ -718,7 +754,14 @@ namespace AviaGetPhoneSize
                 List<double> scores = new List<double>();
                 foreach (var a in area_data)
                 {
-                    Rectangle r = new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]);
+                    int x = (int)a["x"];
+                    int y = (int)a["y"];
+                    x -= p0.X;
+                    y -= p0.Y;
+                    x += p1.X;
+                    y += p1.Y;
+                    Rectangle r = new Rectangle(x, y, (int)a["width"], (int)a["height"]);
+                    //Rectangle r = new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]);
                     Mat m = CvInvoke.Imread(System.IO.Path.Combine(root, $"temp_{a["id"]}.jpg"), ImreadModes.Grayscale);
                     //a.Add("image", m);
                     Image<Gray, Byte> img_t = img.Copy(r);
@@ -743,6 +786,20 @@ namespace AviaGetPhoneSize
             double score = 0.0;
             string root = @"images\template\iphone8 plus silver";
             Program.logIt($"is_iPhone_8Plus_silver: ++ ");
+            Point p0 = new Point(640, 1114);
+            Point p1 = new Point(640, 1114);
+            // alignment
+            {
+                Image<Gray, Byte> img0 = new Image<Gray, byte>(System.IO.Path.Combine(root, @"temp_0.jpg"));
+                Image<Gray, float> mm = img.MatchTemplate(img0, TemplateMatchingType.CcoeffNormed);
+                double[] minValues, maxValues;
+                Point[] minLocations, maxLocations;
+                mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+                Program.logIt($"alignment: match={maxValues[0]}, locatin={maxLocations[0]}, temp={p0}");
+                p1 = maxLocations[0];
+                GC.Collect();
+            }
+
             //foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone6 Gold"))
             {
                 //string test_img = filename;
@@ -760,7 +817,14 @@ namespace AviaGetPhoneSize
                 List<double> scores = new List<double>();
                 foreach (var a in area_data)
                 {
-                    Rectangle r = new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]);
+                    int x = (int)a["x"];
+                    int y = (int)a["y"];
+                    x -= p0.X;
+                    y -= p0.Y;
+                    x += p1.X;
+                    y += p1.Y;
+                    Rectangle r = new Rectangle(x, y, (int)a["width"], (int)a["height"]);
+                    //Rectangle r = new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]);
                     Mat m = CvInvoke.Imread(System.IO.Path.Combine(root, $"temp_{a["id"]}.jpg"), ImreadModes.Grayscale);
                     //a.Add("image", m);
                     Image<Gray, Byte> img_t = img.Copy(r);
@@ -785,7 +849,20 @@ namespace AviaGetPhoneSize
             bool ret = false;
             double score = 0.0;
             string root = @"images\template\iphone8 plus red";
+            Point p0 = new Point(648, 1130);
+            Point p1 = new Point(648, 1130);
             Program.logIt($"is_iPhone_8PlusRed: ++ ");
+            // alignment
+            {
+                Image<Gray, Byte> img0 = new Image<Gray, byte>(System.IO.Path.Combine(root, @"temp_0.jpg"));
+                Image<Gray, float> mm = img.MatchTemplate(img0, TemplateMatchingType.CcoeffNormed);
+                double[] minValues, maxValues;
+                Point[] minLocations, maxLocations;
+                mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+                Program.logIt($"alignment: match={maxValues[0]}, locatin={maxLocations[0]}, temp={p0}");
+                p1 = maxLocations[0];
+                GC.Collect();
+            }
             //foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone6 Gold"))
             {
                 //string test_img = filename;
@@ -803,10 +880,17 @@ namespace AviaGetPhoneSize
                 List<double> scores = new List<double>();
                 foreach (var a in area_data)
                 {
-                    Rectangle r = new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]);
+                    int x = (int)a["x"];
+                    int y = (int)a["y"];
+                    x -= p0.X;
+                    y -= p0.Y;
+                    x += p1.X;
+                    y += p1.Y;
+                    Rectangle r = new Rectangle(x, y, (int)a["width"], (int)a["height"]);
                     Mat m = CvInvoke.Imread(System.IO.Path.Combine(root, $"temp_{a["id"]}.jpg"), ImreadModes.Grayscale);
                     //a.Add("image", m);
                     Image<Gray, Byte> img_t = img.Copy(r);
+                    img_t.Save($"temp_{a["name"]}.jpg");
                     Image<Gray, float> mm = img_t.MatchTemplate(m.ToImage<Gray, Byte>(), TemplateMatchingType.CcoeffNormed);
                     double[] minValues, maxValues;
                     Point[] minLocations, maxLocations;
