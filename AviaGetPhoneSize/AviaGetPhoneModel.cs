@@ -937,7 +937,7 @@ namespace AviaGetPhoneSize
                     Mat m = CvInvoke.Imread(System.IO.Path.Combine(root, $"temp_{a["id"]}.jpg"), ImreadModes.Grayscale);
                     //a.Add("image", m);
                     Image<Gray, Byte> img_t = img.Copy(r);
-                    img_t.Save($"temp_{a["name"]}.jpg");
+                    //img_t.Save($"temp_{a["name"]}.jpg");
                     Image<Gray, float> mm = img_t.MatchTemplate(m.ToImage<Gray, Byte>(), TemplateMatchingType.CcoeffNormed);
                     double[] minValues, maxValues;
                     Point[] minLocations, maxLocations;

@@ -139,7 +139,7 @@ namespace AviaGetPhoneSize
                     bgs.Apply(cm, mask);
                     Image<Gray, Byte> g = mask.ToImage<Gray, Byte>();
                     Gray ga = g.GetAverage();
-                    if(ga.MCvScalar.V0 > 17)
+                    if(ga.MCvScalar.V0 > 11)
                     {
                         // montion 
                         if (!monition)
@@ -167,7 +167,7 @@ namespace AviaGetPhoneSize
                             }
                             if(!handle_motion(cm.ToImage<Bgr, Byte>(), bg_img))
                             {
-                                bg_img = cm.ToImage<Bgr, Byte>();
+                                //bg_img = cm.ToImage<Bgr, Byte>();
                             }
                         }
                     }
@@ -299,7 +299,7 @@ namespace AviaGetPhoneSize
                 }
             }
         }
-        static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.3)
+        static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.25)
         {
             bool ret = false;
             bool device_inplace = false;
@@ -340,14 +340,23 @@ namespace AviaGetPhoneSize
                 {
                     Program.logIt("Device Arrival");
                     Size sz = detect_size(img0.Mat.ToImage<Gray, Byte>());
-                    Bgr rgb = sample_color(img1);
-                    Program.logIt($"device: size={sz}, color={rgb}");
-                    Tuple<bool, int, int> res = predict_color_and_size(rgb, sz);
-                    if (res.Item1)
+                    if (sz.IsEmpty)
                     {
-                        Console.WriteLine($"device=ready");
-                        Console.WriteLine($"colorid={res.Item2}");
-                        Console.WriteLine($"sizeid={res.Item3}");
+                        // error
+                        frane.Save("temp_1.jpg");
+                        bg.Save("temp_2.jpg");
+                    }
+                    else
+                    {
+                        Bgr rgb = sample_color(img1);
+                        Program.logIt($"device: size={sz}, color={rgb}");
+                        Tuple<bool, int, int> res = predict_color_and_size(rgb, sz);
+                        if (res.Item1)
+                        {
+                            Console.WriteLine($"device=ready");
+                            Console.WriteLine($"colorid={res.Item2}");
+                            Console.WriteLine($"sizeid={res.Item3}");
+                        }
                     }
                 }
                 else
@@ -536,7 +545,15 @@ namespace AviaGetPhoneSize
                     }
                 }
             }
-            Size sz = new Size(roi.X + roi.Width, roi.Y + roi.Height);
+            Size sz = Size.Empty;
+            if (!roi.IsEmpty && roi.Width<img.Width && roi.Height<img.Height)
+            {
+                sz = new Size(roi.X + roi.Width, roi.Y + roi.Height);
+            }
+            else
+            {
+                Program.logIt($"detect_size: Error! {roi}");
+            }
             Program.logIt($"detect_size: -- {sz}");
             return sz;
         }
