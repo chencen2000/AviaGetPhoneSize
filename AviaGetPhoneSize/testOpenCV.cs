@@ -1073,8 +1073,10 @@ namespace AviaGetPhoneSize
         }
         static void test_5()
         {
-            Mat m = CvInvoke.Imread(@"C:\projects\avia\imgs\temp\temp_1.jpg");
-            Image<Bgr, Byte> img = m.ToImage<Bgr, Byte>();
+            Mat m = CvInvoke.Imread(@"C:\Users\AVIA-M2\Pictures\MyCam\190722-123614.jpg");
+            CvInvoke.Rotate(m, m, RotateFlags.Rotate90CounterClockwise);
+            Rectangle roi = new Rectangle(744, 266, 576, 1116);
+            Image<Bgr, Byte> img = m.ToImage<Bgr, Byte>().Copy(roi);
             Image<Gray, Byte> mask = img.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70));
             int[] area = mask.CountNonzero();
             double r = (double)area[0] / (mask.Width * mask.Height);

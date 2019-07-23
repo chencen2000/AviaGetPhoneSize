@@ -25,6 +25,10 @@ namespace AviaGetPhoneSize
             return 0;
 
         }
+        public static void start(System.Threading.EventWaitHandle quitEvent)
+        {
+            montion_detect(quitEvent);
+        }
         static void test()
         {
             string folder = @"C:\Tools\avia\images\Final270";
@@ -123,7 +127,7 @@ namespace AviaGetPhoneSize
             //Program.logIt($"Rect: {ret}, size={toFloat(ret)}");
             return ret;
         }
-        static void montion_detect()
+        static void montion_detect(System.Threading.EventWaitHandle quitEvent=null)
         {
             VideoCapture vc = new VideoCapture(0);
             if (vc.IsOpened)
@@ -179,7 +183,18 @@ namespace AviaGetPhoneSize
                     {
                         ConsoleKeyInfo ki = Console.ReadKey();
                         if (ki.Key == ConsoleKey.Escape)
+                        {
+                            Program.logIt("Monitor will terminated by ESC pressed.");
                             break;
+                        }                            
+                    }
+                    if (quitEvent != null)
+                    {
+                        if(quitEvent.WaitOne(0))
+                        {
+                            Program.logIt("Monitor will terminated by event set.");
+                            break;
+                        }
                     }
                 }
             }
@@ -298,8 +313,10 @@ namespace AviaGetPhoneSize
             double r = 0;
             if (all[0] > 0 && all[1]>0 && all[2]>0)
             {
+                Image<Hsv, Byte> hsvimg = diff.Convert<Hsv, Byte>();
+                Image<Gray, Byte> mask = hsvimg.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
                 //diff.Save("temp_2.jpg");
-                Image<Gray, Byte> mask = diff.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70)); //img.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70));
+                //Image<Gray, Byte> mask = diff.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70)); //img.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70));
                 int[] area = mask.CountNonzero();
                 r = (double)area[0] / (mask.Width * mask.Height);
                 if (r < threshold)
@@ -329,6 +346,7 @@ namespace AviaGetPhoneSize
                 Tuple<bool, int, int> res = predict_color_and_size(rgb, sz);
                 if (res.Item1)
                 {
+                    Console.WriteLine($"device=ready");
                     Console.WriteLine($"colorid={res.Item2}");
                     Console.WriteLine($"sizeid={res.Item3}");
                 }
@@ -336,6 +354,7 @@ namespace AviaGetPhoneSize
             else
             {
                 Program.logIt("Device Removal");
+                Console.WriteLine($"device=removed");
             }
             return ret;
         }
@@ -346,9 +365,10 @@ namespace AviaGetPhoneSize
             int size_id = -1;
             try
             {
+                string dir = System.IO.Path.GetDirectoryName(Program.getCurrentExeFilename());
                 using (SVM model = new SVM())
                 {
-                    model.Load(@"traindata/iPhone_color.xml");
+                    model.Load(System.IO.Path.Combine(dir,"traindata","iPhone_color.xml"));
                     Matrix<float> test = new Matrix<float>(1, 3);
                     test[0, 0] = (float)rgb.Red;
                     test[0, 1] = (float)rgb.Green;
@@ -358,12 +378,13 @@ namespace AviaGetPhoneSize
                 }
                 using (SVM model = new SVM())
                 {
-                    model.Load(@"traindata/iPhone_size.xml");
+                    model.Load(System.IO.Path.Combine(dir, "traindata", "iPhone_size.xml"));
+                    //model.Load(@"traindata/iPhone_size.xml");
                     Matrix<float> test = new Matrix<float>(1, 2);
                     test[0, 0] = (float)sz.Width;
                     test[0, 1] = (float)sz.Height;
                     size_id = (int)model.Predict(test);
-                    Program.logIt($"prodict: colorID={size_id}");
+                    Program.logIt($"prodict: sizeID={size_id}");
                 }
                 retb = true;
             }
