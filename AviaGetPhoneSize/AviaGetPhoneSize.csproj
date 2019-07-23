@@ -179,6 +179,7 @@
   </Target>
   <Import Project="..\packages\Tesseract.3.3.0\build\Tesseract.targets" Condition="Exists('..\packages\Tesseract.3.3.0\build\Tesseract.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y $(TargetPath) %25FDHOME%25\AVIA</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
