@@ -78,7 +78,10 @@ namespace AviaGetPhoneSize
                     // do real work
                 }
             }
-
+            else
+            {
+                Program.logIt($"{System.Environment.Is64BitProcess}");
+            }
             return ret;
         }
 

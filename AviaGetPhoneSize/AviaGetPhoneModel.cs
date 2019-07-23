@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using Tesseract;
+using utility;
 
 namespace AviaGetPhoneSize
 {
@@ -37,17 +38,53 @@ namespace AviaGetPhoneSize
             int ret = -1;
             double score = 0.0;
             string model = "";
+            IniFile ini = new IniFile(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "AviaDevice.ini"));
+            int color_id = ini.GetInt32("device", "colorid", 0);
+            int size_id = ini.GetInt32("device", "sizeid", 0);
             if (System.IO.File.Exists(imageFilename))
             {
                 Image<Gray, Byte> img = new Image<Gray, byte>(imageFilename);
-                Task<Tuple<bool, double,string>>[] tasks = new Task<Tuple<bool, double,string>>[]
+                //Task<Tuple<bool, double, string>>[] tasks = new Task<Tuple<bool, double, string>>[]
+                //{
+                //Task.Run(()=>{ return is_iPhone_XR_blue(img); }),
+                //Task.Run(()=>{ return is_iPhone_8Plus_spacegray(img); }),
+                //Task.Run(()=>{ return is_iPhone_8Plus_silver(img); }),
+                //Task.Run(()=>{ return is_iPhone_8PlusRed(img); }),
+                //};
+                List<Task<Tuple<bool, double, string>>> tasks = new List<Task<Tuple<bool, double, string>>>();
+                if (size_id == 2)
                 {
-                Task.Run(()=>{ return is_iPhone_XR_blue(img); }),
-                Task.Run(()=>{ return is_iPhone_8Plus_spacegray(img); }),
-                Task.Run(()=>{ return is_iPhone_8Plus_silver(img); }),
-                Task.Run(()=>{ return is_iPhone_8PlusRed(img); }),
-                };
-                Task.WaitAll(tasks);
+                    // plus size
+                    if (color_id == 2)
+                    {
+                        // red
+                        tasks.Add(Task.Run(() => { return is_iPhone_8PlusRed(img); }));
+                    }
+                    else if (color_id == 3)
+                    {
+                        // red
+                        tasks.Add(Task.Run(() => { return is_iPhone_8Plus_spacegray(img); }));
+                    }
+                    else if (color_id == 4)
+                    {
+                        // red
+                        tasks.Add(Task.Run(() => { return is_iPhone_8Plus_silver(img); }));
+                    }
+                }
+                else if (size_id == 1)
+                {
+                    // XR size
+                    if (color_id == 1)
+                    {
+                        tasks.Add(Task.Run(() => { return is_iPhone_XR_blue(img); }));
+                    }
+                }
+                else
+                {
+                    // unknown size
+                }
+
+                Task.WaitAll(tasks.ToArray());
                 foreach(Task<Tuple<bool, double,string>> t in tasks)
                 {
                     Tuple<bool, double, string> r = t.Result;
@@ -62,6 +99,16 @@ namespace AviaGetPhoneSize
                     }
                 }
             }
+            if (ret != 0)
+            {
+                // not detect
+                model = ini.GetString("model", $"{size_id}-{color_id}", "");
+                if(!string.IsNullOrEmpty(model))
+                {
+                    ret = 0;
+                }
+            }
+            Console.WriteLine($"model={model}");
             Program.logIt($"Detect model: {model}, score={score}");
             return ret;
         }
@@ -624,7 +671,7 @@ namespace AviaGetPhoneSize
         }
         static void test_1()
         {
-#if !false
+#if false
             string fn1 = @"D:\log\m2_image\BACK-IPhoneXR-Blue-8938.bmp";
             //is_iPhone_6_gold(fn1);
             Image<Gray, Byte> img = new Image<Gray, byte>(fn1);
@@ -639,19 +686,19 @@ namespace AviaGetPhoneSize
             //is_iPhone_8Plus_spacegray(img);
             //is_iPhone_8Plus_silver(img);
             //is_iPhone_8PlusRed(img);
-            //start(fn1);
-            Tuple<bool, double, string> res1 = is_iPhone_8PlusRed(img);
-            Tuple<bool, double, string> res2 = is_iPhone_8Plus_spacegray(img);
-            Tuple<bool, double, string> res3 = is_iPhone_8Plus_silver(img);
-            Tuple<bool, double, string> res4 = is_iPhone_XR_blue(img);
+            start(fn1);
+            //Tuple<bool, double, string> res1 = is_iPhone_8PlusRed(img);
+            //Tuple<bool, double, string> res2 = is_iPhone_8Plus_spacegray(img);
+            //Tuple<bool, double, string> res3 = is_iPhone_8Plus_silver(img);
+            //Tuple<bool, double, string> res4 = is_iPhone_XR_blue(img);
 
 #else
-            foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone6 Gray"))
+            foreach (string fn in System.IO.Directory.GetFiles(@"D:\log\m2_image"))
             {
-                if (!is_iPhone_6_gold(fn))
-                {
-                    Program.logIt($"{fn} is not iPhone 6");
-                }
+                //Image<Gray, Byte> img = new Image<Gray, byte>(fn);
+                start(fn);
+                Program.logIt($"{fn}");
+                GC.Collect();
             }
 #endif
         }
