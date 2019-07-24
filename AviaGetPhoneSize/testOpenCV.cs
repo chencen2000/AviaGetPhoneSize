@@ -12,6 +12,8 @@ using Tesseract;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
 using Emgu.CV.ML;
+using System.Net.Sockets;
+using System.Net;
 
 namespace AviaGetPhoneSize
 {
@@ -43,8 +45,8 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            train_iphone_color_data();
-            train_iphone_size_data();
+            //train_iphone_color_data();
+            //train_iphone_size_data();
             //test_ML();
             //test_3();
             //test_4();
@@ -56,7 +58,7 @@ namespace AviaGetPhoneSize
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
             //test_5();
-            //test_ss();
+            test_ss();
             //test_6();
             return 0;
         }
@@ -1103,31 +1105,94 @@ namespace AviaGetPhoneSize
             area = mask.CountNonzero();
             r = (double)area[0] / (mask.Width * mask.Height);
         }
+        static bool is_same_frame(Mat m1, Mat m2, double th=17)
+        {
+            bool ret = false;
+            Mat diff = new Mat();
+            CvInvoke.AbsDiff(m1, m2, diff);
+            Gray g0 = diff.ToImage<Gray, Byte>().GetAverage();
+            if (g0.MCvScalar.V0 < th)
+                ret = true;
+            return ret;
+        }
+        
         static void test_ss()
         {
-            //VideoCapture vc = new VideoCapture(0);
-            //for (int i=0; i < 41; i++)
-            //{
-            //    CapProp cp = (CapProp)i;
-            //    double db = vc.GetCaptureProperty(cp);
-            //    Program.logIt($"{cp} = {db}");
-            //}
-            //VideoWriter v = new VideoWriter("test.mp4", (int)vc.GetCaptureProperty(CapProp.Fps), new Size((int)vc.GetCaptureProperty(CapProp.FrameWidth), (int)vc.GetCaptureProperty(CapProp.FrameHeight)), true);
-            //while (true)
-            //{
-            //    if (vc.Grab())
-            //    {
-            //        Mat m = new Mat();
-            //        if (vc.Retrieve(m))
-            //        {
-            //            v.Write(m);
-            //        }
-            //    }
-            //    if (System.Console.KeyAvailable)
-            //    {
-            //        break;
-            //    }
-            //}
+#if true
+            TcpClient client = new TcpClient();
+            bool done = false;
+            string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
+            Regex r = new Regex(@"^ACK frame (.+)\s*$", RegexOptions.IgnoreCase);
+            Mat bg = null;
+            try
+            {
+                client.Connect(IPAddress.Loopback, 6280);
+                NetworkStream ns = client.GetStream();
+                byte[] cmd = System.Text.Encoding.UTF8.GetBytes("QueryFrame\n");
+                byte[] data = new byte[1024];
+                while (!done)
+                {
+                    ns.Write(cmd, 0, cmd.Length);
+                    int read = ns.Read(data, 0, data.Length);
+                    string str = System.Text.Encoding.UTF8.GetString(data, 0, read);
+                    Match m = r.Match(str);
+                    if (m.Success)
+                    {
+                        //Mat cm = CvInvoke.Imread(System.IO.Path.Combine(root, m.Groups[1].Value));
+                        //if (bg == null)
+                        //    bg = cm;
+                        //else
+                        //{
+                        //    Mat diff = new Mat();
+                        //    CvInvoke.AbsDiff(cm, bg, diff);
+                        //    Image<Gray, byte> img = diff.ToImage<Gray, Byte>();
+                        //    Gray ga = img.GetAverage();
+                        //    if (ga.MCvScalar.V0 > 17)
+                        //        done = true;
+                        //    double db = CvInvoke.Threshold(img, new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+                        //}
+                    }
+                }
+            }
+            catch (Exception) { }
+#else
+            TcpClient client = new TcpClient();
+            bool done = false;
+            string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
+            Regex r = new Regex(@"^ACK frame (.+)\s*$", RegexOptions.IgnoreCase);
+            BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
+            try
+            {
+                client.Connect(IPAddress.Loopback, 6280);
+                NetworkStream ns = client.GetStream();
+                while (!done)
+                {
+                    byte []b = System.Text.Encoding.UTF8.GetBytes("QueryFrame\n");
+                    ns.Write(b, 0, b.Length);
+                    b = new byte[1024];
+                    int read = ns.Read(b, 0, b.Length);
+                    string s = System.Text.Encoding.UTF8.GetString(b, 0, read);
+                    Match m = r.Match(s);
+                    if (m.Success)
+                    {
+                        string fn = System.IO.Path.Combine(root, m.Groups[1].Value);
+                        Mat cm = CvInvoke.Imread(fn);
+                        Mat mask = new Mat();
+                        bgs.Apply(cm, mask);
+                        Image<Gray, Byte> g = mask.ToImage<Gray, Byte>();
+                        Gray ga = g.GetAverage();
+                        if (ga.MCvScalar.V0 > 17)
+                        {
+                            done = true;
+                        }
+                    }
+                    System.Threading.Thread.Sleep(500);
+                }
+                client.Close();
+            }
+            catch (Exception) { }
+#endif
+            /*
             VideoCapture vc = new VideoCapture(0);
             if (vc.IsOpened)
             {
@@ -1144,48 +1209,8 @@ namespace AviaGetPhoneSize
                         m.Save("temp_1.jpg");
                     }
                 }
-                //VideoWriter v1 = new VideoWriter("test_1.mp4", (int)vc.GetCaptureProperty(CapProp.Fps), new Size((int)vc.GetCaptureProperty(CapProp.FrameWidth), (int)vc.GetCaptureProperty(CapProp.FrameHeight)), true);
-                //VideoWriter v2 = new VideoWriter("test_2.mp4", (int)vc.GetCaptureProperty(CapProp.Fps), new Size((int)vc.GetCaptureProperty(CapProp.FrameWidth), (int)vc.GetCaptureProperty(CapProp.FrameHeight)), true);
-                /*
-                BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
-                bool monition = false;
-                Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
-                while (true)
-                {
-                    Mat cm = new Mat();
-                    vc.Read(cm);
-                    Mat mask = new Mat();
-                    bgs.Apply(cm, mask);
-                    //v1.Write(cm);
-                    //v2.Write(mask);
-                    //img = img.MorphologyEx(MorphOp.Erode, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
-                    //CvInvoke.MorphologyEx(mask, mask, MorphOp.Erode, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
-                    MCvScalar mean = new MCvScalar();
-                    MCvScalar stdDev = new MCvScalar();
-                    CvInvoke.MeanStdDev(mask, ref mean, ref stdDev);
-                    if(mean.V0 > 10)
-                    {
-                        if (!monition)
-                        {
-                            Program.logIt("monitor detected!");
-                            monition = true;
-                        }
-                    }
-                    else
-                    {
-                        if (monition)
-                        {
-                            Program.logIt("monitor stopped!");
-                            monition = false;
-                        }
-                    }
-                    if (System.Console.KeyAvailable)
-                    {
-                        break;
-                    }
-                }
-                */
             }
+            */
         }
         static bool check_apple_icon(string filename, Tuple<VectorOfPoint, VectorOfPoint> apple_logo, double threhold=0.05)
         {
