@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -77,6 +79,27 @@ namespace AviaGetPhoneSize
                 {
                     // do real work
                 }
+            }
+            else if (_args.IsParameterTrue("QueryFrame"))
+            {
+                // test
+                TcpClient client = new TcpClient();
+                try
+                {
+                    string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
+                    client.Connect(IPAddress.Loopback, 6280);
+                    NetworkStream ns = client.GetStream();
+                    byte[] cmd = System.Text.Encoding.UTF8.GetBytes("QueryFrame\n");
+                    byte[] data = new byte[1024];
+                    DateTime _start = DateTime.Now;
+                    while ((DateTime.Now - _start).TotalSeconds < 10)
+                    {
+                        System.Threading.Thread.Sleep(500);
+                        ns.Write(cmd, 0, cmd.Length);
+                        int read = ns.Read(data, 0, data.Length);
+                    }
+                }
+                catch (Exception) { }
             }
             else
             {
@@ -195,7 +218,7 @@ namespace AviaGetPhoneSize
         static int handle_QueryPMP_Command(System.Collections.Specialized.StringDictionary args)
         {
             int ret = -1;
-            utility.IniFile ini = new utility.IniFile(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(getCurrentExeFilename()), "AviaDevice.ini"));
+            utility.IniFile ini = new utility.IniFile(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "AviaDevice.ini"));
             string fn = ini.GetString("query", "filename", "");
             string fn1 = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", $"{fn}.bmp");
             if (!string.IsNullOrEmpty(fn) && save_image_file(fn, fn1))

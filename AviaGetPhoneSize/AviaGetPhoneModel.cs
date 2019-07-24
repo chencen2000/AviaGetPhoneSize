@@ -712,6 +712,7 @@ namespace AviaGetPhoneSize
             Point p0 = new Point(650, 1116);
             Point p1 = new Point(650, 1116);
             // alignment
+            if(false)
             {
                 Image<Gray, Byte> img0 = new Image<Gray, byte>(System.IO.Path.Combine(root, @"temp_0.jpg"));
                 Image<Gray, float> mm = img.MatchTemplate(img0, TemplateMatchingType.CcoeffNormed);
@@ -774,6 +775,7 @@ namespace AviaGetPhoneSize
             Point p0 = new Point(650, 1116);
             Point p1 = new Point(650, 1116);
             // alignment
+            if(false)
             {
                 Image<Gray, Byte> img0 = new Image<Gray, byte>(System.IO.Path.Combine(root, @"temp_0.jpg"));
                 Image<Gray, float> mm = img.MatchTemplate(img0, TemplateMatchingType.CcoeffNormed);
@@ -836,6 +838,7 @@ namespace AviaGetPhoneSize
             Point p0 = new Point(640, 1114);
             Point p1 = new Point(640, 1114);
             // alignment
+            if(false)
             {
                 Image<Gray, Byte> img0 = new Image<Gray, byte>(System.IO.Path.Combine(root, @"temp_0.jpg"));
                 Image<Gray, float> mm = img.MatchTemplate(img0, TemplateMatchingType.CcoeffNormed);
@@ -900,6 +903,7 @@ namespace AviaGetPhoneSize
             Point p1 = new Point(648, 1130);
             Program.logIt($"is_iPhone_8PlusRed: ++ ");
             // alignment
+            if(false)
             {
                 Image<Gray, Byte> img0 = new Image<Gray, byte>(System.IO.Path.Combine(root, @"temp_0.jpg"));
                 Image<Gray, float> mm = img.MatchTemplate(img0, TemplateMatchingType.CcoeffNormed);

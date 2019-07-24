@@ -7,7 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AviaGetPhoneSize
@@ -28,7 +31,8 @@ namespace AviaGetPhoneSize
         }
         public static void start(System.Threading.EventWaitHandle quitEvent)
         {
-            montion_detect(quitEvent);
+            //montion_detect(quitEvent);
+            montion_detect_v2(quitEvent);
         }
         static void test()
         {
@@ -119,6 +123,94 @@ namespace AviaGetPhoneSize
             ret = new Rectangle(rs[0].X, rs[1].Y, rs[0].Width, rs[1].Height);
             //Program.logIt($"Rect: {ret}, size={toFloat(ret)}");
             return ret;
+        }
+        static void montion_detect_v2(System.Threading.EventWaitHandle quitEvent = null)
+        {
+            TcpClient client = new TcpClient();
+            try
+            {
+                string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
+                Regex r = new Regex(@"^ACK frame (.+)\s*$", RegexOptions.IgnoreCase);
+                client.Connect(IPAddress.Loopback, 6280);
+                NetworkStream ns = client.GetStream();
+                byte[] cmd = System.Text.Encoding.UTF8.GetBytes("QueryFrame\n");
+                byte[] data = new byte[1024];
+                BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
+                bool monition = false;
+                Image<Bgr, Byte> bg_img = null;
+                while (true)
+                {
+                    System.Threading.Thread.Sleep(500);
+                    ns.Write(cmd, 0, cmd.Length);
+                    int read = ns.Read(data, 0, data.Length);
+                    string str = System.Text.Encoding.UTF8.GetString(data, 0, read);
+                    Match m = r.Match(str);
+                    if (m.Success)
+                    {
+                        Mat cm = CvInvoke.Imread(System.IO.Path.Combine(root, m.Groups[1].Value));
+                        Mat mask = new Mat();
+                        bgs.Apply(cm, mask);
+                        Image<Gray, Byte> g = mask.ToImage<Gray, Byte>();
+                        Gray ga = g.GetAverage();
+                        if (ga.MCvScalar.V0 > 11)
+                        {
+                            // montion 
+                            if (!monition)
+                            {
+                                Program.logIt("motion detected!");
+                                Console.WriteLine("Detected montion.");
+                                monition = true;
+                                System.Threading.Thread.Sleep(500);
+                            }
+
+                        }
+                        else
+                        {
+                            // no montion
+                            if (monition)
+                            {
+                                Program.logIt("motion stopped!");
+                                Console.WriteLine("Montion stopped.");
+                                monition = false;
+                                CvInvoke.Rotate(cm, cm, RotateFlags.Rotate90CounterClockwise);
+                                if (bg_img == null)
+                                {
+                                    bg_img = cm.ToImage<Bgr, Byte>();
+                                }
+                                if (!handle_motion(cm.ToImage<Bgr, Byte>(), bg_img))
+                                {
+                                    bg_img = cm.ToImage<Bgr, Byte>();
+                                }
+                            }
+                        }
+
+                        GC.Collect();
+                        if (System.Console.KeyAvailable)
+                        {
+                            ConsoleKeyInfo ki = Console.ReadKey();
+                            if (ki.Key == ConsoleKey.Escape)
+                            {
+                                Program.logIt("Monitor will terminated by ESC pressed.");
+                                break;
+                            }
+                        }
+                        if (quitEvent != null)
+                        {
+                            if (quitEvent.WaitOne(0))
+                            {
+                                Program.logIt("Monitor will terminated by event set.");
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.logIt(ex.Message);
+                Program.logIt(ex.StackTrace);
+            }
         }
         static void montion_detect(System.Threading.EventWaitHandle quitEvent=null)
         {
