@@ -43,6 +43,8 @@ namespace AviaGetPhoneSize
         }
         static int Main(string[] args)
         {
+             
+
             int ret = 0;
             System.Configuration.Install.InstallContext _args = new System.Configuration.Install.InstallContext(null, args);
             if (_args.IsParameterTrue("debug"))
