@@ -137,7 +137,7 @@ namespace AviaGetPhoneSize
         }
         static void montion_detect_v3(System.Threading.EventWaitHandle quitEvent = null)
         {
-            m_Log.Debug($"[montion_detect_v3] ++");
+            //m_Log.Debug($"[montion_detect_v3] ++");
             TcpClient client = new TcpClient();
             try
             {
@@ -153,26 +153,26 @@ namespace AviaGetPhoneSize
                 //BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
                 bool monition = false;
                 Image<Bgr, Byte> bg_img = new Emgu.CV.Image<Bgr, Byte>(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "Images", "BackGround.jpg")).Rotate(-90, new Bgr(0,0,0), false);
-                m_Log.Info($"Golden background path = {System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "Images", "BackGround.jpg")}");
+                //m_Log.Info($"Golden background path = {System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "Images", "BackGround.jpg")}");
                 bg_img.ROI = roi;
                 while (true)
                 {
                     System.Threading.Thread.Sleep(500);
                     ns.Write(cmd, 0, cmd.Length);
-                    m_Log.Info($"[montion_detect_v3]: Command(To Server) = {BitConverter.ToString(cmd)}, Binary = {cmd}");
+                    //m_Log.Info($"[montion_detect_v3]: Command(To Server) = {BitConverter.ToString(cmd)}, Binary = {cmd}");
                     int read = ns.Read(data, 0, data.Length);
-                    m_Log.Info($"[montion_detect_v3]: Receieve(From Server) = {BitConverter.ToString(data)}, Binary = {data}");
+                    //m_Log.Info($"[montion_detect_v3]: Receieve(From Server) = {BitConverter.ToString(data)}, Binary = {data}");
                     string str = System.Text.Encoding.UTF8.GetString(data, 0, read);
                     Match m = r.Match(str);
                     if (m.Success)
                     {
                         Mat cm = CvInvoke.Imread(System.IO.Path.Combine(root, m.Groups[1].Value));
-                        m_Log.Info($"[montion_detect_v3]: Image Path = {System.IO.Path.Combine(root, m.Groups[1].Value)}");
+                        //m_Log.Info($"[montion_detect_v3]: Image Path = {System.IO.Path.Combine(root, m.Groups[1].Value)}");
                         CvInvoke.Rotate(cm, cm, RotateFlags.Rotate90CounterClockwise);
 
                         if(bg_img==null)
                         {
-                            m_Log.Error($"[montion_detect_v3]: No pre-load golden background image");
+                            //m_Log.Error($"[montion_detect_v3]: No pre-load golden background image");
                             bg_img = cm.ToImage<Bgr,Byte>();
                         }
                         else
@@ -186,7 +186,7 @@ namespace AviaGetPhoneSize
 
                             //Image<Gray, Byte> g = diff.ToImage<Gray, Byte>();
                             Gray ga = diff.Convert<Gray, byte>().GetAverage();
-                            m_Log.Info($"[montion_detect_v3]: Difference image value = {ga.MCvScalar.V0}");
+                            //m_Log.Info($"[montion_detect_v3]: Difference image value = {ga.MCvScalar.V0}");
                             if (ga.MCvScalar.V0 < 17)
                             {
                                 // same as bg image, fetch another frame again.
@@ -200,10 +200,10 @@ namespace AviaGetPhoneSize
                                     if (device_inplace.Item2)
                                     {
                                         // device inplace
-                                        //Program.logIt("Device Arrival");
-                                        m_Log.Info($"[montion_detect_v3]: Device Arrival");
+                                        Program.logIt("Device Arrival");
+                                        //m_Log.Info($"[montion_detect_v3]: Device Arrival");
                                         Size sz = detect_size(diff.Convert<Gray, Byte>());
-                                        m_Log.Info($"[montion_detect_v3]: Size Detect = {sz}");
+                                        //m_Log.Info($"[montion_detect_v3]: Size Detect = {sz}");
                                         if (sz.IsEmpty)
                                         {
                                             // error
@@ -211,10 +211,10 @@ namespace AviaGetPhoneSize
                                         else
                                         {
                                             Bgr rgb = sample_color(frame_roi);
-                                            //Program.logIt($"device: size={sz}, color={rgb}");
-                                            m_Log.Info($"[montion_detect_v3]: Color Detect = {rgb}");
+                                            Program.logIt($"device: size={sz}, color={rgb}");
+                                            //m_Log.Info($"[montion_detect_v3]: Color Detect = {rgb}");
                                             Tuple<bool, int, int> res = predict_color_and_size(rgb, sz);
-                                            m_Log.Info($"[montion_detect_v3]: Color ID = {res.Item2}, Size ID = {res.Item3}");
+                                            //m_Log.Info($"[montion_detect_v3]: Color ID = {res.Item2}, Size ID = {res.Item3}");
                                             if (res.Item1)
                                             {
                                                 Console.WriteLine($"device=ready");
@@ -226,13 +226,13 @@ namespace AviaGetPhoneSize
                                     }
                                     else
                                     {
-                                        m_Log.Debug($"[montion_detect_v3]: Device is not in place");
+                                        //m_Log.Debug($"[montion_detect_v3]: Device is not in place");
                                         // device not inplace
                                     }
                                 }
                                 else
                                 {
-                                    m_Log.Debug($"[montion_detect_v3]: error ocuurs during device inplace check");
+                                    //m_Log.Debug($"[montion_detect_v3]: error ocuurs during device inplace check");
                                     // error ocuurs during device inplace check.
                                 }
                             }
@@ -263,22 +263,22 @@ namespace AviaGetPhoneSize
             }
             catch (Exception ex)
             {
-                //Program.logIt(ex.Message);
+                Program.logIt(ex.Message);
                 Program.logIt(ex.StackTrace);
-                m_Log.Error($"[montion_detect_v3]: {ex.Message}");
+                //m_Log.Error($"[montion_detect_v3]: {ex.Message}");
             }
-            m_Log.Debug($"[montion_detect_v3] --");
+            //m_Log.Debug($"[montion_detect_v3] --");
 
         }
         static void montion_detect_v2(System.Threading.EventWaitHandle quitEvent = null)
         {
-            m_Log.Debug("[montion_detect_v2] ++");
+            //m_Log.Debug("[montion_detect_v2] ++");
 
             TcpClient client = new TcpClient();
             try
             {
                 string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
-                m_Log.Info($"[montion_detect_v2]: RootPath = {root}");
+                //m_Log.Info($"[montion_detect_v2]: RootPath = {root}");
                 Regex r = new Regex(@"^ACK frame (.+)\s*$", RegexOptions.IgnoreCase);
                 client.Connect(IPAddress.Loopback, 6280);
                 NetworkStream ns = client.GetStream();
@@ -290,12 +290,12 @@ namespace AviaGetPhoneSize
                 while (true)
                 {
                     System.Threading.Thread.Sleep(500);
-                    m_Log.Debug($"[montion_detect_v2]: Command Data(To Server) = {BitConverter.ToString(cmd)}, Binary = {cmd}");
+                    //m_Log.Debug($"[montion_detect_v2]: Command Data(To Server) = {BitConverter.ToString(cmd)}, Binary = {cmd}");
                     ns.Write(cmd, 0, cmd.Length);
                     int read = ns.Read(data, 0, data.Length);
                     string str = System.Text.Encoding.UTF8.GetString(data, 0, read);
                     Match m = r.Match(str);
-                    m_Log.Debug($"[montion_detect_v2]: Receive Data(From Server = {str}");
+                    //m_Log.Debug($"[montion_detect_v2]: Receive Data(From Server = {str}");
                     if (m.Success)
                     {
                         Mat cm = CvInvoke.Imread(System.IO.Path.Combine(root, m.Groups[1].Value));
@@ -303,8 +303,8 @@ namespace AviaGetPhoneSize
                         bgs.Apply(cm, mask);
                         Image<Gray, Byte> g = mask.ToImage<Gray, Byte>();
                         Gray ga = g.GetAverage();
-                        m_Log.Debug($"[montion_detect_v2]: Arerage Gray = {ga.MCvScalar.V0}");
-                        m_Log.Debug($"[montion_detect_v2]: Is motion detected = {motion}!");
+                        //m_Log.Debug($"[montion_detect_v2]: Arerage Gray = {ga.MCvScalar.V0}");
+                        //m_Log.Debug($"[montion_detect_v2]: Is motion detected = {motion}!");
                         if (ga.MCvScalar.V0 > 11)
                         {
                             // montion 
@@ -343,9 +343,9 @@ namespace AviaGetPhoneSize
                             ConsoleKeyInfo ki = Console.ReadKey();
                             if (ki.Key == ConsoleKey.Escape)
                             {
-
-                                m_Log.Info($"[montion_detect_v2]: Monitor will terminated by ESC pressed");
-                                //Program.logIt("Monitor will terminated by ESC pressed.");
+								
+                                //m_Log.Info($"[montion_detect_v2]: Monitor will terminated by ESC pressed");
+                                Program.logIt("Monitor will terminated by ESC pressed.");
                                 break;
                             }
                         }
@@ -353,8 +353,8 @@ namespace AviaGetPhoneSize
                         {
                             if (quitEvent.WaitOne(0))
                             {
-                                m_Log.Info($"[montion_detect_v2]: Monitor will terminated by event set");
-                                //Program.logIt("Monitor will terminated by event set.");
+                                //m_Log.Info($"[montion_detect_v2]: Monitor will terminated by event set");
+                                Program.logIt("Monitor will terminated by event set.");
                                 break;
                             }
                         }
@@ -368,11 +368,11 @@ namespace AviaGetPhoneSize
                 Program.logIt(ex.StackTrace);
                 m_Log.Debug($"[montion_detect_v2]: {ex.Message}");
             }
-            m_Log.Debug("[montion_detect_v2] --");
+            //m_Log.Debug("[montion_detect_v2] --");
         }
         static void montion_detect(System.Threading.EventWaitHandle quitEvent=null)
         {
-            m_Log.Debug("[montion_detect] ++");
+            //m_Log.Debug("[montion_detect] ++");
             VideoCapture vc = new VideoCapture(0);
             if (vc.IsOpened)
             {
@@ -445,7 +445,7 @@ namespace AviaGetPhoneSize
                     }
                 }
             }
-            m_Log.Debug("[montion_detect] --");
+            //m_Log.Debug("[montion_detect] --");
 
         }
         static void montion_detect_1()
@@ -556,12 +556,12 @@ namespace AviaGetPhoneSize
         }
         static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.25)
         {
-            m_Log.Debug($"[check_device_inplace] ++");
+            //m_Log.Debug($"[check_device_inplace] ++");
             bool ret = false;
             bool device_inplace = false;
-            //Program.logIt("check_device_inplace: ++");
+            Program.logIt("check_device_inplace: ++");
             int[] all = diff.CountNonzero();
-            m_Log.Debug($"[check_device_inplace]: Non Zero of Blue = {all[0]}, Non Zero of Green = {all[1]}, Non Zero of Red = {all[2]} ");
+            //m_Log.Debug($"[check_device_inplace]: Non Zero of Blue = {all[0]}, Non Zero of Green = {all[1]}, Non Zero of Red = {all[2]} ");
             double r = 0;
             if (all[0] > 0 && all[1]>0 && all[2]>0)
             {
@@ -571,7 +571,7 @@ namespace AviaGetPhoneSize
                 //Image<Gray, Byte> mask = diff.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70)); //img.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70));
                 int[] area = mask.CountNonzero();
                 r = (double)area[0] / (mask.Width * mask.Height);
-                m_Log.Debug($"[check_device_inplace]: Non Zero Area of Mask = {area[0]}, The Rate of Non Zero of mask = {r}, Threahold = {threshold}");
+                //m_Log.Debug($"[check_device_inplace]: Non Zero Area of Mask = {area[0]}, The Rate of Non Zero of mask = {r}, Threahold = {threshold}");
                 if (r < threshold)
                 {
                     device_inplace = true;
@@ -579,13 +579,13 @@ namespace AviaGetPhoneSize
                 ret = true;
             }
             //mask.Save("temp_3.jpg");
-            //Program.logIt($"check_device_inplace: -- {ret}, inplace={device_inplace} score={r}");
-            m_Log.Debug($"[check_device_inplace] --: {ret}, inplace = {device_inplace} score = {r}");
+            Program.logIt($"check_device_inplace: -- {ret}, inplace={device_inplace} score={r}");
+            //m_Log.Debug($"[check_device_inplace] --: {ret}, inplace = {device_inplace} score = {r}");
             return new Tuple<bool, bool>(ret, device_inplace);
         }
         static bool handle_motion(Image<Bgr, Byte> frane, Image<Bgr, Byte> bg)
         {
-            m_Log.Debug($"[handle_motion] ++");
+            //m_Log.Debug($"[handle_motion] ++");
             bool ret = false;
             Rectangle roi = new Rectangle(744, 266, 576, 1116);
             Image<Bgr, Byte> img0 = bg.Copy(roi);
@@ -603,78 +603,77 @@ namespace AviaGetPhoneSize
                 ret = device_inplace.Item2;
                 if (ret)
                 {
-                    m_Log.Info("Device Arrival");
-                    //Program.logIt("Device Arrival");
+                    //m_Log.Info("Device Arrival");
+                    Program.logIt("Device Arrival");
                     Size sz = detect_size(img0.Mat.ToImage<Gray, Byte>());
-                    m_Log.Info($"[handle_motion]: Detect Size = {sz}");
+                    //m_Log.Info($"[handle_motion]: Detect Size = {sz}");
                     if (sz.IsEmpty)
                     {
                         // error
-                        m_Log.Info($"[handle_motion]: Save Image to temp_1.jpg and temp_2.jpg");
+                        //m_Log.Info($"[handle_motion]: Save Image to temp_1.jpg and temp_2.jpg");
                         frane.Save("temp_1.jpg");
                         bg.Save("temp_2.jpg");
                     }
                     else
                     {
                         Bgr rgb = sample_color(img1);
-                        //Program.logIt($"device: size={sz}, color={rgb}");
-                        m_Log.Info($"[handle_motion]: Defect Color = {rgb}");
+                        Program.logIt($"device: size={sz}, color={rgb}");
+                        //m_Log.Info($"[handle_motion]: Defect Color = {rgb}");
                         Tuple<bool, int, int> res = predict_color_and_size(rgb, sz);
                         if (res.Item1)
                         {
-                            m_Log.Info($"[handle_motion]: device ready = {res.Item1}");
-                            m_Log.Info($"[handle_motion]: Color ID = {res.Item2}");
-                            m_Log.Info($"[handle_motion]: Size ID = {res.Item3}");
-                            //Console.WriteLine($"device=ready");
-                            //Console.WriteLine($"colorid={res.Item2}");
-                            //Console.WriteLine($"sizeid={res.Item3}");
+                            //m_Log.Info($"[handle_motion]: device ready = {res.Item1}");
+                            //m_Log.Info($"[handle_motion]: Color ID = {res.Item2}");
+                            //m_Log.Info($"[handle_motion]: Size ID = {res.Item3}");
+                            Console.WriteLine($"device=ready");
+                            Console.WriteLine($"colorid={res.Item2}");
+                            Console.WriteLine($"sizeid={res.Item3}");
                         }
                     }
                 }
                 else
                 {
-                    m_Log.Info($"[handle_motion]: Device Removed");
-                    //Program.logIt("Device Removal");
-                    //Console.WriteLine($"device=removed");
+                    //m_Log.Info($"[handle_motion]: Device Removed");
+                    Program.logIt("Device Removal");
+                    Console.WriteLine($"device=removed");
                 }
             }
-            m_Log.Debug($"[handle_motion] --: Return {ret}");
+            //m_Log.Debug($"[handle_motion] --: Return {ret}");
             return ret;
         }
         static Tuple<bool, int,int> predict_color_and_size(Bgr rgb, Size sz)
         {
-            m_Log.Debug("[predict_color_and_size] ++");
+            //m_Log.Debug("[predict_color_and_size] ++");
             bool retb = false;
             int color_id = -1;
             int size_id = -1;
             try
             {
                 string dir = System.IO.Path.GetDirectoryName(Program.getCurrentExeFilename());
-                m_Log.Info($"[predict_color_and_size]: Current exe filepath = {dir}");
+                //m_Log.Info($"[predict_color_and_size]: Current exe filepath = {dir}");
                 using (SVM model = new SVM())
                 {
                     model.Load(System.IO.Path.Combine(dir,"traindata","iPhone_color.xml"));
-                    m_Log.Info($"[predict_color_and_size]: Iphone color model path = ???");
+                    //m_Log.Info($"[predict_color_and_size]: Iphone color model path = ???");
                     Matrix<float> test = new Matrix<float>(1, 3);
                     test[0, 0] = (float)rgb.Red;
                     test[0, 1] = (float)rgb.Green;
                     test[0, 2] = (float)rgb.Blue;
                     color_id = (int)model.Predict(test);
-                    m_Log.Info($"[predict_color_and_size]: ColorID={color_id}");
-                    //Program.logIt($"prodict: colorID={color_id}");
+                    //m_Log.Info($"[predict_color_and_size]: ColorID={color_id}");
+                    Program.logIt($"prodict: colorID={color_id}");
                 }
                 using (SVM model = new SVM())
                 {
                     model.Load(System.IO.Path.Combine(dir, "traindata", "iPhone_size.xml"));
-                    m_Log.Info($"[predict_color_and_size]: Iphone size model path = ???");
-
+                    //m_Log.Info($"[predict_color_and_size]: Iphone size model path = ???");
                     //model.Load(@"traindata/iPhone_size.xml");
                     Matrix<float> test = new Matrix<float>(1, 2);
                     test[0, 0] = (float)sz.Width;
                     test[0, 1] = (float)sz.Height;
                     size_id = (int)model.Predict(test);
-                    m_Log.Info($"[predict_color_and_size]: sizeID={size_id}");
-                    //Program.logIt($"prodict: sizeID={size_id}");
+                    //m_Log.Info($"[predict_color_and_size]: sizeID={size_id}");
+                    Program.logIt($"prodict: sizeID={size_id}");
                 }
                 retb = true;
             }
@@ -682,7 +681,7 @@ namespace AviaGetPhoneSize
             {
                 m_Log.Error($"[predict_color_and_size]: {Ex.Message}");
             }
-            m_Log.Debug("[predict_color_and_size] --");
+            //m_Log.Debug("[predict_color_and_size] --");
             return new Tuple<bool, int, int>(retb, color_id, size_id);
         }
         static bool handle_motion_V2(Image<Bgr, Byte> frane, Image<Gray, Byte> bg, int idx)
@@ -796,20 +795,20 @@ namespace AviaGetPhoneSize
         }
         static Bgr sample_color(Image<Bgr,Byte> img)
         {
-            m_Log.Debug("[sample_color] ++");
+            //m_Log.Debug("[sample_color] ++");
             //Rectangle r = new Rectangle(20, 810, 290, 30);
             //Rectangle r = new Rectangle(387, 106, 43, 267);
             Rectangle r = new Rectangle(375, 450, 30, 200);
             Image<Bgr, Byte> i = img.Copy(r);
             Bgr rgb = i.GetAverage();
-            m_Log.Debug($"[sample_color]: RGB = {rgb}");
-            m_Log.Debug("[sample_color] --");
+            //m_Log.Debug($"[sample_color]: RGB = {rgb}");
+            //m_Log.Debug("[sample_color] --");
             return rgb;
         }
         static Size detect_size(Image<Gray, Byte> img)
         {
-            m_Log.Debug("[detect_size] ++");
-            //Program.logIt("detect_size: ++");
+            //m_Log.Debug("[detect_size] ++");
+            Program.logIt("detect_size: ++");
             Mat m = new Mat();
             CvInvoke.Threshold(img, m, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
            
@@ -842,11 +841,11 @@ namespace AviaGetPhoneSize
             }
             else
             {
-                m_Log.Error($"[detect_size]: Size = {sz}");
-                //Program.logIt($"detect_size: Error! {roi}");
+                //m_Log.Error($"[detect_size]: Size = {sz}");
+                Program.logIt($"detect_size: Error! {roi}");
             }
-            //Program.logIt($"detect_size: -- {sz}");
-            m_Log.Debug($"[detect_size] --: Size = {sz}");
+            Program.logIt($"detect_size: -- {sz}");
+            //m_Log.Debug($"[detect_size] --: Size = {sz}");
             return sz;
         }
         static Rectangle detect_size_old(Image<Gray,Byte> img)

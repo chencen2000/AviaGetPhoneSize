@@ -39,16 +39,16 @@ namespace AviaGetPhoneSize
 
         public static int start(string imageFilename)
         {
-            m_Log.Debug($"[start] ++: Image file name = {imageFilename}");
+            //m_Log.Debug($"[start] ++: Image file name = {imageFilename}");
             int ret = -1;
             double score = 0.0;
             string model = "";
             IniFile ini = new IniFile(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "AviaDevice.ini"));
-            m_Log.Info($"[Start]: Ini File Path = {ini}");
+            //m_Log.Info($"[Start]: Ini File Path = {ini}");
             int color_id = ini.GetInt32("device", "colorid", 0);
             int size_id = ini.GetInt32("device", "sizeid", 0);
             System.Threading.Thread.Sleep(5000);
-            m_Log.Info($"[Start]: Color ID = {color_id}, Size ID = {size_id}");
+            //m_Log.Info($"[Start]: Color ID = {color_id}, Size ID = {size_id}");
             if (System.IO.File.Exists(imageFilename))
             {
                 Image<Gray, Byte> img = new Image<Gray, byte>(imageFilename);
@@ -116,9 +116,9 @@ namespace AviaGetPhoneSize
                     ret = 0;
                 }
             }
-            //Console.WriteLine($"model={model}");
-            //Program.logIt($"Detect model: {model}, score={score}");
-            m_Log.Debug($"[start] --: Defect Model = {model}, Score = {score}");
+            Console.WriteLine($"model={model}");
+            Program.logIt($"Detect model: {model}, score={score}");
+            //m_Log.Debug($"[start] --: Defect Model = {model}, Score = {score}");
             return ret;
         }
         static void extract_phone_image()

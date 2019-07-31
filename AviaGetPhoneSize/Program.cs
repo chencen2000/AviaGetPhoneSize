@@ -197,7 +197,7 @@ namespace AviaGetPhoneSize
         }
         static void handle_QueryISP_Command(System.Collections.Specialized.StringDictionary args)
         {
-            m_Log.Debug($"[handle_QueryISP_Command] ++: {Utility.DictionaryToStringConcat(args)}");
+            //m_Log.Debug($"[handle_QueryISP_Command] ++: {Utility.DictionaryToStringConcat(args)}");
             
             if (args.ContainsKey("start-service"))
             {
@@ -209,7 +209,7 @@ namespace AviaGetPhoneSize
                 }
                 else
                 {
-                    m_Log.Info($"[handle_QueryISP_Command]: The AVIAGetPhoneSize exe has existed");
+                    //m_Log.Info($"[handle_QueryISP_Command]: The AVIAGetPhoneSize exe has existed");
                     // device monitor already started.
                 }
             }
@@ -225,7 +225,7 @@ namespace AviaGetPhoneSize
                     m_Log.Error($"[handle_QueryISP_Command]: {Ex.Message}");
                 }
             }
-            m_Log.Debug("[handle_QueryISP_Command] --");
+            //m_Log.Debug("[handle_QueryISP_Command] --");
         }
         static bool save_image_file(string fn, string target)
         {
@@ -244,21 +244,21 @@ namespace AviaGetPhoneSize
         }
         static int handle_QueryPMP_Command(System.Collections.Specialized.StringDictionary args)
         {
-            m_Log.Debug("[handle_QueryPMP_Command] ++");
+            //m_Log.Debug("[handle_QueryPMP_Command] ++");
             int ret = -1;
             utility.IniFile ini = new utility.IniFile(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "AviaDevice.ini"));
-            m_Log.Info($"[handle_QueryPMP_Command]: IniFile = {ini}");
+            //m_Log.Info($"[handle_QueryPMP_Command]: IniFile = {ini}");
 
             string fn = ini.GetString("query", "filename", "");
             string fn1 = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", $"{fn}.bmp");
-            m_Log.Info($"[handle_QueryPMP_Command]: Image Saved Path = {fn1}");
+            //m_Log.Info($"[handle_QueryPMP_Command]: Image Saved Path = {fn1}");
             if (!string.IsNullOrEmpty(fn) && save_image_file(fn, fn1))
             {
                 // check model by images
-                //Console.WriteLine("model=iphone8 plus red_M2_N");
+                Console.WriteLine("model=iphone8 plus red_M2_N");
                 ret = AviaGetPhoneModel.start(fn1);
             }
-            m_Log.Debug("$[handle_QueryPMP_Command] --: IsOK = {ret}");
+            //m_Log.Debug("$[handle_QueryPMP_Command] --: IsOK = {ret}");
             return ret;
         }
     }
