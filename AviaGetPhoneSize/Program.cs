@@ -17,8 +17,6 @@ namespace AviaGetPhoneSize
 {
     class Program
     {
-        private static log4net.ILog m_Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         static String eventName = "DEVICEMONITOREVENT";
         static String TAG = "[AviaGetPhoneSize]";
         public static void logIt(string msg)
@@ -45,20 +43,17 @@ namespace AviaGetPhoneSize
         }
         static int Main(string[] args)
         {
-            m_Log.Info($"[Main][Parameters]: {Utility.StringArrayConcat(args)}");
+             
+
             int ret = 0;
             System.Configuration.Install.InstallContext _args = new System.Configuration.Install.InstallContext(null, args);
             if (_args.IsParameterTrue("debug"))
             {
-                m_Log.Debug("[Main][Debug] ++");
-                m_Log.Debug("[Main][Debug]: Press any key to continue...");
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
-                m_Log.Debug("[Main][Debug] --");
             }
             if (_args.IsParameterTrue("QueryISP"))
             {
-                m_Log.Debug("[Main][QueryISP] ++");
                 //Tuple<bool, int> res = run_debug("QueryISP");
                 //if (res.Item1)
                 //{
@@ -69,18 +64,14 @@ namespace AviaGetPhoneSize
                 //    // do real work
                 //}
                 handle_QueryISP_Command(_args.Parameters);
-                m_Log.Debug("[Main][QueryISP] --");
             }
             else if (_args.IsParameterTrue("QueryPMP"))
             {
-                m_Log.Debug("[Main][QueryPMP] ++");
                 //
                 ret = handle_QueryPMP_Command(_args.Parameters);
-                m_Log.Debug("[Main][QueryPMP] --");
             }
             else if (_args.IsParameterTrue("detect"))
             {
-                m_Log.Debug("[Main][detect] ++");
                 Tuple<bool, int> res = run_debug("detect");
                 if (res.Item1)
                 {
@@ -90,11 +81,9 @@ namespace AviaGetPhoneSize
                 {
                     // do real work
                 }
-                m_Log.Debug("[Main][detect] --");
             }
             else if (_args.IsParameterTrue("QueryFrame"))
             {
-                m_Log.Debug("[Main][QueryFrame] ++");
                 // test
                 TcpClient client = new TcpClient();
                 try
@@ -112,17 +101,12 @@ namespace AviaGetPhoneSize
                         int read = ns.Read(data, 0, data.Length);
                     }
                 }
-                catch (Exception Ex)
-                {
-                    m_Log.Error($"[Main][QueryFrame]: {Ex.Message}");
-                }
+                catch (Exception) { }
             }
             else
             {
-                m_Log.Debug($"[Main][QuertFrame]: Is64BitProcess = {System.Environment.Is64BitProcess}");
                 Program.logIt($"{System.Environment.Is64BitProcess}");
             }
-            m_Log.Debug("[Main][QueryFrame] --");
             return ret;
         }
 
@@ -195,8 +179,6 @@ namespace AviaGetPhoneSize
         }
         static void handle_QueryISP_Command(System.Collections.Specialized.StringDictionary args)
         {
-            m_Log.Debug($"[handle_QueryISP_Command] ++: {Utility.DictionaryToStringConcat(args)}");
-            
             if (args.ContainsKey("start-service"))
             {
                 bool own;
@@ -207,7 +189,6 @@ namespace AviaGetPhoneSize
                 }
                 else
                 {
-                    m_Log.Info($"[handle_QueryISP_Command]: The AVIAGetPhoneSize exe has existed");
                     // device monitor already started.
                 }
             }
@@ -218,12 +199,8 @@ namespace AviaGetPhoneSize
                     System.Threading.EventWaitHandle e = System.Threading.EventWaitHandle.OpenExisting(eventName);
                     e.Set();
                 }
-                catch (Exception Ex)
-                {
-                    m_Log.Error($"[handle_QueryISP_Command]: {Ex.Message}");
-                }
+                catch (Exception) { }
             }
-            m_Log.Debug("[handle_QueryISP_Command] --");
         }
         static bool save_image_file(string fn, string target)
         {
@@ -242,21 +219,16 @@ namespace AviaGetPhoneSize
         }
         static int handle_QueryPMP_Command(System.Collections.Specialized.StringDictionary args)
         {
-            m_Log.Debug("[handle_QueryPMP_Command] ++");
             int ret = -1;
             utility.IniFile ini = new utility.IniFile(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "AviaDevice.ini"));
-            m_Log.Info($"[handle_QueryPMP_Command]: IniFile = {ini}");
-
             string fn = ini.GetString("query", "filename", "");
             string fn1 = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", $"{fn}.bmp");
-            m_Log.Info($"[handle_QueryPMP_Command]: Image Saved Path = {fn1}");
             if (!string.IsNullOrEmpty(fn) && save_image_file(fn, fn1))
             {
                 // check model by images
                 //Console.WriteLine("model=iphone8 plus red_M2_N");
                 ret = AviaGetPhoneModel.start(fn1);
             }
-            m_Log.Debug("$[handle_QueryPMP_Command] --: IsOK = {ret}");
             return ret;
         }
     }

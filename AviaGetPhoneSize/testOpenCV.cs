@@ -1118,8 +1118,7 @@ namespace AviaGetPhoneSize
         
         static void test_ss()
         {
-            /*
-#if false
+#if true
             TcpClient client = new TcpClient();
             bool done = false;
             string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
@@ -1193,10 +1192,7 @@ namespace AviaGetPhoneSize
             }
             catch (Exception) { }
 #endif
-*/
-
-            DirectShowLib.DsDevice[] devices = DirectShowLib.DsDevice.GetDevicesOfCat(DirectShowLib.FilterCategory.VideoInputDevice);
-
+            /*
             VideoCapture vc = new VideoCapture(0);
             if (vc.IsOpened)
             {
@@ -1214,7 +1210,7 @@ namespace AviaGetPhoneSize
                     }
                 }
             }
-            
+            */
         }
         static bool check_apple_icon(string filename, Tuple<VectorOfPoint, VectorOfPoint> apple_logo, double threhold=0.05)
         {

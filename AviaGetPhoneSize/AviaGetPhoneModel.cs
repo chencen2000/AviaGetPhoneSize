@@ -18,11 +18,8 @@ namespace AviaGetPhoneSize
 {
     class AviaGetPhoneModel
     {
-        private static log4net.ILog m_Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         static int Main(string[] args)
         {
-            m_Log.Debug($"[Main] ++: {Utility.StringArrayConcat(args)}");
             int ret = 0;
             //test_check_apple_device();
             //test();
@@ -33,21 +30,18 @@ namespace AviaGetPhoneSize
             //test_2();
             //test_3();
             //save_template_image();
-            m_Log.Debug("[Main] --");
             return ret;
         }
 
         public static int start(string imageFilename)
         {
-            m_Log.Debug($"[start] ++: Image file name = {imageFilename}");
             int ret = -1;
             double score = 0.0;
             string model = "";
             IniFile ini = new IniFile(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "AviaDevice.ini"));
-            m_Log.Info($"[Start]: Ini File Path = {ini}");
             int color_id = ini.GetInt32("device", "colorid", 0);
             int size_id = ini.GetInt32("device", "sizeid", 0);
-            m_Log.Info($"[Start]: Color ID = {color_id}, Size ID = {size_id}");
+            System.Threading.Thread.Sleep(5000);
             if (System.IO.File.Exists(imageFilename))
             {
                 Image<Gray, Byte> img = new Image<Gray, byte>(imageFilename);
@@ -115,9 +109,8 @@ namespace AviaGetPhoneSize
                     ret = 0;
                 }
             }
-            //Console.WriteLine($"model={model}");
-            //Program.logIt($"Detect model: {model}, score={score}");
-            m_Log.Debug($"[start] --: Defect Model = {model}, Score = {score}");
+            Console.WriteLine($"model={model}");
+            Program.logIt($"Detect model: {model}, score={score}");
             return ret;
         }
         static void extract_phone_image()
