@@ -12,7 +12,16 @@ device: size={Width=482, Height=995}, color=[233.2445,169.961833333333,54.677166
 device: size={Width=482, Height=995}, color=[233.274833333333,170.285666666667,55.18], clabel=1, slabel=1
 device: size={Width=481, Height=995}, color=[233.508833333333,169.9195,53.7251666666667], clabel=1, slabel=1
 
+#iphone xr Black
+device: size={Width=487, Height=996}, color=[0.005,0.0035,0.00133333333333333], clabel=3, slabel=1
+device: size={Width=487, Height=996}, color=[0.0136666666666667,0.00233333333333333,0.00216666666666667], clabel=3, slabel=1
 #
+
+#iphone X spacegray
+device: size={Width=455, Height=949}, color=[0.00566666666666667,0.00316666666666667,0.00166666666666667], clabel=3, slabel=4
+device: size={Width=456, Height=950}, color=[0.006,0.0025,0.00266666666666667], clabel=3, slabel=4
+
+
 #iphone 8 plus red
 #device: size={Width=515, Height=1036}, color=[5.11697587318178,9.34892430972912,65.3794094591064], clabel=2, slabel=2
 #device: size={Width=515, Height=1036}, color=[4.64698197021165,8.96350492117411,65.3513631216793], clabel=2, slabel=2
@@ -121,6 +130,8 @@ device: size={Width=499, Height=1034}, color=[199.702666666667,199.220666666667,
 #
 #iphone 7 matteblack
 #device: size={Width=443, Height=908}, color=[10.0475568330285,8.6530790000871,15.6798188311123], clabel=11
+device: size={Width=430, Height=915}, color=[0.267666666666667,0.032,0.0656666666666667], clabel=3, slabel=3
+device: size={Width=430, Height=915}, color=[0.252666666666667,0.0278333333333333,0.0455], clabel=3, slabel=3
 #
 #iphone 7 plus matteblack
 #device: size={Width=514, Height=1037}, color=[9.66361815172894,8.45867084748715,14.8189182126992], clabel=11

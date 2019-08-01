@@ -170,7 +170,7 @@ namespace AviaGetPhoneSize
 
                             //Image<Gray, Byte> g = diff.ToImage<Gray, Byte>();
                             Gray ga = diff.Convert<Gray, byte>().GetAverage();
-                            if (ga.MCvScalar.V0 < 17)
+                            if (ga.MCvScalar.V0 < 11)
                             {
                                 // same as bg image, fetch another frame again.
                             }

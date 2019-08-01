@@ -62,6 +62,7 @@ size id:
 1: 75.7x150.9 (iPhone XR)
 2: 78.1x158.4 (iPhone 8 Plus)
 3: 67.1x138.3 (iPhone 6 7 8)
+4: 70.9x143.6 (iPhone X)
 
 command line:
 -detect -image=<full path of image> -color=id -size=id
