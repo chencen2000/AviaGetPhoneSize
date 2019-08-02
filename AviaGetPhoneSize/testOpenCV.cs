@@ -14,6 +14,8 @@ using System.Text.RegularExpressions;
 using Emgu.CV.ML;
 using System.Net.Sockets;
 using System.Net;
+using System.Drawing.Imaging;
+using System.Windows.Forms;
 
 namespace AviaGetPhoneSize
 {
@@ -45,8 +47,8 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            train_iphone_color_data();
-            train_iphone_size_data();
+            //train_iphone_color_data();
+            //train_iphone_size_data();
             //test_ML();
             //test_3();
             //test_4();
@@ -60,6 +62,7 @@ namespace AviaGetPhoneSize
             //test_5();
             //test_ss();
             //test_6();
+            test_form();
             return 0;
         }
         static void test()
@@ -1089,21 +1092,15 @@ namespace AviaGetPhoneSize
         }
         static void test_5()
         {
-            Mat m = CvInvoke.Imread(@"C:\Users\AVIA-M2\Pictures\MyCam\190722-123614.jpg");
-            CvInvoke.Rotate(m, m, RotateFlags.Rotate90CounterClockwise);
-            Rectangle roi = new Rectangle(744, 266, 576, 1116);
-            Image<Bgr, Byte> img = m.ToImage<Bgr, Byte>().Copy(roi);
-            Image<Gray, Byte> mask = img.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70));
-            int[] area = mask.CountNonzero();
-            double r = (double)area[0] / (mask.Width * mask.Height);
-            mask.Save("temp_3.jpg");
-
-            Image<Hsv, Byte> hsvimg = img.Convert<Hsv, Byte>();
-            hsvimg.Save("temp_2.jpg");
-            mask = hsvimg.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
-            mask.Save("temp_4.jpg");
-            area = mask.CountNonzero();
-            r = (double)area[0] / (mask.Width * mask.Height);
+            Bitmap img = new Bitmap(@"C:\Tools\avia\test\test.jpg");
+            string s = "this is comment set by code.";
+            byte[] b = System.Text.Encoding.Unicode.GetBytes(s);
+            PropertyItem pic = img.GetPropertyItem(40092);
+            pic.Value = b;
+            pic.Len = b.Length;
+            pic.Type = 1;
+            img.SetPropertyItem(pic);
+            img.Save("temp_1.jpg");
         }
         static bool is_same_frame(Mat m1, Mat m2, double th=17)
         {
@@ -1290,6 +1287,12 @@ namespace AviaGetPhoneSize
                 GC.Collect();
             }
             
+        }
+        [STAThread]
+        static void test_form()
+        {
+            Application.EnableVisualStyles();
+            Application.Run(new Form1());
         }
     }
 }
