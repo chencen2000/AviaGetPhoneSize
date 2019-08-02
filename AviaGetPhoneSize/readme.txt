@@ -53,8 +53,7 @@ color id:
 7: Gray (iPhone 6/iPhone 6S)
 8: Rosegold (iPhone 6/iPhone 6S/iPhone 7)
 9: Gold (iPhone 7/iPhone 6 Plus)
-10: Silver (iPhone 7)
-11: Black/Matte Black (iPhone 7/iPhone 7 Plus)
+10: Black/Matte Black (iPhone 7/iPhone 7 Plus)
 
 
 

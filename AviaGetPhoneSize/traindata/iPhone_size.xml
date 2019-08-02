@@ -9,82 +9,35 @@
   <term_criteria><epsilon>1.0000000000000001e-05</epsilon>
     <iterations>100</iterations></term_criteria>
   <var_count>2</var_count>
-  <class_count>4</class_count>
+  <class_count>2</class_count>
   <class_labels type_id="opencv-matrix">
-    <rows>4</rows>
+    <rows>2</rows>
     <cols>1</cols>
     <dt>i</dt>
     <data>
-      1 2 3 4</data></class_labels>
-  <sv_total>6</sv_total>
+      2 3</data></class_labels>
+  <sv_total>1</sv_total>
   <support_vectors>
     <_>
-      -1.51133500e-02 -4.78589423e-02</_>
-    <_>
-      1.13320742e-02 1.77758019e-02</_>
-    <_>
-      1.88679248e-02 3.39622647e-02</_>
-    <_>
-      7.29309814e-03 1.25779519e-02</_>
-    <_>
-      9.65749566e-03 1.88658051e-02</_>
-    <_>
-      -2.80741155e-02 -3.81807983e-02</_></support_vectors>
-  <uncompressed_sv_total>6</uncompressed_sv_total>
+      1. 5.99998653e-01</_></support_vectors>
+  <uncompressed_sv_total>5</uncompressed_sv_total>
   <uncompressed_support_vectors>
     <_>
-      481. 995.</_>
+      431. 899.</_>
     <_>
-      487. 996.</_>
+      430. 899.</_>
     <_>
-      455. 949.</_>
+      432. 894.</_>
     <_>
-      456. 950.</_>
+      429. 899.</_>
     <_>
-      499. 1034.</_>
-    <_>
-      430. 915.</_></uncompressed_support_vectors>
+      429. 899.</_></uncompressed_support_vectors>
   <decision_functions>
     <_>
       <sv_count>1</sv_count>
-      <rho>-5.6027707808562553e+01</rho>
+      <rho>9.6939878146990156e+02</rho>
       <alpha>
         1.</alpha>
       <index>
-        0</index></_>
-    <_>
-      <sv_count>1</sv_count>
-      <rho>2.2137651372069769e+01</rho>
-      <alpha>
-        1.</alpha>
-      <index>
-        1</index></_>
-    <_>
-      <sv_count>1</sv_count>
-      <rho>4.1867924528303647e+01</rho>
-      <alpha>
-        1.</alpha>
-      <index>
-        2</index></_>
-    <_>
-      <sv_count>1</sv_count>
-      <rho>1.5644857837437980e+01</rho>
-      <alpha>
-        1.</alpha>
-      <index>
-        3</index></_>
-    <_>
-      <sv_count>1</sv_count>
-      <rho>2.3326333520493975e+01</rho>
-      <alpha>
-        1.</alpha>
-      <index>
-        4</index></_>
-    <_>
-      <sv_count>1</sv_count>
-      <rho>-4.8007299270072963e+01</rho>
-      <alpha>
-        1.</alpha>
-      <index>
-        5</index></_></decision_functions></opencv_ml_svm>
+        0</index></_></decision_functions></opencv_ml_svm>
 </opencv_storage>

@@ -48,8 +48,8 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            //train_iphone_color_data();
-            //train_iphone_size_data();
+            train_iphone_color_data();
+            train_iphone_size_data();
             //test_ML();
             //test_3();
             //test_4();
@@ -63,7 +63,7 @@ namespace AviaGetPhoneSize
             //test_5();
             //test_ss();
             //test_6();
-            test_form();
+            //test_form();
             return 0;
         }
         static void test()
@@ -224,7 +224,7 @@ namespace AviaGetPhoneSize
         }
         static void train_iphone_color_data()
         {
-            string fn = @"../../../test/iphone_color.txt";
+            string fn = @"../../../test/M4_testing_data.txt";
             Regex re = new Regex(@"^.+color=\[([\d\.]*),([\d\.]*),([\d\.]*)\], clabel=(\d+).*$");
             List<Tuple<double, double, double, int>> datas = new List<Tuple<double, double, double, int>>();
             foreach (string l in System.IO.File.ReadAllLines(fn))
@@ -356,7 +356,7 @@ namespace AviaGetPhoneSize
         }
         static void train_iphone_size_data()
         {
-            string fn = @"../../../test/iphone_color.txt";
+            string fn = @"../../../test/M4_testing_data.txt";
             Regex re = new Regex(@"^.+size={Width=([\d\.]*), Height=([\d\.]*)},.+slabel=(\d+).*$");
             List<Tuple<double, double, int>> datas = new List<Tuple<double, double, int>>();
             foreach (string l in System.IO.File.ReadAllLines(fn))

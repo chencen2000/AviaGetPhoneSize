@@ -214,7 +214,7 @@ namespace AviaGetPhoneSize
                                     {
                                         Bgr rgb = sample_color(frame_roi);
                                         Program.logIt($"device: size={sz}, color={rgb}");
-                                        Tuple<bool, int, int> res = predict_color_and_size(rgb, sz);
+                                        Tuple<bool, int, int> res = predict_color_and_size(rgb, sz, _cfg);
                                         if (res.Item1)
                                         {
                                             Console.WriteLine($"device=ready");
