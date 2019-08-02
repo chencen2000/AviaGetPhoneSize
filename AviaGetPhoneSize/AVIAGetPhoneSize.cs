@@ -128,12 +128,15 @@ namespace AviaGetPhoneSize
         static void montion_detect_v3(System.Threading.EventWaitHandle quitEvent = null)
         {
             TcpClient client = new TcpClient();
+            Dictionary<string, object> _cfg = Program.loadConfig();
             try
             {
+                string root = _cfg["root"]?.ToString();
                 //Rectangle roi = new Rectangle(744, 266, 576, 1116);
-                Rectangle roi = new Rectangle(744, 266, 540, 1116);
+                //Rectangle roi = new Rectangle(744, 266, 540, 1116);
+                Rectangle roi = Program.config_load_rectangle(_cfg, "rectangle1");
                 //System.Threading.Thread.Sleep(5000);
-                string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
+                string frames = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
                 Regex r = new Regex(@"^ACK frame (.+)\s*$", RegexOptions.IgnoreCase);
                 client.Connect(IPAddress.Loopback, 6280);
                 NetworkStream ns = client.GetStream();
@@ -141,7 +144,7 @@ namespace AviaGetPhoneSize
                 byte[] data = new byte[1024];
                 //BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
                 bool monition = false;
-                Image<Bgr, Byte> bg_img = new Emgu.CV.Image<Bgr, Byte>(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "Images", "BackGround.jpg")).Rotate(-90, new Bgr(0,0,0), false);
+                Image<Bgr, Byte> bg_img = new Emgu.CV.Image<Bgr, Byte>(System.IO.Path.Combine(root, "Images", "BackGround.jpg")).Rotate(-90, new Bgr(0,0,0), false);
                 bg_img.ROI = roi;
                 while (true)
                 {
@@ -152,7 +155,7 @@ namespace AviaGetPhoneSize
                     Match m = r.Match(str);
                     if (m.Success)
                     {
-                        Mat cm = CvInvoke.Imread(System.IO.Path.Combine(root, m.Groups[1].Value));
+                        Mat cm = CvInvoke.Imread(System.IO.Path.Combine(frames, m.Groups[1].Value));
                         CvInvoke.Rotate(cm, cm, RotateFlags.Rotate90CounterClockwise);
 
                         if(bg_img==null)

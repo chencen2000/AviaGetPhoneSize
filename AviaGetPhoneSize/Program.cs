@@ -41,6 +41,61 @@ namespace AviaGetPhoneSize
             catch (Exception) { }
             return doc;
         }
+        #region load data from config
+        public static Rectangle config_load_rectangle(Dictionary<string,object> config, string key)
+        {
+            Rectangle ret = new Rectangle(744, 266, 540, 1116);
+            if (string.Compare(key, "rectangle2", false) == 0)
+                ret = new Rectangle(375, 450, 30, 200);
+            if (config.ContainsKey(key) && config[key] != null && config[key].GetType() == typeof(Dictionary<string, object>))
+            {
+                Dictionary<string, object> rect = (Dictionary<string, object>)config[key];
+                int x = -1;
+                int y = -1;
+                int w = -1;
+                int h = -1;
+                if(rect.ContainsKey("x") && rect["x"]!=null && rect["x"].GetType() == typeof(int))
+                {
+                    x = (int)rect["x"];
+                }
+                if (rect.ContainsKey("y") && rect["y"] != null && rect["y"].GetType() == typeof(int))
+                {
+                    y = (int)rect["y"];
+                }
+                if (rect.ContainsKey("w") && rect["w"] != null && rect["w"].GetType() == typeof(int))
+                {
+                    w = (int)rect["w"];
+                }
+                if (rect.ContainsKey("h") && rect["h"] != null && rect["h"].GetType() == typeof(int))
+                {
+                    h = (int)rect["h"];
+                }
+                if (x >= 0 && y >= 0 && w > 0 && h > 0)
+                    ret = new Rectangle(x, y, w, h);
+            }
+            return ret;
+        }
+        public static Dictionary<string,object> loadConfig()
+        {
+            Dictionary<string, object> ret = new Dictionary<string, object>();
+            string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", System.Environment.MachineName);
+            if (System.IO.Directory.Exists(root))
+            {
+                try
+                {
+                    string fn = System.IO.Path.Combine(root, "avia_config.json");
+                    var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    ret = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText(fn));
+                }
+                catch (Exception) { }
+                ret["root"] = root;
+            }
+            else
+                ret["root"] = System.IO.Path.GetDirectoryName(root);
+            return ret;
+        }
+        #endregion
+
         static int Main(string[] args)
         {
              
