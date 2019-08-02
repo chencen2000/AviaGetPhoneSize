@@ -33,7 +33,8 @@ namespace AviaGetPhoneSize
         {
             //montion_detect(quitEvent);
             //montion_detect_v2(quitEvent);
-            montion_detect_v3(quitEvent);
+            //montion_detect_v3(quitEvent);
+            montion_detect_v4(quitEvent);
         }
         static void test()
         {
@@ -124,6 +125,246 @@ namespace AviaGetPhoneSize
             ret = new Rectangle(rs[0].X, rs[1].Y, rs[0].Width, rs[1].Height);
             //Program.logIt($"Rect: {ret}, size={toFloat(ret)}");
             return ret;
+        }
+
+        static Image<Bgr,Byte> get_frame(TcpClient c, NetworkStream s)
+        {
+            Image<Bgr, Byte> ret = null;
+            byte[] cmd = System.Text.Encoding.UTF8.GetBytes("QueryFrame\n");
+            byte[] data = new byte[1024];
+            Regex r = new Regex(@"^ACK frame (.+)\s*$", RegexOptions.IgnoreCase);
+            string frames = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
+            if (c.Connected)
+            {
+                try
+                {
+                    s.Write(cmd, 0, cmd.Length);
+                    int read = s.Read(data, 0, data.Length);
+                    string str = System.Text.Encoding.UTF8.GetString(data, 0, read);
+                    Match m = r.Match(str);
+                    if (m.Success)
+                    {
+                        Mat m0 = CvInvoke.Imread(System.IO.Path.Combine(frames, m.Groups[1].Value));
+                        CvInvoke.Rotate(m0, m0, RotateFlags.Rotate90CounterClockwise);
+                        ret = m0.ToImage<Bgr, byte>();
+                    }
+                }
+                catch (Exception) { }
+            }
+            return ret;
+        }
+        static void montion_detect_v4(System.Threading.EventWaitHandle quitEvent = null)
+        {
+            TcpClient client = new TcpClient();
+            Dictionary<string, object> _cfg = Program.loadConfig();
+            try
+            {
+                string root = _cfg["root"]?.ToString();
+                //Rectangle roi = new Rectangle(744, 266, 576, 1116);
+                //Rectangle roi = new Rectangle(744, 266, 540, 1116);
+                Rectangle roi = Program.config_load_rectangle(_cfg, "rectangle1");
+                //System.Threading.Thread.Sleep(5000);
+                //string frames = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
+                //Regex r = new Regex(@"^ACK frame (.+)\s*$", RegexOptions.IgnoreCase);
+                client.Connect(IPAddress.Loopback, 6280);
+                NetworkStream ns = client.GetStream();
+                ns.ReadTimeout = 3000;
+                //byte[] cmd = System.Text.Encoding.UTF8.GetBytes("QueryFrame\n");
+                //byte[] data = new byte[1024];
+                //BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
+                Image<Bgr, Byte> bg_img = new Emgu.CV.Image<Bgr, Byte>(System.IO.Path.Combine(root, "Images", "BackGround.jpg")).Rotate(-90, new Bgr(0, 0, 0), false);
+                bg_img.ROI = roi;
+
+#if true
+                int frame_num = 0;
+                Image<Bgr, Byte>[] frames = new Image<Bgr, Byte>[4];
+                while (true)
+                {
+                    System.Threading.Thread.Sleep(500);
+                    // fetch a frame
+                    Image<Bgr, Byte> cf = get_frame(client, ns);
+                    if (cf != null)
+                    {
+                        CvInvoke.Rotate(cf, cf, RotateFlags.Rotate90CounterClockwise);
+                        frames[frame_num % 4] = cf.Copy(roi);
+                        frame_num++;
+                    }
+                    // check 4 frame are same
+                    if (frame_num > 3)
+                    {
+                        frame_num = 0;
+                        if (all_same_frames(frames))
+                        {
+                            Image<Bgr, Byte> frame_roi = frames[0];
+                            // still
+                            Tuple<bool, bool> device_inplace = check_device_inplace(frame_roi);
+                            if (device_inplace.Item1)
+                            {
+                                if (device_inplace.Item2)
+                                {
+                                    // device inplace
+                                    Program.logIt("Device implace");
+                                    Image<Bgr, Byte> diff = frame_roi.AbsDiff(bg_img);
+                                    Size sz = detect_size(diff.Convert<Gray, Byte>());
+                                    if (sz.IsEmpty)
+                                    {
+                                        // error
+                                    }
+                                    else
+                                    {
+                                        Bgr rgb = sample_color(frame_roi);
+                                        Program.logIt($"device: size={sz}, color={rgb}");
+                                        Tuple<bool, int, int> res = predict_color_and_size(rgb, sz);
+                                        if (res.Item1)
+                                        {
+                                            Console.WriteLine($"device=ready");
+                                            Console.WriteLine($"colorid={res.Item2}");
+                                            Console.WriteLine($"sizeid={res.Item3}");
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    // device not implace
+                                    Program.logIt("Device not implace");
+                                    Console.WriteLine($"device=gone");
+                                }
+                            }
+                            else
+                            {
+                                // error during check device in place.
+                            }
+                        }
+                        else
+                        {
+                            // montion
+                        }
+                    }
+
+                    // check terminating.
+                    GC.Collect();
+                    if (System.Console.KeyAvailable)
+                    {
+                        ConsoleKeyInfo ki = Console.ReadKey();
+                        if (ki.Key == ConsoleKey.Escape)
+                        {
+                            Program.logIt("Monitor will terminated by ESC pressed.");
+                            break;
+                        }
+                    }
+                    if (quitEvent != null)
+                    {
+                        if (quitEvent.WaitOne(0))
+                        {
+                            Program.logIt("Monitor will terminated by event set.");
+                            break;
+                        }
+                    }
+                }
+#else
+                bool monition = false;
+                Image<Bgr, Byte> bg_img = new Emgu.CV.Image<Bgr, Byte>(System.IO.Path.Combine(root, "Images", "BackGround.jpg")).Rotate(-90, new Bgr(0, 0, 0), false);
+                bg_img.ROI = roi;
+                while (true)
+                {
+                    System.Threading.Thread.Sleep(500);
+                    ns.Write(cmd, 0, cmd.Length);
+                    int read = ns.Read(data, 0, data.Length);
+                    string str = System.Text.Encoding.UTF8.GetString(data, 0, read);
+                    Match m = r.Match(str);
+                    if (m.Success)
+                    {
+                        Mat cm = CvInvoke.Imread(System.IO.Path.Combine(frames, m.Groups[1].Value));
+                        CvInvoke.Rotate(cm, cm, RotateFlags.Rotate90CounterClockwise);
+
+                        if (bg_img == null)
+                        {
+                            bg_img = cm.ToImage<Bgr, Byte>();
+                        }
+                        else
+                        {
+                            Image<Bgr, Byte> frame = cm.ToImage<Bgr, Byte>();
+                            Image<Bgr, Byte> frame_roi = frame.Copy(roi);
+                            //frame.ROI = roi;
+                            Image<Bgr, Byte> diff = frame_roi.AbsDiff(bg_img);
+                            //Mat diff = new Mat();
+                            //CvInvoke.AbsDiff(cm, bg_img, diff);
+
+                            //Image<Gray, Byte> g = diff.ToImage<Gray, Byte>();
+                            Gray ga = diff.Convert<Gray, byte>().GetAverage();
+                            if (ga.MCvScalar.V0 < 11)
+                            {
+                                // same as bg image, fetch another frame again.
+                            }
+                            else
+                            {
+                                // no same as bg, check device is place.
+                                Tuple<bool, bool> device_inplace = check_device_inplace(frame_roi);
+                                if (device_inplace.Item1)
+                                {
+                                    if (device_inplace.Item2)
+                                    {
+                                        // device inplace
+                                        Program.logIt("Device Arrival");
+                                        Size sz = detect_size(diff.Convert<Gray, Byte>());
+                                        if (sz.IsEmpty)
+                                        {
+                                            // error
+                                        }
+                                        else
+                                        {
+                                            Bgr rgb = sample_color(frame_roi);
+                                            Program.logIt($"device: size={sz}, color={rgb}");
+                                            Tuple<bool, int, int> res = predict_color_and_size(rgb, sz);
+                                            if (res.Item1)
+                                            {
+                                                Console.WriteLine($"device=ready");
+                                                Console.WriteLine($"colorid={res.Item2}");
+                                                Console.WriteLine($"sizeid={res.Item3}");
+                                            }
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        // device not inplace
+                                    }
+                                }
+                                else
+                                {
+                                    // error ocuurs during device inplace check.
+                                }
+                            }
+
+                        }
+                        GC.Collect();
+                        if (System.Console.KeyAvailable)
+                        {
+                            ConsoleKeyInfo ki = Console.ReadKey();
+                            if (ki.Key == ConsoleKey.Escape)
+                            {
+                                Program.logIt("Monitor will terminated by ESC pressed.");
+                                break;
+                            }
+                        }
+                        if (quitEvent != null)
+                        {
+                            if (quitEvent.WaitOne(0))
+                            {
+                                Program.logIt("Monitor will terminated by event set.");
+                                break;
+                            }
+                        }
+
+                    }
+                }
+#endif
+            }
+            catch (Exception ex)
+            {
+                Program.logIt(ex.Message);
+                Program.logIt(ex.StackTrace);
+            }
         }
         static void montion_detect_v3(System.Threading.EventWaitHandle quitEvent = null)
         {
@@ -573,7 +814,7 @@ namespace AviaGetPhoneSize
                 }
             }
         }
-        static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.25)
+        static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.3)
         {
             bool ret = false;
             bool device_inplace = false;
@@ -645,7 +886,7 @@ namespace AviaGetPhoneSize
             }
             return ret;
         }
-        static Tuple<bool, int,int> predict_color_and_size(Bgr rgb, Size sz)
+        static Tuple<bool, int,int> predict_color_and_size(Bgr rgb, Size sz, Dictionary<string,object> args=null)
         {
             bool retb = false;
             int color_id = -1;
@@ -653,6 +894,8 @@ namespace AviaGetPhoneSize
             try
             {
                 string dir = System.IO.Path.GetDirectoryName(Program.getCurrentExeFilename());
+                if (args != null)
+                    dir = args["root"] as string;
                 using (SVM model = new SVM())
                 {
                     model.Load(System.IO.Path.Combine(dir,"traindata","iPhone_color.xml"));
@@ -794,6 +1037,13 @@ namespace AviaGetPhoneSize
             Rectangle r = new Rectangle(375, 450, 30, 200);
             Image<Bgr, Byte> i = img.Copy(r);
             Bgr rgb = i.GetAverage();
+            // debug
+#if true
+            Program.logIt($"b,g,r={rgb}");
+            Image<Hsv, float> i1 = i.Convert<Hsv, float>();
+            Hsv h = i1.GetAverage();
+            Program.logIt($"hsv={h}");
+#endif
             return rgb;
         }
         static Size detect_size(Image<Gray, Byte> img)
@@ -857,6 +1107,32 @@ namespace AviaGetPhoneSize
                 }
             }
             return roi;
+        }
+        static bool all_same_frames(Image<Bgr, Byte>[] frames, double th = 11)
+        {
+            bool ret = false;
+            Image<Bgr, Byte> m0 = frames[0];
+            if (m0 != null)
+            {
+                bool all_same = true;
+                for (int i = 1; i < frames.Length && all_same; i++)
+                {
+                    if (frames[i] != null && frames[i].Width == m0.Width && frames[i].Height == m0.Height)
+                    {
+                        Image<Bgr, Byte> diff = m0.AbsDiff(frames[i]);
+                        Gray ga = diff.Convert<Gray, byte>().GetAverage();
+                        if (ga.MCvScalar.V0 > th)
+                        {
+                            Program.logIt($"image diff: score={ga.MCvScalar.V0}");
+                            all_same = false;
+                        }
+                    }
+                    else
+                        all_same = false;
+                }
+                ret = all_same;
+            }
+            return ret;
         }
     }
 }
