@@ -42,6 +42,7 @@ namespace AviaGetPhoneSize
 
     class testOpenCV
     {
+        [STAThread]
         static int Main(string[] args)
         {
             //resize_image();
@@ -1092,15 +1093,36 @@ namespace AviaGetPhoneSize
         }
         static void test_5()
         {
-            Bitmap img = new Bitmap(@"C:\Tools\avia\test\test.jpg");
-            string s = "this is comment set by code.";
-            byte[] b = System.Text.Encoding.Unicode.GetBytes(s);
-            PropertyItem pic = img.GetPropertyItem(40092);
-            pic.Value = b;
-            pic.Len = b.Length;
-            pic.Type = 1;
-            img.SetPropertyItem(pic);
-            img.Save("temp_1.jpg");
+            //Bitmap img = new Bitmap(@"D:\Tools\test\test.jpg");
+            //string s = "this is comment set by code.\0";
+            //byte[] b = System.Text.Encoding.Unicode.GetBytes(s);
+
+            ////PropertyItem pic = img.GetPropertyItem(40092);
+            //PropertyItem pic = img.PropertyItems[0];
+            //pic.Id = 40092;
+            //pic.Value = b;
+            //pic.Len = b.Length;
+            //pic.Type = 1;
+            //img.SetPropertyItem(pic);
+            //img.Save("temp_2.jpg");
+            string strFileName = @"D:\Tools\test\test.jpg";
+            Shell32.Shell shell = new Shell32.Shell();
+            Shell32.Folder objFolder = shell.NameSpace(System.IO.Path.GetDirectoryName(strFileName));
+            Shell32.FolderItem folderItem = objFolder.ParseName(System.IO.Path.GetFileName(strFileName));
+            List<string> arrHeaders = new List<string>();
+            for (int i = 0; i < short.MaxValue; i++)
+            {
+                string header = objFolder.GetDetailsOf(null, i);
+                if (String.IsNullOrEmpty(header))
+                    break;
+                arrHeaders.Add(header);
+            }
+            for (int i=0; i< arrHeaders.Count; i++)
+            {
+                string s = objFolder.GetDetailsOf(folderItem, i);
+                Program.logIt($"{i}: {arrHeaders[i]}: {s}");
+            }
+            
         }
         static bool is_same_frame(Mat m1, Mat m2, double th=17)
         {
