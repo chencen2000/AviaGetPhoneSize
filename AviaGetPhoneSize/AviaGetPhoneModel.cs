@@ -26,11 +26,11 @@ namespace AviaGetPhoneSize
             //test_ocr();
             //extract_phone_image();
             //test_ml();
-            //test_1();
+            test_1();
             //test_2();
             //test_3();
             //save_template_image();
-            start(@"D:\projects\avia\AviaGetPhoneSize\AviaGetPhoneSize\bin\x64\Debug\test\newmodel\iphone7matteblack.1.bmp");
+            //start(@"D:\projects\avia\AviaGetPhoneSize\AviaGetPhoneSize\bin\x64\Debug\test\newmodel\iphone7matteblack.1.bmp");
             return ret;
         }
 
@@ -551,7 +551,8 @@ namespace AviaGetPhoneSize
             //string[] models = System.IO.Directory.GetDirectories(folder);
             foreach(string mf in System.IO.Directory.GetDirectories(folder))
             {
-                List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                List<Dictionary<string, object>> areas = new List<Dictionary<string, object>>();
                 string model = System.IO.Path.GetFileName(mf);
                 System.IO.Directory.CreateDirectory($@"output\template\{model}");
                 string xmlfile = System.IO.Path.Combine(mf, "work_station_1", "layout.xml");
@@ -574,9 +575,13 @@ namespace AviaGetPhoneSize
                     r.Add("width", area[i].Item1.Width);
                     r.Add("height", area[i].Item1.Height);
                     r.Add("xpath", area[i].Item3);
-                    data.Add(r);
+                    areas.Add(r);
                 }
                 //System.IO.File.WriteAllText($@"output\template\{model}\info.txt", sb.ToString());
+                data.Add("model", model);
+                data.Add("sizeid", 0);
+                data.Add("colorid", 0);
+                data.Add("areas", areas);
                 try
                 {
                     var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -693,36 +698,10 @@ namespace AviaGetPhoneSize
         }
         static void test_1()
         {
-#if false
-            string fn1 = @"D:\log\m2_image\BACK-IPhoneXR-Blue-8938.bmp";
-            //is_iPhone_6_gold(fn1);
-            Image<Gray, Byte> img = new Image<Gray, byte>(fn1);
-            //Task<Tuple<bool, double>>[] tasks = new Task<Tuple<bool, double>>[]
-            //{
-            //    Task.Run(()=>{ return is_iPhone_XR_blue(img); }),
-            //    Task.Run(()=>{ return is_iPhone_8Plus_spacegray(img); }),
-            //    Task.Run(()=>{ return is_iPhone_8Plus_silver(img); }),
-            //    Task.Run(()=>{ return is_iPhone_8PlusRed(img); }),
-            //};
-            //Task.WaitAll(tasks);
-            //is_iPhone_8Plus_spacegray(img);
-            //is_iPhone_8Plus_silver(img);
-            //is_iPhone_8PlusRed(img);
-            start(fn1);
-            //Tuple<bool, double, string> res1 = is_iPhone_8PlusRed(img);
-            //Tuple<bool, double, string> res2 = is_iPhone_8Plus_spacegray(img);
-            //Tuple<bool, double, string> res3 = is_iPhone_8Plus_silver(img);
-            //Tuple<bool, double, string> res4 = is_iPhone_XR_blue(img);
+            string test_img = @"";
+            int color_id = 0;
+            int size_id = 0;
 
-#else
-            foreach (string fn in System.IO.Directory.GetFiles(@"D:\log\m2_image"))
-            {
-                //Image<Gray, Byte> img = new Image<Gray, byte>(fn);
-                start(fn);
-                Program.logIt($"{fn}");
-                GC.Collect();
-            }
-#endif
         }
         #region iPhone Model Check
         static Tuple<bool, double, string> is_iPhone_X_SpaceGray(Image<Gray, Byte> img, double threshold = 0.40)
