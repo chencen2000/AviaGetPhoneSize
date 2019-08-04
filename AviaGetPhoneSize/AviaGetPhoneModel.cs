@@ -4,6 +4,7 @@ using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using HtmlAgilityPack;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -699,12 +700,79 @@ namespace AviaGetPhoneSize
         }
         static void test_1()
         {
-            string test_img = @"";
-            int color_id = 0;
-            int size_id = 0;
-
+            string test_img = @"C:\Tools\avia\images\Final270\iphone6 Plus Gold\0169.1.bmp";
+            Mat m = CvInvoke.Imread(test_img);
+            int color_id = 9;
+            int size_id = 2;
+            string root = @"C:\ProgramData\FutureDial\AVIA\AVIA-M4-PC\images\template";
+            Dictionary<string, object>[] all_models = load_template(root);
+            var models = all_models.Where(x => x["colorid"].ToString()==color_id.ToString() && x["sizeid"].ToString() == size_id.ToString());
+            foreach(var model in models)
+            {
+                Tuple<bool, double, string> res = is_right_model(m.ToImage<Gray,Byte>(), model);
+            }
+        }
+        static Dictionary<string,object>[] load_template(string dir)
+        {
+            List<Dictionary<string, object>> ret = new List<Dictionary<string, object>>();
+            foreach (string s in System.IO.Directory.GetDirectories(dir))
+            {
+                try
+                {
+                    string fn = System.IO.Path.Combine(s, "info.json");
+                    var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    Dictionary<string, object> d = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText(fn));
+                    d.Add("path", s);
+                    ret.Add(d);
+                }
+                catch (Exception) { }
+            }
+            return ret.ToArray();
         }
         #region iPhone Model Check
+        static Tuple<bool, double, string> is_right_model(Image<Gray, Byte> img, Dictionary<string,object> args,double threshold = 0.50)
+        {
+            bool ret = false;
+            double score = 0.0;
+            string root = args["path"] as string;
+            Program.logIt($"is_right_model: ++ {root}");
+            // need alignment?
+            Point p0 = new Point(650, 1116);
+            Point p1 = new Point(650, 1116);
+            // matching
+            ArrayList data = args["areas"] as ArrayList;
+            //var area_data = data.Where(x => x.ContainsKey("type") && x["type"].ToString() == "match");
+            List<double> scores = new List<double>();
+            foreach (var a0 in data)
+            {
+                Dictionary<string, object> a = (Dictionary<string, object>)a0;
+                if (a.ContainsKey("type") && string.Compare(a["type"].ToString(), "match", true) == 0)
+                {
+                    int x = (int)a["x"];
+                    int y = (int)a["y"];
+                    x -= p0.X;
+                    y -= p0.Y;
+                    x += p1.X;
+                    y += p1.Y;
+                    Rectangle r = new Rectangle(x, y, (int)a["width"], (int)a["height"]);
+                    //Rectangle r = new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]);
+                    Mat m = CvInvoke.Imread(System.IO.Path.Combine(root, $"temp_{a["id"]}.jpg"), ImreadModes.Grayscale);
+                    //a.Add("image", m);
+                    Image<Gray, Byte> img_t = img.Copy(r);
+                    Image<Gray, float> mm = img_t.MatchTemplate(m.ToImage<Gray, Byte>(), TemplateMatchingType.CcoeffNormed);
+                    double[] minValues, maxValues;
+                    Point[] minLocations, maxLocations;
+                    mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+                    Program.logIt($"id: {a["name"]}, match: {maxValues[0]}");
+                    scores.Add(maxValues[0]);
+                }
+            }
+            score = scores.Average();
+            if (score > threshold)
+                ret = true;
+            Program.logIt($"is_right_model: -- {ret} score={score}");
+            return new Tuple<bool, double, string>(ret, score, args["model"] as string);
+        }
         static Tuple<bool, double, string> is_iPhone_X_SpaceGray(Image<Gray, Byte> img, double threshold = 0.40)
         {
             bool ret = false;
