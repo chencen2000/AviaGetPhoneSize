@@ -18,8 +18,10 @@ iPhone 7 plus matteblack
 [AviaGetPhoneSize]: device: size={Width=499, Height=1051}, color=[0.113666666666667,0.0151666666666667,0.0256666666666667], clabel=3, slabel=2
 [AviaGetPhoneSize]: device: size={Width=499, Height=1042}, color=[0.2225,0.0111666666666667,0.0146666666666667], clabel=3, slabel=2
 [AviaGetPhoneSize]: device: size={Width=499, Height=1037}, color=[0.140833333333333,0.0111666666666667,0.0135], clabel=3, slabel=2
-[AviaGetPhoneSize]: device: size={Width=431, Height=899}, color=[0.308,0.0156666666666667,0.038], clabel=3, slabel=2
-[AviaGetPhoneSize]: device: size={Width=430, Height=899}, color=[0.299666666666667,0.0276666666666667,0.0341666666666667], clabel=3, slabel=2
+
+iPhone 7 matteblack
+[AviaGetPhoneSize]: device: size={Width=431, Height=899}, color=[0.308,0.0156666666666667,0.038], clabel=3, slabel=3
+[AviaGetPhoneSize]: device: size={Width=430, Height=899}, color=[0.299666666666667,0.0276666666666667,0.0341666666666667], clabel=3, slabel=3
 
 
 iPhone 6 plus gold
@@ -77,6 +79,7 @@ iphone 8 gold
 iphone 8 gray
 [AviaGetPhoneSize]: device: size={Width=429, Height=899}, color=[0.0105,0.0005,0.0005], clabel=3, slabel=3
 [AviaGetPhoneSize]: device: size={Width=429, Height=899}, color=[0.008,0,0], clabel=3, slabel=3
+[AviaGetPhoneSize]: device: size={Width=430, Height=900}, color=[0.008,0,0], clabel=3, slabel=3
 
 
 iphone 7 silver

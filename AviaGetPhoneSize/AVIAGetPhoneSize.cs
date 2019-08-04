@@ -203,7 +203,7 @@ namespace AviaGetPhoneSize
                                 if (device_inplace.Item2)
                                 {
                                     // device inplace
-                                    Program.logIt("Device implace");
+                                    Program.logIt("Device inplace");
                                     Image<Bgr, Byte> diff = frame_roi.AbsDiff(bg_img);
                                     Size sz = detect_size(diff.Convert<Gray, Byte>());
                                     if (sz.IsEmpty)
@@ -226,8 +226,8 @@ namespace AviaGetPhoneSize
                                 else
                                 {
                                     // device not implace
-                                    Program.logIt("Device not implace");
-                                    Console.WriteLine($"device=gone");
+                                    Program.logIt("Device not inplace");
+                                    Console.WriteLine($"device=removed");
                                 }
                             }
                             else
@@ -814,7 +814,7 @@ namespace AviaGetPhoneSize
                 }
             }
         }
-        static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.33)
+        static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.25)
         {
             bool ret = false;
             bool device_inplace = false;

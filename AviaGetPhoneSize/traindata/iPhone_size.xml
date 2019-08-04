@@ -19,23 +19,17 @@
   <sv_total>1</sv_total>
   <support_vectors>
     <_>
-      1. 5.99998653e-01</_></support_vectors>
-  <uncompressed_sv_total>5</uncompressed_sv_total>
+      6.93815993e-03 1.23680243e-02</_></support_vectors>
+  <uncompressed_sv_total>2</uncompressed_sv_total>
   <uncompressed_support_vectors>
     <_>
-      431. 899.</_>
+      499. 1023.</_>
     <_>
-      430. 899.</_>
-    <_>
-      432. 894.</_>
-    <_>
-      429. 899.</_>
-    <_>
-      429. 899.</_></uncompressed_support_vectors>
+      430. 900.</_></uncompressed_support_vectors>
   <decision_functions>
     <_>
       <sv_count>1</sv_count>
-      <rho>9.6939878146990156e+02</rho>
+      <rho>1.5114630467571681e+01</rho>
       <alpha>
         1.</alpha>
       <index>
