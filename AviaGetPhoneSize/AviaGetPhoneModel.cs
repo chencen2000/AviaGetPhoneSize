@@ -27,7 +27,7 @@ namespace AviaGetPhoneSize
             //test_ocr();
             //extract_phone_image();
             //test_ml();
-            test_1();
+            //test_1();
             //test_2();
             //test_3();
             //save_template_image();
@@ -56,6 +56,7 @@ namespace AviaGetPhoneSize
                 //Task.Run(()=>{ return is_iPhone_8PlusRed(img); }),
                 //};
                 List<Task<Tuple<bool, double, string>>> tasks = new List<Task<Tuple<bool, double, string>>>();
+#if !true
                 if (size_id == 1)
                 {
                     // XR size
@@ -107,7 +108,7 @@ namespace AviaGetPhoneSize
                 {
                     // unknown size
                 }
-
+#endif
                 Task.WaitAll(tasks.ToArray());
                 foreach(Task<Tuple<bool, double,string>> t in tasks)
                 {
@@ -1174,6 +1175,7 @@ namespace AviaGetPhoneSize
                 GC.Collect();
             }
             //foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\final_270\iphone6 Gold"))
+            try
             {
                 //string test_img = filename;
                 //Image<Gray, Byte> img = new Image<Gray, byte>(test_img);
@@ -1212,6 +1214,7 @@ namespace AviaGetPhoneSize
                 if (score > threshold)
                     ret = true;
             }
+            catch (Exception) { }
             Program.logIt($"is_iPhone_7_MatteBlack: -- {ret} score={score}");
             return new Tuple<bool, double, string>(ret, score, "Iphone7 MatteBlack_M2_N");
 

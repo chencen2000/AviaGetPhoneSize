@@ -48,8 +48,8 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            train_iphone_color_data();
-            train_iphone_size_data();
+            //train_iphone_color_data();
+            //train_iphone_size_data();
             //test_ML();
             //test_3();
             //test_4();
@@ -63,7 +63,7 @@ namespace AviaGetPhoneSize
             //test_5();
             //test_ss();
             //test_6();
-            //test_form();
+            test_form();
             return 0;
         }
         static void test()
