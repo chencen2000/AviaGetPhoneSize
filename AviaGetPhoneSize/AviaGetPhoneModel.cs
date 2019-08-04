@@ -42,6 +42,7 @@ namespace AviaGetPhoneSize
             IniFile ini = new IniFile(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "AviaDevice.ini"));
             int color_id = ini.GetInt32("device", "colorid", 0);
             int size_id = ini.GetInt32("device", "sizeid", 0);
+            Program.logIt($"AviaGetPhoneModel::start: ++ image={imageFilename}, sizeid={size_id}, colorid={color_id}");
             //System.Threading.Thread.Sleep(5000);
             if (System.IO.File.Exists(imageFilename))
             {
@@ -131,7 +132,7 @@ namespace AviaGetPhoneSize
                 }
             }
             Console.WriteLine($"model={model}");
-            Program.logIt($"Detect model: {model}, score={score}");
+            Program.logIt($"AviaGetPhoneModel::start: -- {model}, score={score}");
             return ret;
         }
         static void extract_phone_image()
