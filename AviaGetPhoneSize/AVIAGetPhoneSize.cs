@@ -814,7 +814,7 @@ namespace AviaGetPhoneSize
                 }
             }
         }
-        static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.25)
+        static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.30)
         {
             bool ret = false;
             bool device_inplace = false;
