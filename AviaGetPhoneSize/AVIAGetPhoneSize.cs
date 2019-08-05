@@ -188,11 +188,12 @@ namespace AviaGetPhoneSize
                         CvInvoke.Rotate(cf, cf, RotateFlags.Rotate90CounterClockwise);
                         frames[frame_num % 4] = cf.Copy(roi);
                         frame_num++;
+                        if (frame_num > 7)
+                            frame_num = 4;
                     }
                     // check 4 frame are same
                     if (frame_num > 3)
                     {
-                        frame_num = 0;
                         if (all_same_frames(frames))
                         {
                             Image<Bgr, Byte> frame_roi = frames[0];
@@ -814,7 +815,7 @@ namespace AviaGetPhoneSize
                 }
             }
         }
-        static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.30)
+        static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.27)  // 0.3
         {
             bool ret = false;
             bool device_inplace = false;
