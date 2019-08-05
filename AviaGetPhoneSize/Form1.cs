@@ -1,5 +1,6 @@
 ﻿using Emgu.CV;
 using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,11 +43,10 @@ namespace AviaGetPhoneSize
                 vc.Read(m);
                 if (!m.IsEmpty)
                 {
-                    Bitmap img = m.Bitmap;
-                    img.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                    Image<Bgr, Byte> img = prepare_image(m.ToImage<Bgr,Byte>());
                     pictureBox1.Invoke(new Action(() =>
                     {
-                        pictureBox1.Image = img;
+                        pictureBox1.Image = img.Bitmap;
                     }));
                 }
                 System.Threading.Thread.Sleep(500);
@@ -89,6 +89,16 @@ namespace AviaGetPhoneSize
             {
                 pictureBox1.Image.Save(saveFileDialog1.FileName);
             }
+        }
+
+        Image<Bgr, Byte> prepare_image(Image<Bgr,Byte> img)
+        {
+            Rectangle r = new Rectangle(534, 352, 606, 1118);
+            Image<Bgr, Byte> ret = null;
+            // 
+            ret = img.Rotate(-90.0, new Bgr(0, 0, 0), false);
+            ret.Draw(r, new Bgr(0, 0, 255), 5);
+            return ret;
         }
     }
 }
