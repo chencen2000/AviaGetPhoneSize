@@ -27,7 +27,7 @@ namespace AviaGetPhoneSize
             //test_ocr();
             //extract_phone_image();
             //test_ml();
-            //test_1();
+            test_1();
             //test_2();
             //test_3();
             //save_template_image();
@@ -708,9 +708,32 @@ namespace AviaGetPhoneSize
             string root = @"C:\ProgramData\FutureDial\AVIA\AVIA-M4-PC\images\template";
             Dictionary<string, object>[] all_models = load_template(root);
             var models = all_models.Where(x => x["colorid"].ToString()==color_id.ToString() && x["sizeid"].ToString() == size_id.ToString());
+            List<Task<Tuple<bool, double, string>>> tasks = new List<Task<Tuple<bool, double, string>>>();
             foreach(var model in models)
             {
-                Tuple<bool, double, string> res = is_right_model(m.ToImage<Gray,Byte>(), model);
+                tasks.Add(Task.Run(() => 
+                {
+                    return is_right_model(m.ToImage<Gray, Byte>(), model);
+                }));
+                //Tuple<bool, double, string> res = is_right_model(m.ToImage<Gray,Byte>(), model);
+            }
+            if (tasks.Count > 0)
+            {
+                double score = 0;
+                string model = string.Empty;
+                Task.WaitAll(tasks.ToArray());
+                foreach(var t in tasks)
+                {
+                    Tuple<bool, double, string> res = t.Result;
+                    if (res.Item1)
+                    {
+                        if (res.Item2 > score)
+                        {
+                            score = res.Item2;
+                            model = res.Item3;
+                        }
+                    }
+                }
             }
         }
         static Dictionary<string,object>[] load_template(string dir)
@@ -736,7 +759,8 @@ namespace AviaGetPhoneSize
             bool ret = false;
             double score = 0.0;
             string root = args["path"] as string;
-            Program.logIt($"is_right_model: ++ {root}");
+            string model = args["model"] as string;
+            Program.logIt($"[{model}] is_right_model: ++ {root}");
             // need alignment?
             Point p0 = new Point(650, 1116);
             Point p1 = new Point(650, 1116);
@@ -764,15 +788,15 @@ namespace AviaGetPhoneSize
                     double[] minValues, maxValues;
                     Point[] minLocations, maxLocations;
                     mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
-                    Program.logIt($"id: {a["name"]}, match: {maxValues[0]}");
+                    Program.logIt($"[{model}] id: {a["name"]}, match: {maxValues[0]}");
                     scores.Add(maxValues[0]);
                 }
             }
             score = scores.Average();
             if (score > threshold)
                 ret = true;
-            Program.logIt($"is_right_model: -- {ret} score={score}");
-            return new Tuple<bool, double, string>(ret, score, args["model"] as string);
+            Program.logIt($"[{model}] is_right_model: -- {ret} score={score}");
+            return new Tuple<bool, double, string>(ret, score, model);
         }
         static Tuple<bool, double, string> is_iPhone_X_SpaceGray(Image<Gray, Byte> img, double threshold = 0.40)
         {
