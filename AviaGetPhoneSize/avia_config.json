@@ -23,28 +23,55 @@
       "v": 255
     }
   },
-  "AVIA-M4-PC": {
-    "rectangle1": {
-      "x": 774,
-      "y": 266,
-      "w": 540,
-      "h": 1116
-    },
-    "rectangle2": {
-      "x": 375,
-      "y": 450,
-      "w": 30,
-      "h": 200
-    },
-    "hsv1": {
-      "h": 45,
-      "s": 100,
-      "v": 50
-    },
-    "hsv2": {
-      "h": 75,
-      "s": 255,
-      "v": 255
-    }
+  "model_size": {
+    "iphone6 gold": [3],
+    "iphone6 gray": [3],
+    "iphone6 plus gold": [2],
+    "iphone6 silver": [3],
+    "iphone6s gray": [3],
+    "iphone6s plus rosegold": [2],
+    "iphone6s plus silver": [2],
+    "iphone6s rosegold": [3],
+    "iphone6s silver": [3],
+    "iphone7 gold": [3],
+    "iphone7 matteblack": [3],
+    "iphone7 plus matteblack": [2],
+    "iphone7 plus rosegold": [2],
+    "iphone7 rosegold": [3],
+    "iphone7 silver": [3],
+    "iphone8 gold": [3],
+    "iphone8 gray": [3],
+    "iphone8 plus gold": [2],
+    "iphone8 plus red": [2],
+    "iphone8 plus silver": [2],
+    "iphone8 plus spacegray": [2],
+    "iphonexr blue": [1]
+  },
+  "model_color": {
+    "iphone6 gold": [ 9 ],
+    "iphone6 gray": [ 7 ],
+    "iphone6 plus gold": [ 9 ],
+    "iphone6 silver": [ 6 ],
+    "iphone6s gray": [ 7 ],
+    "iphone6s plus rosegold": [ 8, 9 ],
+    "iphone6s plus silver": [ 6 ],
+    "iphone6s rosegold": [ 8, 9 ],
+    "iphone6s silver": [ 6 ],
+    "iphone7 gold": [ 9 ],
+    "iphone7 matteblack": [ 3 ],
+    "iphone7 plus matteblack": [ 3 ],
+    "iphone7 plus rosegold": [ 8 ],
+    "iphone7 rosegold": [ 8 ],
+    "iphone7 silver": [ 6 ],
+    "iphone8 gold": [ 5 ],
+    "iphone8 gray": [ 3 ],
+    "iphone8 plus gold": [ 5 ],
+    "iphone8 plus red": [ 2 ],
+    "iphone8 plus silver": [ 4 ],
+    "iphone8 plus spacegray": [ 3 ],
+    "iphonexr blue": [ 1 ]
+  },
+  "machines": {
+    "AVIA-M4-PC": "AVIA-M4-PC"
   }
 }

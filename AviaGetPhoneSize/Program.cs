@@ -22,6 +22,7 @@ namespace AviaGetPhoneSize
     {
         static String eventName = "DEVICEMONITOREVENT";
         static String TAG = "[AviaGetPhoneSize]";
+        static Dictionary<string, object> avia_config = null;
         public static void logIt(string msg)
         {
             System.Diagnostics.Trace.WriteLine($"{TAG}: {msg}");
@@ -78,9 +79,24 @@ namespace AviaGetPhoneSize
             }
             return ret;
         }
-        public static Dictionary<string,object> loadConfig()
+        public static Dictionary<string, object> loadConfig(string name)
         {
-            Dictionary<string, object> ret = new Dictionary<string, object>();
+            Dictionary<string, object> ret = null;
+            loadConfig();
+            if (avia_config.ContainsKey("name"))
+            {
+                try { ret = (Dictionary<string, object>)avia_config[name]; }
+                catch (Exception) { }
+            }
+            else
+            {
+                ret = avia_config;
+            }
+            return ret;
+        }
+        public static Dictionary<string,object> loadConfig()
+        {            
+#if false
             string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", System.Environment.MachineName);
             if (System.IO.Directory.Exists(root))
             {
@@ -95,15 +111,57 @@ namespace AviaGetPhoneSize
             }
             else
                 ret["root"] = System.IO.Path.GetDirectoryName(root);
-            return ret;
+#else
+            // load avia config
+            if (avia_config == null)
+            {
+                Dictionary<string, object> ret = new Dictionary<string, object>();
+                string s = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "avia_config.json");
+                Dictionary<string, object> m00 = null;
+                // load main config
+                if (System.IO.File.Exists(s))
+                {
+                    try
+                    {
+                        var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                        m00 = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText(s));
+                    }
+                    catch (Exception) { }
+                }
+                // load each machines
+                if (m00 != null && m00.ContainsKey("machines") && m00["machines"] != null && m00["machines"].GetType() == typeof(Dictionary<string, object>))
+                {
+                    ret.Add("main", m00);
+                    if (m00.ContainsKey("machines") && m00["machines"] != null && m00["machines"].GetType() == typeof(Dictionary<string, object>))
+                    {
+                        Dictionary<string, object> ms = (Dictionary<string, object>)m00["machines"];
+                        foreach (KeyValuePair<string, object> kvp in ms)
+                        {
+                            s = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", kvp.Value.ToString(), "avia_config.json");
+                            if (System.IO.File.Exists(s))
+                            {
+                                try
+                                {
+                                    var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                                    Dictionary<string, object> m = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText(s));
+                                    m["root"] = System.IO.Path.GetDirectoryName(s);
+                                    ret[kvp.Key] = m;
+                                }
+                                catch (Exception) { }
+                            }
+                        }
+                    }
+                    avia_config = ret;
+                }
+            }
+#endif
+            return avia_config;
         }
         #endregion
 
         [STAThread]
         static int Main(string[] args)
         {
-             
-
             int ret = 0;
             System.Configuration.Install.InstallContext _args = new System.Configuration.Install.InstallContext(null, args);
             if (_args.IsParameterTrue("debug"))

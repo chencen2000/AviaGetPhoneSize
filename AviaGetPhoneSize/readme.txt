@@ -46,14 +46,14 @@ color=1, color id, 1, 2, 3...
 color id:
 1: Blue (iPhone XR)
 2: Red (iPhone 8 Plus)
-3: Gray (iPhone 8 Plus/iPhone 8)
+3: Gray (iPhone 8 Plus/iPhone 8), Black/Matte Black (iPhone 7/iPhone 7 Plus)
 4: Silver (iPhone 8 Plus)
 5: Gold (iPhone 8/iPhone 8 Plus)
 6: Sliver (iPhone 6/iPhone 6S/iPhone 7)
 7: Gray (iPhone 6/iPhone 6S)
 8: Rosegold (iPhone 6/iPhone 6S/iPhone 7)
 9: Gold (iPhone 7/iPhone 6 Plus)
-10: Black/Matte Black (iPhone 7/iPhone 7 Plus)
+
 
 
 

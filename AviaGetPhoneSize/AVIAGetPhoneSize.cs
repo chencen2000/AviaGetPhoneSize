@@ -156,7 +156,7 @@ namespace AviaGetPhoneSize
         static void montion_detect_v4(System.Threading.EventWaitHandle quitEvent = null)
         {
             TcpClient client = new TcpClient();
-            Dictionary<string, object> _cfg = Program.loadConfig();
+            Dictionary<string, object> _cfg = Program.loadConfig(System.Environment.MachineName);
             try
             {
                 string root = _cfg["root"]?.ToString();
@@ -370,7 +370,7 @@ namespace AviaGetPhoneSize
         static void montion_detect_v3(System.Threading.EventWaitHandle quitEvent = null)
         {
             TcpClient client = new TcpClient();
-            Dictionary<string, object> _cfg = Program.loadConfig();
+            Dictionary<string, object> _cfg = Program.loadConfig(System.Environment.MachineName);
             try
             {
                 string root = _cfg["root"]?.ToString();

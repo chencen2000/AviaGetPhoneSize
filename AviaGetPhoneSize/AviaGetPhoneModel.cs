@@ -28,8 +28,8 @@ namespace AviaGetPhoneSize
             //extract_phone_image();
             //test_ml();
             //test_1();
-            //test_2();
-            test_3();
+            test_2();
+            //test_3();
             //save_template_image();
             //start(@"D:\projects\avia\AviaGetPhoneSize\AviaGetPhoneSize\bin\x64\Debug\test\newmodel\iphone7matteblack.1.bmp");
             return ret;
@@ -550,9 +550,10 @@ namespace AviaGetPhoneSize
         }
         static void save_template_image()
         {
-            string folder = @"D:\M2_models";
+            string folder = @"C:\Tools\avia\M2\Profile";
+            Regex reg = new Regex(@"^(.+)_M[\d+]_N$");
             //string[] models = System.IO.Directory.GetDirectories(folder);
-            foreach(string mf in System.IO.Directory.GetDirectories(folder))
+            foreach (string mf in System.IO.Directory.GetDirectories(folder))
             {
                 Dictionary<string, object> data = new Dictionary<string, object>();
                 List<Dictionary<string, object>> areas = new List<Dictionary<string, object>>();
@@ -581,12 +582,20 @@ namespace AviaGetPhoneSize
                     areas.Add(r);
                 }
                 //System.IO.File.WriteAllText($@"output\template\{model}\info.txt", sb.ToString());
-                data.Add("model", model);
+                Match m = reg.Match(model);
+                List<int> sizeid = new List<int>();
+                List<int> colorid = new List<int>();
+                if (m.Success)
+                {
+                    data.Add("model", m.Groups[1].Value);
+
+                }
+                data.Add("modelid", model);                
                 data.Add("sizeid", new int[] { 0 });
                 data.Add("colorid", new int[] { 0 });
                 data.Add("filename", xmlfile);
                 data.Add("md5", Program.md5(xmlfile));
-                data.Add("areas", areas);
+                data.Add("areas", areas);               
                 try
                 {
                     var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -642,27 +651,7 @@ namespace AviaGetPhoneSize
         }
         static void test_2()
         {
-            string dir = @"C:\ProgramData\FutureDial\AVIA\AVIA-M4-PC\images\template";
-            foreach(string src in System.IO.Directory.GetDirectories(@"output\template"))
-            {
-                string target = System.IO.Path.Combine(dir, System.IO.Path.GetFileName(src), "info.xml");
-                string source = System.IO.Path.Combine(src, "info.xml");
-                if (System.IO.File.Exists(target) && System.IO.File.Exists(src))
-                {
-                    try
-                    {
-                        var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-                        Dictionary<string, object> t_dic = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText(target));
-                        Dictionary<string, object> s_dic = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText(src));
-                        foreach(KeyValuePair<string,object> kvp in s_dic)
-                        {
-                        }
-                    }
-                    catch (Exception) { }
-                }
-
-            }
-
+            Program.loadConfig();
         }
         static Tuple<Rectangle, string, string>[] get_roi_area(string model, string color="")
         {
