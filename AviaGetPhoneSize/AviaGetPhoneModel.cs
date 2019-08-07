@@ -27,9 +27,9 @@ namespace AviaGetPhoneSize
             //test_ocr();
             //extract_phone_image();
             //test_ml();
-            test_1();
+            //test_1();
             //test_2();
-            //test_3();
+            test_3();
             //save_template_image();
             //start(@"D:\projects\avia\AviaGetPhoneSize\AviaGetPhoneSize\bin\x64\Debug\test\newmodel\iphone7matteblack.1.bmp");
             return ret;
@@ -582,8 +582,10 @@ namespace AviaGetPhoneSize
                 }
                 //System.IO.File.WriteAllText($@"output\template\{model}\info.txt", sb.ToString());
                 data.Add("model", model);
-                data.Add("sizeid", 0);
-                data.Add("colorid", 0);
+                data.Add("sizeid", new int[] { 0 });
+                data.Add("colorid", new int[] { 0 });
+                data.Add("filename", xmlfile);
+                data.Add("md5", Program.md5(xmlfile));
                 data.Add("areas", areas);
                 try
                 {
@@ -612,31 +614,27 @@ namespace AviaGetPhoneSize
         }
         static void test_3()
         {
-            string imgfile = @"C:\Tools\avia\20190607-VZW-Model-Loose-270\Iphone7 plus Red\work_station_1\image.bmp";
-            string xmlfile = @"C:\Tools\avia\20190607-VZW-Model-Loose-270\Iphone7 plus Red\work_station_1\layout.xml";
-            Image<Gray, Byte> img0 = new Image<Gray, byte>(imgfile);
-            Tuple<Rectangle, bool, string>[] area = retrieve_area_by_filename(xmlfile);
-            string fn = @"C:\Tools\avia\images\final_270\iphone7 Plus Red\0656.1.bmp";
-            Image<Gray, Byte> img1 = new Image<Gray, byte>(fn);
-            for (int i=0; i<area.Length; i++)
+            string dir = @"C:\ProgramData\FutureDial\AVIA\AVIA-M4-PC\images\template";
+            foreach (string src in System.IO.Directory.GetDirectories(dir))
             {
-                if (area[i].Item2)
+                string info = System.IO.Path.Combine(src, "info.json");
+                if (System.IO.File.Exists(info))
                 {
                     try
                     {
-                        Image<Gray, Byte> m0 = img0.Copy(area[i].Item1);
-                        //Rectangle r = area[i].Item1;
-                        //Rectangle.Inflate(r, 10, 10);
-                        //Image<Gray, Byte> m1 = img1.Copy(Rectangle.Inflate(r, 100, 100));
-                        Image<Gray, Byte> m1 = img1.Copy(area[i].Item1);
-                        Program.logIt($"{i}: {area[i].Item1} {area[i].Item2} {area[i].Item3} ");
-                        m0.Save($@"output\temp\temp_{i}_0.jpg");
-                        m1.Save($@"output\temp\temp_{i}_1.jpg");
-                        Image<Gray, float> res = m1.MatchTemplate(m0, TemplateMatchingType.CcoeffNormed);
-                        double[] minValues, maxValues;
-                        Point[] minLocations, maxLocations;
-                        res.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
-                        Program.logIt($"{i}: simi={maxValues[0]}, {maxLocations[0]}");
+                        var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                        Dictionary<string, object> dic = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText(info));
+                        if (dic.ContainsKey("sizeid"))
+                        {
+                            int i = (int)dic["sizeid"];
+                            dic["sizeid"] = new int[] { i };
+                        }
+                        if (dic.ContainsKey("colorid"))
+                        {
+                            int i = (int)dic["colorid"];
+                            dic["colorid"] = new int[] { i };
+                        }
+                        System.IO.File.WriteAllText(info, jss.Serialize(dic));
                     }
                     catch (Exception) { }
                 }
@@ -644,25 +642,27 @@ namespace AviaGetPhoneSize
         }
         static void test_2()
         {
-            string fn0 = @"D:\M2_Models\TMobile\V2\iphone8 plus red_M2_N\work_station_1\image.bmp";
-            string fn1 = @"D:\log\m2_image\BACK-IPhone8-Plus-Red-2516.bmp";
-            string fn2 = @"D:\projects\avia\AviaGetPhoneSize\AviaGetPhoneSize\bin\Debug\images\template\Iphone8 plus red\temp_0.jpg";
+            string dir = @"C:\ProgramData\FutureDial\AVIA\AVIA-M4-PC\images\template";
+            foreach(string src in System.IO.Directory.GetDirectories(@"output\template"))
+            {
+                string target = System.IO.Path.Combine(dir, System.IO.Path.GetFileName(src), "info.xml");
+                string source = System.IO.Path.Combine(src, "info.xml");
+                if (System.IO.File.Exists(target) && System.IO.File.Exists(src))
+                {
+                    try
+                    {
+                        var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                        Dictionary<string, object> t_dic = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText(target));
+                        Dictionary<string, object> s_dic = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText(src));
+                        foreach(KeyValuePair<string,object> kvp in s_dic)
+                        {
+                        }
+                    }
+                    catch (Exception) { }
+                }
 
-            //Mat m0 = CvInvoke.Imread(fn0);
-            //Mat m2 = CvInvoke.Imread(fn2);
-            Image<Gray, Byte> img0 = new Image<Gray, byte>(fn0);
-            Image<Gray, Byte> img1 = new Image<Gray, byte>(fn1);
-            Image<Gray, Byte> img2 = new Image<Gray, byte>(fn2);
+            }
 
-            Image<Gray, float> mm = img0.MatchTemplate(img2, TemplateMatchingType.CcoeffNormed);
-            double[] minValues, maxValues;
-            Point[] minLocations, maxLocations;
-            mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
-            Program.logIt($"match={maxValues[0]}, location={maxLocations[0]}");
-
-            mm = img1.MatchTemplate(img2, TemplateMatchingType.CcoeffNormed);
-            mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
-            Program.logIt($"match={maxValues[0]}, location={maxLocations[0]}");
         }
         static Tuple<Rectangle, string, string>[] get_roi_area(string model, string color="")
         {

@@ -9,9 +9,12 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
+using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
 namespace AviaGetPhoneSize
 {
@@ -96,6 +99,7 @@ namespace AviaGetPhoneSize
         }
         #endregion
 
+        [STAThread]
         static int Main(string[] args)
         {
              
@@ -157,6 +161,11 @@ namespace AviaGetPhoneSize
                     }
                 }
                 catch (Exception) { }
+            }
+            else if (_args.IsParameterTrue("show"))
+            {
+                Application.EnableVisualStyles();
+                Application.Run(new Form1());
             }
             else
             {
@@ -283,6 +292,19 @@ namespace AviaGetPhoneSize
                 // check model by images
                 //Console.WriteLine("model=iphone8 plus red_M2_N");
                 ret = AviaGetPhoneModel.start(fn1);
+            }
+            return ret;
+        }
+        public static string md5(string filename)
+        {
+            string ret = string.Empty;
+            if (System.IO.File.Exists(filename))
+            {
+                using (var md5 = MD5.Create())
+                {
+                    Byte[] h = md5.ComputeHash(System.IO.File.ReadAllBytes(filename));
+                    ret = BitConverter.ToString(h);
+                }
             }
             return ret;
         }
