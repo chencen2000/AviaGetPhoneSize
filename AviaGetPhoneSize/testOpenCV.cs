@@ -49,7 +49,7 @@ namespace AviaGetPhoneSize
             //test();
             //test_1();
             train_iphone_color_data();
-            train_iphone_size_data_v2();
+            //train_iphone_size_data_v2();
             //test_ML();
             //test_3();
             //test_4();
@@ -60,7 +60,7 @@ namespace AviaGetPhoneSize
             //r.Item1.Save("temp_1.jpg");
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
-            //test_5();
+            test_5();
             //test_ss();
             //test_6();
             //test_form();
@@ -1219,11 +1219,11 @@ namespace AviaGetPhoneSize
             r = (double)area[0] / (mask.Width * mask.Height);
             */
 
-            Mat m00 = CvInvoke.Imread(@"C:\Tools\avia\images\avia_m0_pc\images\BackGround.jpg");
+            Mat m00 = CvInvoke.Imread(@"C:\Tools\avia\images\avia_m0_pc\FromMyCam\BackGround.jpg");
             CvInvoke.Rotate(m00, m00, RotateFlags.Rotate90CounterClockwise);
             Image<Bgr, Byte> img00 = m00.ToImage<Bgr, Byte>().Copy(r1);
 
-            string dir = @"C:\Tools\avia\images\avia_m0_pc\images";
+            string dir = @"C:\Tools\avia\images\avia_m0_pc\FromMyCam";
             StringBuilder sb = new StringBuilder();
             foreach (string fn in System.IO.Directory.GetFiles(dir))
                 //string fn = @"C:\Tools\avia\images\avia_m0_pc\Iphone7 JetBlack.jpg";
@@ -1248,7 +1248,7 @@ namespace AviaGetPhoneSize
                     bgr = AviaGetPhoneSize.AVIAGetPhoneSize.sample_color(img0, new Rectangle(388, 84, 30, 200));
                     Program.logIt($"{System.IO.Path.GetFileName(fn)}: size={bgr}");
 
-                    sb.AppendLine($"{System.IO.Path.GetFileNameWithoutExtension(fn)}, size={res.Item3}, color={bgr}");
+                    sb.AppendLine($"{System.IO.Path.GetFileNameWithoutExtension(fn)}, color={bgr}");
                 }                
             }
 
