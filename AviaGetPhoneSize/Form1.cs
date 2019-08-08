@@ -36,6 +36,7 @@ namespace AviaGetPhoneSize
 
         void capture_frame()
         {
+            Program.loadConfig();
             VideoCapture vc = (VideoCapture)this.Tag;
             while (true)
             {

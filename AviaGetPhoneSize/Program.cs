@@ -88,10 +88,10 @@ namespace AviaGetPhoneSize
                 try { ret = (Dictionary<string, object>)avia_config[name]; }
                 catch (Exception) { }
             }
-            else
-            {
-                ret = avia_config;
-            }
+            //else
+            //{
+            //    ret = avia_config;
+            //}
             return ret;
         }
         public static Dictionary<string,object> loadConfig()
