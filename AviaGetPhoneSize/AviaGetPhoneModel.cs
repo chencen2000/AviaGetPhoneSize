@@ -27,8 +27,8 @@ namespace AviaGetPhoneSize
             //test_ocr();
             //extract_phone_image();
             //test_ml();
-            //test_1();
-            test_2();
+            test_1();
+            //test_2();
             //test_3();
             //save_template_image();
             //start(@"D:\projects\avia\AviaGetPhoneSize\AviaGetPhoneSize\bin\x64\Debug\test\newmodel\iphone7matteblack.1.bmp");
@@ -553,6 +553,9 @@ namespace AviaGetPhoneSize
             string folder = @"C:\Tools\avia\M2\Profile";
             Regex reg = new Regex(@"^(.+)_M[\d+]_N$");
             //string[] models = System.IO.Directory.GetDirectories(folder);
+            Dictionary<string, object> cfg = Program.loadConfig("main");
+            Dictionary<string, object> model_to_size = (Dictionary<string, object>)cfg["model_size"];
+            Dictionary<string, object> model_to_color = (Dictionary<string, object>)cfg["model_color"];
             foreach (string mf in System.IO.Directory.GetDirectories(folder))
             {
                 Dictionary<string, object> data = new Dictionary<string, object>();
@@ -588,11 +591,16 @@ namespace AviaGetPhoneSize
                 if (m.Success)
                 {
                     data.Add("model", m.Groups[1].Value);
-
+                    if(model_to_color.ContainsKey(m.Groups[1].Value))
+                        data.Add("colorid", model_to_color[m.Groups[1].Value]);
+                    if (model_to_size.ContainsKey(m.Groups[1].Value))
+                        data.Add("sizeid", model_to_size[m.Groups[1].Value]);
                 }
-                data.Add("modelid", model);                
-                data.Add("sizeid", new int[] { 0 });
-                data.Add("colorid", new int[] { 0 });
+                data.Add("modelid", model);
+                if(!data.ContainsKey("sizeid"))
+                    data.Add("sizeid", new int[] { 0 });
+                if (!data.ContainsKey("colorid"))
+                    data.Add("colorid", new int[] { 0 });
                 data.Add("filename", xmlfile);
                 data.Add("md5", Program.md5(xmlfile));
                 data.Add("areas", areas);               
@@ -651,7 +659,11 @@ namespace AviaGetPhoneSize
         }
         static void test_2()
         {
-            Program.loadConfig();
+            Dictionary<string, object> cfg = Program.loadConfig("main");
+            //Dictionary<string, object> cfg_main = (Dictionary<string, object>)cfg["main"];
+            Dictionary<string, object> model_to_size = (Dictionary<string, object>)cfg["model_size"];
+            Dictionary<string, object> model_to_color = (Dictionary<string, object>)cfg["model_color"];
+
         }
         static Tuple<Rectangle, string, string>[] get_roi_area(string model, string color="")
         {
@@ -690,12 +702,29 @@ namespace AviaGetPhoneSize
         }
         static void test_1()
         {
-            string test_img = @"C:\Tools\avia\images\Final270\iphone6 Plus Gold\0169.1.bmp";
+            string test_img = @"C:\Tools\avia\images\test.1\iphone8 Plus Silver_img\1128.1.bmp";
             Mat m = CvInvoke.Imread(test_img);
-            int color_id = 9;
+            int color_id = 2;
             int size_id = 2;
-            string root = @"C:\ProgramData\FutureDial\AVIA\AVIA-M4-PC\images\template";
+            string root = @"C:\ProgramData\FutureDial\AVIA\images\template";
             Dictionary<string, object>[] all_models = load_template(root);
+            List<Task<Tuple<bool, double, string>>> tasks = new List<Task<Tuple<bool, double, string>>>();
+            foreach (Dictionary<string,object> model in all_models)
+            {
+                if(model.ContainsKey("colorid") && model.ContainsKey("sizeid") && model["colorid"] !=null && model["sizeid"] != null && model["colorid"].GetType()==typeof(ArrayList) && model["colorid"].GetType() == typeof(ArrayList))
+                {
+                    ArrayList cid = (ArrayList)model["colorid"];
+                    ArrayList sid = (ArrayList)model["sizeid"];
+                    if(cid.Contains(color_id) && sid.Contains(size_id))
+                    {
+                        tasks.Add(Task.Run(() =>
+                        {
+                            return is_right_model_v2(m.ToImage<Gray, Byte>(), model);
+                        }));
+                    }
+                }
+            }
+            /*
             var models = all_models.Where(x => x["colorid"].ToString()==color_id.ToString() && x["sizeid"].ToString() == size_id.ToString());
             List<Task<Tuple<bool, double, string>>> tasks = new List<Task<Tuple<bool, double, string>>>();
             foreach(var model in models)
@@ -706,10 +735,11 @@ namespace AviaGetPhoneSize
                 }));
                 //Tuple<bool, double, string> res = is_right_model(m.ToImage<Gray,Byte>(), model);
             }
+            */
+            double score = 0;
+            string model_id = string.Empty;
             if (tasks.Count > 0)
             {
-                double score = 0;
-                string model = string.Empty;
                 Task.WaitAll(tasks.ToArray());
                 foreach(var t in tasks)
                 {
@@ -719,11 +749,12 @@ namespace AviaGetPhoneSize
                         if (res.Item2 > score)
                         {
                             score = res.Item2;
-                            model = res.Item3;
+                            model_id = res.Item3;
                         }
                     }
                 }
             }
+            Program.logIt($"model: {model_id}, score: {score}");
         }
         static Dictionary<string,object>[] load_template(string dir)
         {
@@ -743,6 +774,64 @@ namespace AviaGetPhoneSize
             return ret.ToArray();
         }
         #region iPhone Model Check
+        static Tuple<bool, double, string> is_right_model_v2(Image<Gray, Byte> img, Dictionary<string, object> args, double threshold = 0.50)
+        {
+            bool ret = false;
+            double score = 0.0;
+            string root = args["path"] as string;
+            string model = args["model"] as string;
+            Program.logIt($"[{model}] is_right_model_v2: ++ {root}");
+            // need alignment?
+            Point p0 = new Point(650, 1116);
+            Point p1 = new Point(650, 1116);
+            // matching
+            ArrayList data = args["areas"] as ArrayList;
+            //var area_data = data.Where(x => x.ContainsKey("type") && x["type"].ToString() == "match");
+            List<double> scores = new List<double>();
+            int area = img.Height * img.Width;
+            foreach (var a0 in data)
+            {
+                Dictionary<string, object> a = (Dictionary<string, object>)a0;
+                //if (a.ContainsKey("type") && string.Compare(a["type"].ToString(), "match", true) == 0)
+                {
+                    int x = (int)a["x"];
+                    int y = (int)a["y"];
+                    x -= p0.X;
+                    y -= p0.Y;
+                    x += p1.X;
+                    y += p1.Y;
+                    int w = (int)a["width"];
+                    int h = (int)a["height"];
+                    double ra = 1.0 * w * h / area;
+                    if (ra < 0.25)
+                    {
+                        Rectangle r = new Rectangle(x, y, w, h);
+                        //SizeF sf = new SizeF(0.1f * w, 0.1f * h);
+                        //r.Inflate(Size.Round(sf));
+                        //Rectangle r = new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]);
+                        Mat m = CvInvoke.Imread(System.IO.Path.Combine(root, $"temp_{a["id"]}.jpg"), ImreadModes.Grayscale);
+                        //a.Add("image", m);
+                        Image<Gray, Byte> img_t = img.Copy(r);
+                        Image<Gray, float> mm = img_t.MatchTemplate(m.ToImage<Gray, Byte>(), TemplateMatchingType.CcoeffNormed);
+                        double[] minValues, maxValues;
+                        Point[] minLocations, maxLocations;
+                        mm.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+                        Program.logIt($"[{model}] id: {a["id"]}, match: {maxValues[0]}");
+                        scores.Add(maxValues[0]);
+                        if (maxValues[0] < 0.5)
+                        {
+                            m.Save($"temp_{a["id"]}_1.jpg");
+                            img_t.Save($"temp_{a["id"]}_2.jpg");
+                        }
+                    }
+                }
+            }
+            score = scores.Average();
+            if (score > threshold)
+                ret = true;
+            Program.logIt($"[{model}] is_right_model_v2: -- {ret} score={score}");
+            return new Tuple<bool, double, string>(ret, score, model);
+        }
         static Tuple<bool, double, string> is_right_model(Image<Gray, Byte> img, Dictionary<string,object> args,double threshold = 0.50)
         {
             bool ret = false;

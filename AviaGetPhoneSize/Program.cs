@@ -83,7 +83,7 @@ namespace AviaGetPhoneSize
         {
             Dictionary<string, object> ret = null;
             loadConfig();
-            if (avia_config.ContainsKey("name"))
+            if (avia_config.ContainsKey(name))
             {
                 try { ret = (Dictionary<string, object>)avia_config[name]; }
                 catch (Exception) { }
@@ -342,14 +342,22 @@ namespace AviaGetPhoneSize
         static int handle_QueryPMP_Command(System.Collections.Specialized.StringDictionary args)
         {
             int ret = -1;
-            utility.IniFile ini = new utility.IniFile(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "AviaDevice.ini"));
-            string fn = ini.GetString("query", "filename", "");
-            string fn1 = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", $"{fn}.bmp");
-            if (!string.IsNullOrEmpty(fn) && save_image_file(fn, fn1))
+            string image_filename = string.Empty;
+            if (args.ContainsKey("img") && System.IO.File.Exists(args["img"]))
+                image_filename = args["img"];
+            else
+            {
+                utility.IniFile ini = new utility.IniFile(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "AviaDevice.ini"));
+                string fn = ini.GetString("query", "filename", "");
+                string fn1 = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", $"{fn}.bmp");
+                if (save_image_file(fn, fn1))
+                    image_filename = fn1;
+            }
+            if (!string.IsNullOrEmpty(image_filename) && System.IO.File.Exists(image_filename))
             {
                 // check model by images
                 //Console.WriteLine("model=iphone8 plus red_M2_N");
-                ret = AviaGetPhoneModel.start(fn1);
+                ret = AviaGetPhoneModel.start(image_filename);
             }
             return ret;
         }
