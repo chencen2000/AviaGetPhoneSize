@@ -567,12 +567,15 @@ namespace AviaGetPhoneSize
             catch (Exception) { }
             return area.ToArray();
         }
-        static void save_template_image()
+        public static void save_template_image(string folder)
         {
-            string folder = @"C:\Tools\avia\M2\Profile";
+            //string folder = @"C:\Tools\avia\M2\Profile";
             Regex reg = new Regex(@"^(.+)_M[\d+]_N$");
             //string[] models = System.IO.Directory.GetDirectories(folder);
             Dictionary<string, object> cfg = Program.loadConfig("main");
+            Dictionary<string, object> cfg1 = Program.loadConfig(System.Environment.MachineName);
+            if (cfg1 != null && cfg1.ContainsKey("regex1"))
+                reg = new Regex(cfg1["regex1"].ToString());
             Dictionary<string, object> model_to_size = (Dictionary<string, object>)cfg["model_size"];
             Dictionary<string, object> model_to_color = (Dictionary<string, object>)cfg["model_color"];
             foreach (string mf in System.IO.Directory.GetDirectories(folder))

@@ -1249,7 +1249,7 @@ namespace AviaGetPhoneSize
                     bgr = AviaGetPhoneSize.AVIAGetPhoneSize.sample_color(img0, new Rectangle(388, 84, 30, 200));
                     Program.logIt($"{System.IO.Path.GetFileName(fn)}: size={bgr}");
 
-                    sb.AppendLine($"{System.IO.Path.GetFileNameWithoutExtension(fn)}, size={res.Item3}, color={bgr}");
+                    sb.AppendLine($"{System.IO.Path.GetFileNameWithoutExtension(fn)}, color={bgr}");
                 }                
             }
 
