@@ -4,6 +4,7 @@ using Emgu.CV.ML;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -205,7 +206,7 @@ namespace AviaGetPhoneSize
                                     Program.logIt($"Device inplace, score={device_inplace.Item3}");
 
 #if true
-                                    int sizeid = check_size(device_inplace.Item3);
+                                    int sizeid = check_size(device_inplace.Item3, _cfg);
                                     if (sizeid > 0)
                                     {
                                         Bgr rgb = sample_color(frame_roi);
@@ -1083,9 +1084,33 @@ namespace AviaGetPhoneSize
             }
             return ret;
         }
-        static int check_size(double score)
+        static int check_size(double score, Dictionary<string,object> cfg)
         {
             int ret = 0;
+#if true
+            if (cfg.ContainsKey("size"))
+            {
+                Dictionary<string, object> size_cfg = (Dictionary<string, object>)cfg["size"];
+                foreach (KeyValuePair<string, object> kvp in size_cfg)
+                {
+                    try
+                    {
+                        ArrayList al = (ArrayList)kvp.Value;
+                        double d1 = System.Decimal.ToDouble((System.Decimal)al[0]);
+                        double d2 = System.Decimal.ToDouble((System.Decimal)al[1]);
+                        double r = Math.Abs(score - d1) / d1;
+                        if (r < d2)
+                        {
+                            // ok
+                            ret = Int32.Parse(kvp.Key);
+                            break;
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            }
+
+#else
             if (ret == 0)
             {
                 double diff = Math.Abs(score - 0.13);
@@ -1107,6 +1132,7 @@ namespace AviaGetPhoneSize
                 if (r < 0.1)
                     ret = 4;
             }
+#endif
             return ret;
         }
     }

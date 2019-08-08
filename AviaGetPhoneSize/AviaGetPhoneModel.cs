@@ -39,7 +39,7 @@ namespace AviaGetPhoneSize
         {
             int ret = -1;
             double score = 0.0;
-            string model = "";
+            string modelid = "";
             IniFile ini = new IniFile(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "AviaDevice.ini"));
             int color_id = ini.GetInt32("device", "colorid", 0);
             int size_id = ini.GetInt32("device", "sizeid", 0);
@@ -56,7 +56,26 @@ namespace AviaGetPhoneSize
                 //Task.Run(()=>{ return is_iPhone_8PlusRed(img); }),
                 //};
                 List<Task<Tuple<bool, double, string>>> tasks = new List<Task<Tuple<bool, double, string>>>();
-#if !true
+#if true
+                string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA");
+                Dictionary<string, object>[] all_models = load_template(System.IO.Path.Combine( root,"images", "template"));
+                foreach (Dictionary<string, object> model in all_models)
+                {
+                    if (model.ContainsKey("colorid") && model.ContainsKey("sizeid") && model["colorid"] != null && model["sizeid"] != null && model["colorid"].GetType() == typeof(ArrayList) && model["colorid"].GetType() == typeof(ArrayList))
+                    {
+                        ArrayList cid = (ArrayList)model["colorid"];
+                        ArrayList sid = (ArrayList)model["sizeid"];
+                        if (cid.Contains(color_id) && sid.Contains(size_id))
+                        {
+                            tasks.Add(Task.Run(() =>
+                            {
+                                return is_right_model_v2(img, model);
+                            }));
+                        }
+                    }
+                }
+
+#else
                 if (size_id == 1)
                 {
                     // XR size
@@ -118,7 +137,7 @@ namespace AviaGetPhoneSize
                         if (r.Item2 > score)
                         {
                             score = r.Item2;
-                            model = r.Item3;
+                            modelid = r.Item3;
                             ret = 0;
                         }
                     }
@@ -127,14 +146,14 @@ namespace AviaGetPhoneSize
             if (ret != 0)
             {
                 // not detect
-                model = ini.GetString("model", $"{size_id}-{color_id}", "");
-                if(!string.IsNullOrEmpty(model))
+                modelid = ini.GetString("model", $"{size_id}-{color_id}", "");
+                if(!string.IsNullOrEmpty(modelid))
                 {
                     ret = 0;
                 }
             }
-            Console.WriteLine($"model={model}");
-            Program.logIt($"AviaGetPhoneModel::start: -- {model}, score={score}");
+            Console.WriteLine($"model={modelid}");
+            Program.logIt($"AviaGetPhoneModel::start: -- {modelid}, score={score}");
             return ret;
         }
         static void extract_phone_image()

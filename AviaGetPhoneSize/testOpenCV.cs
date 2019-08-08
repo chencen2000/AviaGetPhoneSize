@@ -16,6 +16,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using System.Collections;
 
 namespace AviaGetPhoneSize
 {
@@ -48,8 +49,8 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            train_iphone_color_data();
-            train_iphone_size_data_v2();
+            //train_iphone_color_data();
+            //train_iphone_size_data_v2();
             //test_ML();
             //test_3();
             //test_4();
@@ -62,7 +63,7 @@ namespace AviaGetPhoneSize
             //test_ocr();
             //test_5();
             //test_ss();
-            //test_6();
+            test_6();
             //test_form();
             return 0;
         }
@@ -1402,43 +1403,24 @@ namespace AviaGetPhoneSize
         }
         static void test_6()
         {
-            Tuple<VectorOfPoint, VectorOfPoint> apple_logo = get_apple_logo();
-            string fn = @"C:\Tools\avia\images\test\0342.1.bmp";
-            //check_apple_icon(fn, apple_logo);
-            //foreach (string f in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test\"))
-            //{
-            //    check_apple_icon(f, apple_logo);
-            //}            
-            foreach (string f in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\test\"))
+            double sz = 0.227834848484848;
+            Dictionary<string, object> cfg = Program.loadConfig(System.Environment.MachineName);
+            if (cfg.ContainsKey("size"))
             {
-                fn = f;
-                Mat m = CvInvoke.Imread(fn);
-                RectangleF rf = new RectangleF(0.35f * m.Width, 0.72f * m.Height, 0.30f * m.Width, 0.07f * m.Height);
-                Image<Gray, Byte> img = m.ToImage<Gray, Byte>().Copy(Rectangle.Round(rf));
-                //img.Save("temp_1.jpg");
-                //CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
-                //img.Save("temp_2.jpg");
-                //Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
-                //img = img.MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
-                //img.Save("temp_3.jpg");
-                //CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
-                //img.Save("temp_4.jpg");
-                //img = img.MorphologyEx(MorphOp.Dilate, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
-                //img.Save("temp_5.jpg");
-                string n = System.IO.Path.GetFileNameWithoutExtension(fn);
-                CvInvoke.GaussianBlur(img, img, new Size(3, 3), 0);
-                img.Save(System.IO.Path.Combine("output","temp",$"{n}.jpg"));
-                using (TesseractEngine TE = new TesseractEngine("tessdata", "eng", EngineMode.TesseractOnly))
+                Dictionary<string, object> size_cfg = (Dictionary<string, object>)cfg["size"];
+                foreach(KeyValuePair<string,object> kvp in size_cfg)
                 {
-                    //Bitmap b = new Bitmap(@"temp_text_3.jpg");
-                    var p = TE.Process(img.ToBitmap());
-                    string s = p.GetText();
-                    //s = p.GetHOCRText(0);
-                    Program.logIt($"{fn}: {s}");
+                    ArrayList al = (ArrayList)kvp.Value;
+                    double d1 = System.Decimal.ToDouble((System.Decimal)al[0]);
+                    double d2 = System.Decimal.ToDouble((System.Decimal)al[1]);
+                    double r = Math.Abs(sz - d1) / d1;
+                    if (r < d2)
+                    {
+                        // ok
+                    }
+
                 }
-                GC.Collect();
             }
-            
         }
         [STAThread]
         static void test_form()
