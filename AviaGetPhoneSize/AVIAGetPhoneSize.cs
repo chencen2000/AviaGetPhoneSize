@@ -174,8 +174,6 @@ namespace AviaGetPhoneSize
                 //BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
                 Image<Bgr, Byte> bg_img = new Emgu.CV.Image<Bgr, Byte>(System.IO.Path.Combine(root, "Images", "BackGround.jpg")).Rotate(-90, new Bgr(0, 0, 0), false);
                 bg_img.ROI = roi;
-
-#if true
                 int frame_num = 0;
                 Image<Bgr, Byte>[] frames = new Image<Bgr, Byte>[4];
                 while (true)
@@ -198,13 +196,33 @@ namespace AviaGetPhoneSize
                         {
                             Image<Bgr, Byte> frame_roi = frames[0];
                             // still
-                            Tuple<bool, bool> device_inplace = check_device_inplace(frame_roi);
+                            Tuple<bool, bool, double> device_inplace = check_device_inplace_v2(frame_roi);
                             if (device_inplace.Item1)
                             {
                                 if (device_inplace.Item2)
                                 {
                                     // device inplace
-                                    Program.logIt("Device inplace");
+                                    Program.logIt($"Device inplace, score={device_inplace.Item3}");
+
+#if true
+                                    int sizeid = check_size(device_inplace.Item3);
+                                    if (sizeid > 0)
+                                    {
+                                        Bgr rgb = sample_color(frame_roi);
+                                        Tuple<bool, int, int> res = predict_color_and_size(rgb, new Size(515, 1032), _cfg);
+                                        if (res.Item1)
+                                        {
+                                            Console.WriteLine($"device=ready");
+                                            Console.WriteLine($"colorid={res.Item2}");
+                                            Console.WriteLine($"sizeid={sizeid}");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // error
+                                        Program.logIt("Fail to get size");
+                                    }
+#else
                                     Image<Bgr, Byte> diff = frame_roi.AbsDiff(bg_img);
                                     Size sz = detect_size(diff.Convert<Gray, Byte>());
                                     if (sz.IsEmpty)
@@ -223,6 +241,7 @@ namespace AviaGetPhoneSize
                                             Console.WriteLine($"sizeid={res.Item3}");
                                         }
                                     }
+#endif
                                 }
                                 else
                                 {
@@ -262,104 +281,6 @@ namespace AviaGetPhoneSize
                         }
                     }
                 }
-#else
-                bool monition = false;
-                Image<Bgr, Byte> bg_img = new Emgu.CV.Image<Bgr, Byte>(System.IO.Path.Combine(root, "Images", "BackGround.jpg")).Rotate(-90, new Bgr(0, 0, 0), false);
-                bg_img.ROI = roi;
-                while (true)
-                {
-                    System.Threading.Thread.Sleep(500);
-                    ns.Write(cmd, 0, cmd.Length);
-                    int read = ns.Read(data, 0, data.Length);
-                    string str = System.Text.Encoding.UTF8.GetString(data, 0, read);
-                    Match m = r.Match(str);
-                    if (m.Success)
-                    {
-                        Mat cm = CvInvoke.Imread(System.IO.Path.Combine(frames, m.Groups[1].Value));
-                        CvInvoke.Rotate(cm, cm, RotateFlags.Rotate90CounterClockwise);
-
-                        if (bg_img == null)
-                        {
-                            bg_img = cm.ToImage<Bgr, Byte>();
-                        }
-                        else
-                        {
-                            Image<Bgr, Byte> frame = cm.ToImage<Bgr, Byte>();
-                            Image<Bgr, Byte> frame_roi = frame.Copy(roi);
-                            //frame.ROI = roi;
-                            Image<Bgr, Byte> diff = frame_roi.AbsDiff(bg_img);
-                            //Mat diff = new Mat();
-                            //CvInvoke.AbsDiff(cm, bg_img, diff);
-
-                            //Image<Gray, Byte> g = diff.ToImage<Gray, Byte>();
-                            Gray ga = diff.Convert<Gray, byte>().GetAverage();
-                            if (ga.MCvScalar.V0 < 11)
-                            {
-                                // same as bg image, fetch another frame again.
-                            }
-                            else
-                            {
-                                // no same as bg, check device is place.
-                                Tuple<bool, bool> device_inplace = check_device_inplace(frame_roi);
-                                if (device_inplace.Item1)
-                                {
-                                    if (device_inplace.Item2)
-                                    {
-                                        // device inplace
-                                        Program.logIt("Device Arrival");
-                                        Size sz = detect_size(diff.Convert<Gray, Byte>());
-                                        if (sz.IsEmpty)
-                                        {
-                                            // error
-                                        }
-                                        else
-                                        {
-                                            Bgr rgb = sample_color(frame_roi);
-                                            Program.logIt($"device: size={sz}, color={rgb}");
-                                            Tuple<bool, int, int> res = predict_color_and_size(rgb, sz);
-                                            if (res.Item1)
-                                            {
-                                                Console.WriteLine($"device=ready");
-                                                Console.WriteLine($"colorid={res.Item2}");
-                                                Console.WriteLine($"sizeid={res.Item3}");
-                                            }
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        // device not inplace
-                                    }
-                                }
-                                else
-                                {
-                                    // error ocuurs during device inplace check.
-                                }
-                            }
-
-                        }
-                        GC.Collect();
-                        if (System.Console.KeyAvailable)
-                        {
-                            ConsoleKeyInfo ki = Console.ReadKey();
-                            if (ki.Key == ConsoleKey.Escape)
-                            {
-                                Program.logIt("Monitor will terminated by ESC pressed.");
-                                break;
-                            }
-                        }
-                        if (quitEvent != null)
-                        {
-                            if (quitEvent.WaitOne(0))
-                            {
-                                Program.logIt("Monitor will terminated by event set.");
-                                break;
-                            }
-                        }
-
-                    }
-                }
-#endif
             }
             catch (Exception ex)
             {
@@ -815,7 +736,32 @@ namespace AviaGetPhoneSize
                 }
             }
         }
-        static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.27)  // 0.3
+        public static Tuple<bool, bool, double> check_device_inplace_v2(Image<Bgr, Byte> diff, double threshold = 0.27)  // 0.3
+        {
+            bool ret = false;
+            bool device_inplace = false;
+            Program.logIt("check_device_inplace: ++");
+            int[] all = diff.CountNonzero();
+            double r = 0;
+            if (all[0] > 0 && all[1] > 0 && all[2] > 0)
+            {
+                Image<Hsv, Byte> hsvimg = diff.Convert<Hsv, Byte>();
+                Image<Gray, Byte> mask = hsvimg.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
+                //diff.Save("temp_2.jpg");
+                //Image<Gray, Byte> mask = diff.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70)); //img.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70));
+                int[] area = mask.CountNonzero();
+                r = (double)area[0] / (mask.Width * mask.Height);
+                if (r < threshold)
+                {
+                    device_inplace = true;
+                }
+                ret = true;
+            }
+            //mask.Save("temp_3.jpg");
+            Program.logIt($"check_device_inplace: -- {ret}, inplace={device_inplace} score={r}");
+            return new Tuple<bool, bool, double>(ret, device_inplace, r);
+        }
+        public static Tuple<bool,bool> check_device_inplace(Image<Bgr, Byte> diff, double threshold =0.27)  // 0.3
         {
             bool ret = false;
             bool device_inplace = false;
@@ -1031,11 +977,13 @@ namespace AviaGetPhoneSize
             }
             return device_in_place;
         }
-        static Bgr sample_color(Image<Bgr,Byte> img)
+        public static Bgr sample_color(Image<Bgr, Byte> img, Rectangle rect = default(Rectangle))
         {
             //Rectangle r = new Rectangle(20, 810, 290, 30);
             //Rectangle r = new Rectangle(387, 106, 43, 267);
             Rectangle r = new Rectangle(375, 450, 30, 200);
+            if (!rect.IsEmpty)
+                r = rect;
             Image<Bgr, Byte> i = img.Copy(r);
             Bgr rgb = i.GetAverage();
             // debug
@@ -1047,7 +995,7 @@ namespace AviaGetPhoneSize
 #endif
             return rgb;
         }
-        static Size detect_size(Image<Gray, Byte> img)
+        public static Size detect_size(Image<Gray, Byte> img)
         {
             Program.logIt("detect_size: ++");
             Mat m = new Mat();
@@ -1132,6 +1080,32 @@ namespace AviaGetPhoneSize
                         all_same = false;
                 }
                 ret = all_same;
+            }
+            return ret;
+        }
+        static int check_size(double score)
+        {
+            int ret = 0;
+            if (ret == 0)
+            {
+                double diff = Math.Abs(score - 0.13);
+                double r = diff / 0.13;
+                if (r < 0.1)
+                    ret = 2;
+            }
+            if (ret == 0)
+            {
+                double diff = Math.Abs(score - 0.28);
+                double r = diff / 0.28;
+                if (r < 0.1)
+                    ret = 3;
+            }
+            if (ret == 0)
+            {
+                double diff = Math.Abs(score - 0.23);
+                double r = diff / 0.23;
+                if (r < 0.1)
+                    ret = 4;
             }
             return ret;
         }

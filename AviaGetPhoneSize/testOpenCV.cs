@@ -48,8 +48,8 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            //train_iphone_color_data();
-            //train_iphone_size_data();
+            train_iphone_color_data();
+            train_iphone_size_data_v2();
             //test_ML();
             //test_3();
             //test_4();
@@ -63,7 +63,7 @@ namespace AviaGetPhoneSize
             //test_5();
             //test_ss();
             //test_6();
-            test_form();
+            //test_form();
             return 0;
         }
         static void test()
@@ -224,7 +224,8 @@ namespace AviaGetPhoneSize
         }
         static void train_iphone_color_data()
         {
-            string fn = @"../../../test/M4_testing_data.txt";
+            //string fn = @"../../../test/M4_testing_data.txt";
+            string fn = @"C:\Tools\avia\images\avia_m0_pc\train_data.txt";
             Regex re = new Regex(@"^.+color=\[([\d\.]*),([\d\.]*),([\d\.]*)\], clabel=(\d+).*$");
             List<Tuple<double, double, double, int>> datas = new List<Tuple<double, double, double, int>>();
             foreach (string l in System.IO.File.ReadAllLines(fn))
@@ -354,9 +355,108 @@ namespace AviaGetPhoneSize
             }
             */
         }
+        static void train_iphone_size_data_v2()
+        {
+            //string fn = @"../../../test/M4_testing_data.txt";
+            string fn = @"C:\Tools\avia\images\avia_m0_pc\train_data.txt";
+            Regex re = new Regex(@"^.+size=([\d\.]*),.+slabel=(\d+).*$");
+            List<Tuple<double, int>> datas = new List<Tuple<double, int>>();
+            foreach (string l in System.IO.File.ReadAllLines(fn))
+            {
+                if (!string.IsNullOrEmpty(l))
+                {
+                    if (l.StartsWith("#"))
+                    {
+                        // comment line
+                    }
+                    else
+                    {
+                        Match m = re.Match(l);
+                        if (m.Success)
+                        {
+                            double r = Double.Parse(m.Groups[1].Value);
+                            //double h = Double.Parse(m.Groups[2].Value);
+                            int label = Int32.Parse(m.Groups[2].Value);
+                            Tuple<double, int> d = new Tuple<double, int>(r, label);
+                            datas.Add(d);
+                        }
+                    }
+                }
+            }
+            foreach (var v in datas)
+            {
+                Program.logIt($"r={v.Item1}, label={v.Item2}");
+            }
+
+            int trainSampleCount = datas.Count;
+            Matrix<float> trainData = new Matrix<float>(trainSampleCount, 1);
+            Matrix<int> trainClasses = new Matrix<int>(trainSampleCount, 1);
+            for (int i = 0; i < datas.Count; i++)
+            {
+                trainData[i, 0] = (float)datas[i].Item1;
+                //trainData[i, 1] = (float)datas[i].Item2;
+                trainClasses[i, 0] = datas[i].Item2;
+            }
+            TrainData td = new TrainData(trainData, Emgu.CV.ML.MlEnum.DataLayoutType.RowSample, trainClasses);
+            using (SVM model = new SVM())
+            {
+                if (System.IO.File.Exists("iPhone_size.xml"))
+                {
+                    model.Load("iPhone_size.xml");
+
+                    Matrix<float> test = new Matrix<float>(1, 1);
+                    for (int i = 0; i < datas.Count; i++)
+                    {
+                        test[0, 0] = (float)datas[i].Item1;
+                        //test[0, 1] = (float)datas[i].Item2;
+                        int l = (int)model.Predict(test);
+                        if (l != datas[i].Item2)
+                        {
+                            Program.logIt($"predict: {l} vs {datas[i].Item2}");
+                        }
+                    }
+
+                    // test
+                    //test[0, 0] = 515f;
+                    //test[0, 1] = 1032f;
+                    //int p = (int)model.Predict(test);
+                    //Program.logIt($"predict: {p} ");
+                }
+                else
+                {
+                    model.TermCriteria = new MCvTermCriteria(100, 0.00001);
+                    model.C = 1;
+                    model.Type = SVM.SvmType.CSvc;
+                    model.SetKernel(SVM.SvmKernelType.Linear);
+                    //bool trained = model.TrainAuto(trainData, trainClasses, null, null, p.MCvSVMParams, 5);
+                    bool trained = model.Train(td);
+
+                    model.Save("iPhone_size.xml");
+
+                    Matrix<float> test = new Matrix<float>(1, 1);
+                    for (int i = 0; i < datas.Count; i++)
+                    {
+                        test[0, 0] = (float)datas[i].Item1;
+                        //test[0, 1] = (float)datas[i].Item2;
+                        int l = (int)model.Predict(test);
+                        if (l != datas[i].Item2)
+                        {
+                            Program.logIt($"predict: {l} vs {datas[i].Item2}");
+                        }
+                    }
+
+                    // test
+                    //test[0, 0] = 515f;
+                    //test[0, 1] = 1032f;
+                    //int p = (int)model.Predict(test);
+                    //Program.logIt($"predict: {p} ");
+                }
+            }
+        }
         static void train_iphone_size_data()
         {
-            string fn = @"../../../test/M4_testing_data.txt";
+            //string fn = @"../../../test/M4_testing_data.txt";
+            string fn = @"C:\Tools\avia\images\avia_m0_pc\train_data.txt";
             Regex re = new Regex(@"^.+size={Width=([\d\.]*), Height=([\d\.]*)},.+slabel=(\d+).*$");
             List<Tuple<double, double, int>> datas = new List<Tuple<double, double, int>>();
             foreach (string l in System.IO.File.ReadAllLines(fn))
@@ -1093,36 +1193,66 @@ namespace AviaGetPhoneSize
         }
         static void test_5()
         {
-            //Bitmap img = new Bitmap(@"D:\Tools\test\test.jpg");
-            //string s = "this is comment set by code.\0";
-            //byte[] b = System.Text.Encoding.Unicode.GetBytes(s);
+            Rectangle r1 = new Rectangle(610, 350, 600, 1100);
+            /*
+            Mat m0 = CvInvoke.Imread(@"C:\Tools\avia\images\avia_m0_pc\BackGround.jpg");
+            Mat m1 = CvInvoke.Imread(@"C:\Tools\avia\images\avia_m0_pc\IPhone6 Gold .jpg");
 
-            ////PropertyItem pic = img.GetPropertyItem(40092);
-            //PropertyItem pic = img.PropertyItems[0];
-            //pic.Id = 40092;
-            //pic.Value = b;
-            //pic.Len = b.Length;
-            //pic.Type = 1;
-            //img.SetPropertyItem(pic);
-            //img.Save("temp_2.jpg");
-            string strFileName = @"D:\Tools\test\test.jpg";
-            Shell32.Shell shell = new Shell32.Shell();
-            Shell32.Folder objFolder = shell.NameSpace(System.IO.Path.GetDirectoryName(strFileName));
-            Shell32.FolderItem folderItem = objFolder.ParseName(System.IO.Path.GetFileName(strFileName));
-            List<string> arrHeaders = new List<string>();
-            for (int i = 0; i < short.MaxValue; i++)
+            CvInvoke.Rotate(m0, m0, RotateFlags.Rotate90CounterClockwise);
+            CvInvoke.Rotate(m1, m1, RotateFlags.Rotate90CounterClockwise);
+
+            Image<Bgr, Byte> img0 = m0.ToImage<Bgr, Byte>();
+            Image<Bgr, Byte> img1 = m1.ToImage<Bgr, Byte>();
+
+            img0.ROI = r1;
+            img1.ROI = r1;
+
+            Image<Hsv, Byte> hsv0 = img0.Convert<Hsv, Byte>();
+            Image<Hsv, Byte> hsv1 = img1.Convert<Hsv, Byte>();
+
+            Image<Gray, Byte> mask = hsv0.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
+            int[] area = mask.CountNonzero();
+            double r = (double)area[0] / (mask.Width * mask.Height);
+
+            mask = hsv1.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
+            area = mask.CountNonzero();
+            r = (double)area[0] / (mask.Width * mask.Height);
+            */
+
+            Mat m00 = CvInvoke.Imread(@"C:\Tools\avia\images\avia_m0_pc\images\BackGround.jpg");
+            CvInvoke.Rotate(m00, m00, RotateFlags.Rotate90CounterClockwise);
+            Image<Bgr, Byte> img00 = m00.ToImage<Bgr, Byte>().Copy(r1);
+
+            string dir = @"C:\Tools\avia\images\avia_m0_pc\images";
+            StringBuilder sb = new StringBuilder();
+            foreach (string fn in System.IO.Directory.GetFiles(dir))
+                //string fn = @"C:\Tools\avia\images\avia_m0_pc\Iphone7 JetBlack.jpg";
             {
-                string header = objFolder.GetDetailsOf(null, i);
-                if (String.IsNullOrEmpty(header))
-                    break;
-                arrHeaders.Add(header);
+                // check device inplace
+                Mat m0 = CvInvoke.Imread(fn);
+                CvInvoke.Rotate(m0, m0, RotateFlags.Rotate90CounterClockwise);
+                Image<Bgr, Byte> img0 = m0.ToImage<Bgr, Byte>().Copy(r1);
+                //img0.ROI = r1;
+                Tuple<bool, bool, double> res = AviaGetPhoneSize.AVIAGetPhoneSize.check_device_inplace_v2(img0, 0.33);
+                Program.logIt($"{System.IO.Path.GetFileName(fn)}: ret={res.Item1}, device inplace={res.Item2}");
+                Size sz = Size.Empty;
+                Bgr bgr;
+                // get size
+                if(res.Item1 && res.Item2)
+                {
+                    //Image<Bgr, Byte> diff = img0.AbsDiff(img00);
+                    //sz = AviaGetPhoneSize.AVIAGetPhoneSize.detect_size(diff.Convert<Gray, Byte>());
+                    //Program.logIt($"{System.IO.Path.GetFileName(fn)}: size={sz}");
+                
+                    // sample color
+                    bgr = AviaGetPhoneSize.AVIAGetPhoneSize.sample_color(img0, new Rectangle(388, 84, 30, 200));
+                    Program.logIt($"{System.IO.Path.GetFileName(fn)}: size={bgr}");
+
+                    sb.AppendLine($"{System.IO.Path.GetFileNameWithoutExtension(fn)}, size={res.Item3}, color={bgr}");
+                }                
             }
-            for (int i=0; i< arrHeaders.Count; i++)
-            {
-                string s = objFolder.GetDetailsOf(folderItem, i);
-                Program.logIt($"{i}: {arrHeaders[i]}: {s}");
-            }
-            
+
+            Program.logIt(sb.ToString());
         }
         static bool is_same_frame(Mat m1, Mat m2, double th=17)
         {
