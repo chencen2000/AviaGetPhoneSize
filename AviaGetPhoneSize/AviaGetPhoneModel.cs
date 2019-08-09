@@ -59,6 +59,14 @@ namespace AviaGetPhoneSize
 #if true
                 string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA");
                 Dictionary<string, object>[] all_models = load_template(System.IO.Path.Combine( root,"images", "template"));
+                // debug save all_models
+                try
+                {
+                    var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    string s = jss.Serialize(all_models);
+                    System.IO.File.WriteAllText(@"temp\all_models.json", s);
+                }
+                catch (Exception) { }
                 foreach (Dictionary<string, object> model in all_models)
                 {
                     if (model.ContainsKey("colorid") && model.ContainsKey("sizeid") && model["colorid"] != null && model["sizeid"] != null && model["colorid"].GetType() == typeof(ArrayList) && model["colorid"].GetType() == typeof(ArrayList))
@@ -730,6 +738,7 @@ namespace AviaGetPhoneSize
         }
         static Dictionary<string,object>[] load_template(string dir)
         {
+            Program.logIt($"load_template: ++ {dir}");
             List<Dictionary<string, object>> ret = new List<Dictionary<string, object>>();
             foreach (string s in System.IO.Directory.GetDirectories(dir))
             {
@@ -743,6 +752,7 @@ namespace AviaGetPhoneSize
                 }
                 catch (Exception) { }
             }
+            Program.logIt($"load_template: -- {ret.Count}");
             return ret.ToArray();
         }
         #region iPhone Model Check
@@ -751,7 +761,7 @@ namespace AviaGetPhoneSize
             bool ret = false;
             double score = 0.0;
             string root = args["path"] as string;
-            string model = args["model"] as string;
+            string model = args["modelid"] as string;
             Program.logIt($"[{model}] is_right_model_v2: ++ {root}");
             // need alignment?
             Point p0 = new Point(650, 1116);
@@ -778,8 +788,8 @@ namespace AviaGetPhoneSize
                     if (ra < 0.25)
                     {
                         Rectangle r = new Rectangle(x, y, w, h);
-                        //SizeF sf = new SizeF(0.1f * w, 0.1f * h);
-                        //r.Inflate(Size.Round(sf));
+                        SizeF sf = new SizeF(0.1f * w, 0.1f * h);
+                        r.Inflate(Size.Round(sf));
                         //Rectangle r = new Rectangle((int)a["x"], (int)a["y"], (int)a["width"], (int)a["height"]);
                         Mat m = CvInvoke.Imread(System.IO.Path.Combine(root, $"temp_{a["id"]}.jpg"), ImreadModes.Grayscale);
                         //a.Add("image", m);
@@ -809,7 +819,7 @@ namespace AviaGetPhoneSize
             bool ret = false;
             double score = 0.0;
             string root = args["path"] as string;
-            string model = args["model"] as string;
+            string model = args["modelid"] as string;
             Program.logIt($"[{model}] is_right_model: ++ {root}");
             // need alignment?
             Point p0 = new Point(650, 1116);
