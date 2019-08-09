@@ -225,6 +225,10 @@ namespace AviaGetPhoneSize
                 Application.EnableVisualStyles();
                 Application.Run(new Form1());
             }
+            else if (_args.IsParameterTrue("gentemp"))
+            {
+                AviaGetPhoneModel.save_template_image(_args.Parameters["dir"]);
+            }
             else
             {
                 Program.logIt($"{System.Environment.Is64BitProcess}");

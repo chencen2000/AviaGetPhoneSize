@@ -4,6 +4,7 @@ using Emgu.CV.ML;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -163,6 +164,8 @@ namespace AviaGetPhoneSize
                 //Rectangle roi = new Rectangle(744, 266, 576, 1116);
                 //Rectangle roi = new Rectangle(744, 266, 540, 1116);
                 Rectangle roi = Program.config_load_rectangle(_cfg, "rectangle1");
+                Rectangle roi_color = Program.config_load_rectangle(_cfg, "rectangle2");
+                double threshold1 = _cfg.ContainsKey("threshold1") ? System.Decimal.ToDouble((System.Decimal)_cfg["threshold1"]) : 0.27;
                 //System.Threading.Thread.Sleep(5000);
                 //string frames = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
                 //Regex r = new Regex(@"^ACK frame (.+)\s*$", RegexOptions.IgnoreCase);
@@ -196,7 +199,7 @@ namespace AviaGetPhoneSize
                         {
                             Image<Bgr, Byte> frame_roi = frames[0];
                             // still
-                            Tuple<bool, bool, double> device_inplace = check_device_inplace_v2(frame_roi);
+                            Tuple<bool, bool, double> device_inplace = check_device_inplace_v2(frame_roi, threshold1);
                             if (device_inplace.Item1)
                             {
                                 if (device_inplace.Item2)
@@ -205,10 +208,10 @@ namespace AviaGetPhoneSize
                                     Program.logIt($"Device inplace, score={device_inplace.Item3}");
 
 #if true
-                                    int sizeid = check_size(device_inplace.Item3);
+                                    int sizeid = check_size(device_inplace.Item3, _cfg);
                                     if (sizeid > 0)
                                     {
-                                        Bgr rgb = sample_color(frame_roi);
+                                        Bgr rgb = sample_color(frame_roi, roi_color);
                                         Tuple<bool, int, int> res = predict_color_and_size(rgb, new Size(515, 1032), _cfg);
                                         if (res.Item1)
                                         {
@@ -853,6 +856,7 @@ namespace AviaGetPhoneSize
                     color_id = (int)model.Predict(test);
                     Program.logIt($"prodict: colorID={color_id}");
                 }
+#if false
                 using (SVM model = new SVM())
                 {
                     model.Load(System.IO.Path.Combine(dir, "traindata", "iPhone_size.xml"));
@@ -863,6 +867,7 @@ namespace AviaGetPhoneSize
                     size_id = (int)model.Predict(test);
                     Program.logIt($"prodict: sizeID={size_id}");
                 }
+#endif
                 retb = true;
             }
             catch (Exception) { }
@@ -1083,9 +1088,34 @@ namespace AviaGetPhoneSize
             }
             return ret;
         }
-        static int check_size(double score)
+        static int check_size(double score, Dictionary<string,object> cfg)
         {
             int ret = 0;
+            Program.logIt($"check_size: ++ {score}");
+#if true
+            if (cfg.ContainsKey("size"))
+            {
+                Dictionary<string, object> size_cfg = (Dictionary<string, object>)cfg["size"];
+                foreach (KeyValuePair<string, object> kvp in size_cfg)
+                {
+                    try
+                    {
+                        ArrayList al = (ArrayList)kvp.Value;
+                        double d1 = System.Decimal.ToDouble((System.Decimal)al[0]);
+                        double d2 = System.Decimal.ToDouble((System.Decimal)al[1]);
+                        double r = Math.Abs(score - d1) / d1;
+                        if (r < d2)
+                        {
+                            // ok
+                            ret = Int32.Parse(kvp.Key);
+                            break;
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            }
+
+#else
             if (ret == 0)
             {
                 double diff = Math.Abs(score - 0.13);
@@ -1107,6 +1137,8 @@ namespace AviaGetPhoneSize
                 if (r < 0.1)
                     ret = 4;
             }
+#endif
+            Program.logIt($"check_size: -- ret={ret}");
             return ret;
         }
     }
