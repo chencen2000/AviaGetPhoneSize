@@ -76,57 +76,7 @@ namespace AviaGetPhoneSize
                 }
 
 #else
-                if (size_id == 1)
-                {
-                    // XR size
-                    if (color_id == 1)
-                    {
-                        tasks.Add(Task.Run(() => { return is_iPhone_XR_blue(img); }));
-                    }
-                    else if (color_id == 3)
-                    {
-                        tasks.Add(Task.Run(() => { return is_iPhone_XR_black(img); }));
-                    }
-                }
-                else if (size_id == 2)
-                {
-                    // plus size
-                    if (color_id == 2)
-                    {
-                        // red
-                        tasks.Add(Task.Run(() => { return is_iPhone_8PlusRed(img); }));
-                    }
-                    else if (color_id == 3)
-                    {
-                        // red
-                        tasks.Add(Task.Run(() => { return is_iPhone_8Plus_spacegray(img); }));
-                    }
-                    else if (color_id == 4)
-                    {
-                        // red
-                        tasks.Add(Task.Run(() => { return is_iPhone_8Plus_silver(img); }));
-                    }
-                }
-                else if (size_id == 3)
-                {
-                    // 6/7/8 size
-                    if (color_id == 3)
-                    {
-                        tasks.Add(Task.Run(() => { return is_iPhone_7_MatteBlack(img); }));
-                    }
-                }
-                else if(size_id == 4)
-                {
-                    // X size
-                    if (color_id == 3)
-                    {
-                        tasks.Add(Task.Run(() => { return is_iPhone_X_SpaceGray(img); }));
-                    }
-                }
-                else
-                {
-                    // unknown size
-                }
+
 #endif
                 Task.WaitAll(tasks.ToArray());
                 foreach(Task<Tuple<bool, double,string>> t in tasks)
@@ -842,8 +792,8 @@ namespace AviaGetPhoneSize
                         scores.Add(maxValues[0]);
                         if (maxValues[0] < 0.5)
                         {
-                            m.Save($"temp_{a["id"]}_1.jpg");
-                            img_t.Save($"temp_{a["id"]}_2.jpg");
+                            m.Save($@"temp\temp_{a["id"]}_1.jpg");
+                            img_t.Save($@"temp\temp_{a["id"]}_2.jpg");
                         }
                     }
                 }
