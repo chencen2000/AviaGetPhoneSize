@@ -44,10 +44,10 @@ namespace AviaGetPhoneSize
                 vc.Read(m);
                 if (!m.IsEmpty)
                 {
-                    Image<Bgr, Byte> img = prepare_image(m.ToImage<Bgr,Byte>());
+                    //Image<Bgr, Byte> img = prepare_image(m.ToImage<Bgr,Byte>());
                     pictureBox1.Invoke(new Action(() =>
                     {
-                        pictureBox1.Image = img.Bitmap;
+                        pictureBox1.Image = m.Bitmap;
                     }));
                 }
                 System.Threading.Thread.Sleep(500);
