@@ -167,10 +167,12 @@ namespace AviaGetPhoneSize
                             Image<Bgr, Byte> diff = frame_roi.AbsDiff(bg_img);
                             //Mat diff = new Mat();
                             //CvInvoke.AbsDiff(cm, bg_img, diff);
-
                             //Image<Gray, Byte> g = diff.ToImage<Gray, Byte>();
                             Gray ga = diff.Convert<Gray, byte>().GetAverage();
-                            if (ga.MCvScalar.V0 < 11)
+                            
+                            Program.logIt($"Detect Diff = {ga.MCvScalar.V0 }, Threshold = 8");
+
+                            if (ga.MCvScalar.V0 < 8)
                             {
                                 // same as bg image, fetch another frame again.
                             }
