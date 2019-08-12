@@ -36,6 +36,7 @@ namespace AviaGetPhoneSize
 
         void capture_frame()
         {
+#if true
             VideoCapture vc = (VideoCapture)this.Tag;
             while (true)
             {
@@ -51,6 +52,7 @@ namespace AviaGetPhoneSize
                 }
                 System.Threading.Thread.Sleep(500);
             }
+#endif
         }
         [STAThread]
         private void Button1_Click(object sender, EventArgs e)
