@@ -1419,7 +1419,7 @@ namespace AviaGetPhoneSize
                 Image<Bgr, byte> img1 = new Image<Bgr, byte>(fn1).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
                 Image<Hsv, byte> hsvimg1 = img1.Convert<Hsv, byte>();
                 Image<Gray, Byte> mask1 = hsvimg1.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
-
+                //img1.Save(System.IO.Path.GetFileName(fn1));
                 Size ret_sz = Size.Empty;
                 Bgr ret_bgr = new Bgr(0, 0, 0);
                 int w = 0;
@@ -1465,11 +1465,12 @@ namespace AviaGetPhoneSize
                     SizeF sf = new SizeF(-0.2f * x, -0.2f * y);
                     rc.Inflate(Size.Round(sf));
                     Image<Bgr, byte> img_c = img1.Copy(rc);
-                    img_c.Save("temp_4.jpg");
+                    img_c.Save(System.IO.Path.GetFileName(fn1));
                     Image<Hsv, Byte> img_hsv = img_c.Convert<Hsv, Byte>();
-                    Hsv avg_hsv = img_hsv.GetAverage();
+                    Hsv avg_hsv = img_hsv.GetAverage();                    
                     Program.logIt($"AVG HSV: {avg_hsv}");
-                    mask1 = img_hsv.InRange(new Hsv(0, 0, avg_hsv.Value / 2), new Hsv(255, 255, avg_hsv.Value));
+                    //mask1 = img_hsv.InRange(new Hsv(0, avg_hsv.Satuation/2, avg_hsv.Value / 2), new Hsv(255, avg_hsv.Satuation, avg_hsv.Value));
+                    mask1 = img_hsv.InRange(new Hsv(0, 0, avg_hsv.Value / 2), new Hsv(255, avg_hsv.Satuation, avg_hsv.Value));
                     mask1.Save("temp_4.jpg");
 
                     Image<Bgr, byte> img_c1 = img_c.Copy(mask1);
