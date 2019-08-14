@@ -227,7 +227,8 @@ namespace AviaGetPhoneSize
             else
             {
                 Application.EnableVisualStyles();
-                Application.Run(new Form1());
+                //Application.Run(new Form1());
+                Application.Run(new Form2());
             }
             return ret;
         }
