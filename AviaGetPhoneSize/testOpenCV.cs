@@ -49,8 +49,8 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            train_iphone_color_data();
-            train_iphone_size_data_v2();
+            //train_iphone_color_data();
+            //train_iphone_size_data_v2();
             //test_ML();
             //test_3();
             //test_4();
@@ -61,7 +61,7 @@ namespace AviaGetPhoneSize
             //r.Item1.Save("temp_1.jpg");
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
-            test_5();
+            //test_5();
             //test_ss();
             test_6();
             //test_form();
@@ -1403,23 +1403,82 @@ namespace AviaGetPhoneSize
         }
         static void test_6()
         {
-            double sz = 0.227834848484848;
-            Dictionary<string, object> cfg = Program.loadConfig(System.Environment.MachineName);
-            if (cfg.ContainsKey("size"))
-            {
-                Dictionary<string, object> size_cfg = (Dictionary<string, object>)cfg["size"];
-                foreach(KeyValuePair<string,object> kvp in size_cfg)
-                {
-                    ArrayList al = (ArrayList)kvp.Value;
-                    double d1 = System.Decimal.ToDouble((System.Decimal)al[0]);
-                    double d2 = System.Decimal.ToDouble((System.Decimal)al[1]);
-                    double r = Math.Abs(sz - d1) / d1;
-                    if (r < d2)
-                    {
-                        // ok
-                    }
+            Rectangle ROI = new Rectangle(615, 345, 610, 1110);
+            string fn0 = @"C:\Tools\avia\images\avia_m0_pc\FromMyCam\BackGround.jpg";
 
+            Image<Bgr, Byte> img_bg = new Image<Bgr, byte>(fn0).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+            Image<Hsv, byte> hsv_bg = img_bg.Convert<Hsv, byte>();
+            Image<Gray, Byte> mask_bg = hsv_bg.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
+
+            //string fn1 = @"C:\Tools\avia\images\avia_m0_pc\FromMyCam\Iphone6s Gray.jpg";
+            foreach (string fn1 in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\avia_m0_pc\FromMyCam"))
+            {
+                if (string.Compare(fn1, fn0, true) == 0)
+                    continue;
+                Program.logIt($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}");
+                Image<Bgr, byte> img1 = new Image<Bgr, byte>(fn1).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+                Image<Hsv, byte> hsvimg1 = img1.Convert<Hsv, byte>();
+                Image<Gray, Byte> mask1 = hsvimg1.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
+
+                Size ret_sz = Size.Empty;
+                Bgr ret_bgr = new Bgr(0, 0, 0);
+                int w = 0;
+                // get size
+                if (true)
+                {
+                    Image<Gray, Byte> diff = mask1.AbsDiff(mask_bg);
+                    diff._Erode(1);
+                    diff.ROI = new Rectangle(diff.Width / 2, diff.Height / 2, diff.Width / 2, diff.Height / 2);
+                    Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+                    diff._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+                    Rectangle roi = Rectangle.Empty;
+                    using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+                    {
+                        CvInvoke.FindContours(diff, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                        int count = contours.Size;
+                        for (int i = 0; i < count; i++)
+                        {
+                            VectorOfPoint contour = contours[i];
+                            double a = CvInvoke.ContourArea(contour);
+                            Rectangle r = CvInvoke.BoundingRectangle(contour);
+                            if (a > 10.0)
+                            {
+                                //Program.logIt($"area: {a}, {r}");
+                                if (roi.IsEmpty) roi = r;
+                                else roi = Rectangle.Union(roi, r);
+                            }
+                        }
+                    }
+                    w = roi.Width - 80;
+                    ret_sz = new Size(roi.Width + diff.Width / 2, roi.Height + diff.Height / 2);
+                    Program.logIt($"size: {ret_sz}");
                 }
+
+                // get color
+                if (true)
+                {
+                    int x = img1.Width / 2 + 80;
+                    int y = 100;
+                    Rectangle rc = new Rectangle(x, y, w, 300);
+                    x = rc.Width;
+                    y = rc.Height;
+                    SizeF sf = new SizeF(-0.2f * x, -0.2f * y);
+                    rc.Inflate(Size.Round(sf));
+                    Image<Bgr, byte> img_c = img1.Copy(rc);
+                    img_c.Save("temp_4.jpg");
+                    Image<Hsv, Byte> img_hsv = img_c.Convert<Hsv, Byte>();
+                    Hsv avg_hsv = img_hsv.GetAverage();
+                    Program.logIt($"AVG HSV: {avg_hsv}");
+                    mask1 = img_hsv.InRange(new Hsv(0, 0, avg_hsv.Value / 2), new Hsv(255, 255, avg_hsv.Value));
+                    mask1.Save("temp_4.jpg");
+
+                    Image<Bgr, byte> img_c1 = img_c.Copy(mask1);
+                    img_c1.Save("temp_4.jpg");
+                    ret_bgr = img_c.GetAverage(mask1);
+                    Hsv hsv = img_hsv.GetAverage(mask1);
+                    Program.logIt($"GRB: {ret_bgr}, HSV: {hsv}");
+                }
+                Program.logIt($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}: size={ret_sz}, RGB={ret_bgr}");
             }
         }
         [STAThread]
