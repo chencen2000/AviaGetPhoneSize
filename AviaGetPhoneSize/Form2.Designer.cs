@@ -31,21 +31,22 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLoad = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSave = new System.Windows.Forms.ToolStripLabel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.pictureBoxROI = new System.Windows.Forms.PictureBox();
-            this.panelLeft = new System.Windows.Forms.Panel();
-            this.panelRight = new System.Windows.Forms.Panel();
             this.panelMain = new System.Windows.Forms.Panel();
-            this.toolStripSave = new System.Windows.Forms.ToolStripLabel();
+            this.pictureBoxROI = new System.Windows.Forms.PictureBox();
+            this.panelRight = new System.Windows.Forms.Panel();
+            this.panelLeft = new System.Windows.Forms.Panel();
+            this.toolStripCheck = new System.Windows.Forms.ToolStripLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxROI)).BeginInit();
             this.panelMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxROI)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -53,7 +54,7 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(786, 393);
+            this.pictureBox1.Size = new System.Drawing.Size(866, 512);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -62,7 +63,8 @@
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLoad,
-            this.toolStripSave});
+            this.toolStripSave,
+            this.toolStripCheck});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(880, 25);
@@ -75,6 +77,13 @@
             this.toolStripLoad.Size = new System.Drawing.Size(37, 22);
             this.toolStripLoad.Text = "Load";
             this.toolStripLoad.Click += new System.EventHandler(this.ToolStripLoad_Click);
+            // 
+            // toolStripSave
+            // 
+            this.toolStripSave.Name = "toolStripSave";
+            this.toolStripSave.Size = new System.Drawing.Size(35, 22);
+            this.toolStripSave.Text = "Save";
+            this.toolStripSave.Click += new System.EventHandler(this.ToolStripSave_Click);
             // 
             // tabControl1
             // 
@@ -93,7 +102,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(792, 399);
+            this.tabPage1.Size = new System.Drawing.Size(872, 518);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Orginal Image";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -112,6 +121,15 @@
             this.tabPage2.UseVisualStyleBackColor = true;
             this.tabPage2.Enter += new System.EventHandler(this.TabPage2_Enter);
             // 
+            // panelMain
+            // 
+            this.panelMain.Controls.Add(this.pictureBoxROI);
+            this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelMain.Location = new System.Drawing.Point(152, 3);
+            this.panelMain.Name = "panelMain";
+            this.panelMain.Size = new System.Drawing.Size(517, 512);
+            this.panelMain.TabIndex = 3;
+            // 
             // pictureBoxROI
             // 
             this.pictureBoxROI.BackColor = System.Drawing.Color.Black;
@@ -124,14 +142,6 @@
             this.pictureBoxROI.TabStop = false;
             this.pictureBoxROI.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBoxROI_MouseMove);
             // 
-            // panelLeft
-            // 
-            this.panelLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelLeft.Location = new System.Drawing.Point(3, 3);
-            this.panelLeft.Name = "panelLeft";
-            this.panelLeft.Size = new System.Drawing.Size(149, 512);
-            this.panelLeft.TabIndex = 1;
-            // 
             // panelRight
             // 
             this.panelRight.Dock = System.Windows.Forms.DockStyle.Right;
@@ -140,21 +150,20 @@
             this.panelRight.Size = new System.Drawing.Size(200, 512);
             this.panelRight.TabIndex = 2;
             // 
-            // panelMain
+            // panelLeft
             // 
-            this.panelMain.Controls.Add(this.pictureBoxROI);
-            this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelMain.Location = new System.Drawing.Point(152, 3);
-            this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(517, 512);
-            this.panelMain.TabIndex = 3;
+            this.panelLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panelLeft.Location = new System.Drawing.Point(3, 3);
+            this.panelLeft.Name = "panelLeft";
+            this.panelLeft.Size = new System.Drawing.Size(149, 512);
+            this.panelLeft.TabIndex = 1;
             // 
-            // toolStripSave
+            // toolStripCheck
             // 
-            this.toolStripSave.Name = "toolStripSave";
-            this.toolStripSave.Size = new System.Drawing.Size(35, 22);
-            this.toolStripSave.Text = "Save";
-            this.toolStripSave.Click += new System.EventHandler(this.ToolStripSave_Click);
+            this.toolStripCheck.Name = "toolStripCheck";
+            this.toolStripCheck.Size = new System.Drawing.Size(43, 22);
+            this.toolStripCheck.Text = "Check";
+            this.toolStripCheck.Click += new System.EventHandler(this.ToolStripCheck_Click);
             // 
             // Form2
             // 
@@ -171,8 +180,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxROI)).EndInit();
             this.panelMain.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxROI)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -191,5 +200,6 @@
         private System.Windows.Forms.Panel panelRight;
         private System.Windows.Forms.Panel panelLeft;
         private System.Windows.Forms.ToolStripLabel toolStripSave;
+        private System.Windows.Forms.ToolStripLabel toolStripCheck;
     }
 }

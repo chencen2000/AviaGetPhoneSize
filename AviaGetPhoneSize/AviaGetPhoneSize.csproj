@@ -142,6 +142,7 @@
     <None Include="tessdata\eng.traineddata">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="test\colors.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="images\Apple-Logo-black-880x660.png">

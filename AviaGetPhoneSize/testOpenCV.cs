@@ -63,7 +63,8 @@ namespace AviaGetPhoneSize
             //test_ocr();
             //test_5();
             //test_ss();
-            test_6();
+            //test_6();
+            test_7();
             //test_form();
             return 0;
         }
@@ -1404,20 +1405,20 @@ namespace AviaGetPhoneSize
         static void test_6()
         {
             Rectangle ROI = new Rectangle(615, 345, 610, 1110);
-            //string fn0 = @"C:\Tools\avia\images\avia_m0_pc\FromMyCam\BackGround.jpg";
-            string fn0 = @"C:\Tools\avia\images\FromMyCam\BackGround.jpg";
+            string fn0 = @"C:\Tools\avia\images\avia_m0_pc\FromMyCam\BackGround.jpg";
+            //string fn0 = @"C:\Tools\avia\images\FromMyCam\BackGround.jpg";
 
             Image<Bgr, Byte> img_bg = new Image<Bgr, byte>(fn0).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
             Image<Hsv, byte> hsv_bg = img_bg.Convert<Hsv, byte>();
             Image<Gray, Byte> mask_bg = hsv_bg.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
 
             StringBuilder sb = new StringBuilder();
-            //string fn1 = @"C:\Tools\avia\images\avia_m0_pc\FromMyCam\Iphone6s Gray.jpg";
-            string fn1 = @"C:\Tools\avia\images\FromMyCam\Iphone6 Gold .jpg";
-            //foreach (string fn1 in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\FromMyCam"))
+            //string fn1 = @"C:\Tools\avia\images\avia_m0_pc\FromMyCam\Iphone7P Gold.jpg";
+            //string fn1 = @"C:\Tools\avia\images\FromMyCam\Iphone6 Gold .jpg";
+            foreach (string fn1 in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\avia_m0_pc\FromMyCam"))
             {
-                //if (string.Compare(fn1, fn0, true) == 0)
-                //    continue;
+                if (string.Compare(fn1, fn0, true) == 0)
+                    continue;
                 Program.logIt($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}");
                 Image<Bgr, byte> img1 = new Image<Bgr, byte>(fn1).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
                 Image<Hsv, byte> hsvimg1 = img1.Convert<Hsv, byte>();
@@ -1426,6 +1427,7 @@ namespace AviaGetPhoneSize
                 Size ret_sz = Size.Empty;
                 Bgr ret_bgr = new Bgr(0, 0, 0);
                 Hsv ret_hsv = new Hsv(0, 0, 0);
+                Lab ret_lab = new Lab(0, 0, 0);
                 int w = 0;
                 // get size
                 if (true)
@@ -1471,9 +1473,10 @@ namespace AviaGetPhoneSize
                     Image<Bgr, byte> img_c = img1.Copy(rc);
                     img_c.Save(System.IO.Path.GetFileName(fn1));
                     Image<Hsv, Byte> img_hsv = img_c.Convert<Hsv, Byte>();
+                    Image<Lab, Byte> img_lab = img_c.Convert<Lab, Byte>();
                     Hsv avg_hsv = img_hsv.GetAverage();                    
-                    Program.logIt($"AVG HSV: {avg_hsv}");
-                    mask1 = img_hsv.InRange(new Hsv(0, Math.Floor(avg_hsv.Satuation)-1, Math.Floor(avg_hsv.Value - 2)-1), new Hsv(255, Math.Ceiling(avg_hsv.Satuation)+1, Math.Ceiling(avg_hsv.Value)+1));
+                    Program.logIt($"AVG HSV: {avg_hsv}, LAB: {img_lab.GetAverage()}");
+                    mask1 = img_hsv.InRange(new Hsv(0, 0, avg_hsv.Value), new Hsv(255, 255, avg_hsv.Value+11));
                     //mask1 = img_hsv.InRange(new Hsv(0, 0, avg_hsv.Value-1), new Hsv(255, 255, avg_hsv.Value+1));
                     //mask1.Save("temp_4.jpg");
 
@@ -1482,18 +1485,181 @@ namespace AviaGetPhoneSize
                     img_c1.Save($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}_mask.jpg");
                     ret_bgr = img_c.GetAverage(mask1);
                     ret_hsv = img_hsv.GetAverage(mask1);
-                    Program.logIt($"GRB: {ret_bgr}, HSV: {ret_hsv}");
+                    ret_lab = img_lab.GetAverage(mask1);
+                    Program.logIt($"GRB: {ret_bgr}, HSV: {ret_hsv}, LAB: {ret_lab}");
 
                     // test
-                    mask1=img_c.InRange(new Bgr(183,204,223),new Bgr(201,224,246));
-                    int[] count=mask1.CountNonzero();
-                    mask1 = img_hsv.InRange(new Hsv(20,80,150), new Hsv(20, 100, 220));
-                    count = mask1.CountNonzero();
+#if false
+                    Bgr g = new Bgr(182, 204, 223);
+                    //int rgb_diff = 5;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        int rgb_diff = i;
+                        mask1 = img_c.InRange(new Bgr(g.Blue - rgb_diff, g.Green - rgb_diff, g.Red - rgb_diff), new Bgr(g.Blue + rgb_diff, g.Green + rgb_diff, g.Red + rgb_diff));
+                        int[] count = mask1.CountNonzero();
+                        if (count[0] > 0)
+                        {
+                            ret_bgr = img_c.GetAverage(mask1);
+                            ret_hsv = img_hsv.GetAverage(mask1);
+                            Program.logIt($"[Check Gold]: {System.IO.Path.GetFileNameWithoutExtension(fn1)} RGB Diff: {rgb_diff}, GRB: {ret_bgr}, HSV: {ret_hsv}");
+                            break;
+                        }
+                    }
+#endif
+                    //mask1 = img_hsv.InRange(new Hsv(21, 0, 191), new Hsv(21, 255, 191));
+                    //count = mask1.CountNonzero();
+                    //ret_bgr = img_c.GetAverage(mask1);
+                    //ret_hsv = img_hsv.GetAverage(mask1);
+                    //Program.logIt($"GRB: {ret_bgr}, HSV: {ret_hsv}");
+#if false
+                    Tuple<int, int, int, int>[] colors = new Tuple<int, int, int, int>[]
+                    {
+                        new Tuple<int, int, int, int>(223,204,182,10),
+                        new Tuple<int, int, int, int>(194,199,230,10),
+                    };
+                    foreach(var c in colors)
+                    {
+                        Bgr g = new Bgr(c.Item3, c.Item2, c.Item1);
+                        for(int i = 0; i < c.Item4; i++)
+                        {
+                            mask1 = img_c.InRange(new Bgr(g.Blue - i, g.Green - i, g.Red - i), new Bgr(g.Blue + i, g.Green + i, g.Red + i));
+                            int[] count = mask1.CountNonzero();
+                            if (count[0] > 0)
+                            {
+                                Bgr bgr1 = img_c.GetAverage(mask1);
+                                Hsv hsv1 = img_hsv.GetAverage(mask1);
+                                Program.logIt($"[Check #{g}]: {System.IO.Path.GetFileNameWithoutExtension(fn1)} RGB Diff: {i}, GRB: {bgr1 }, HSV: {hsv1}");
+                                break;
+                            }
+                        }
+                    }
+#endif
                 }
                 //Program.logIt($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}: size={ret_sz}, RGB={ret_bgr}, hsv={ret_hsv}");
-                sb.AppendLine($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}: size={ret_sz}, RGB={ret_bgr}, hsv={ret_hsv}");
+                sb.AppendLine($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}: size={ret_sz}, RGB={ret_bgr}, hsv={ret_hsv}, lab={ret_lab}");
             }
             Program.logIt($"report: {sb.ToString()}");
+        }
+        static void test_7()
+        {
+#if true
+            string fn1 = "Iphone7P Gold.jpg";
+            //Image<Bgr, Byte> img = new Image<Bgr, byte>(fn);
+            //Image<Hsv, Byte> img_hsv = img.Convert<Hsv, Byte>();
+            //Image<Lab, Byte> img_lab = img.Convert<Lab, Byte>();
+
+            Dictionary<string, object> colors = null;
+            try
+            {
+                var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                colors = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText("colors.json"));
+            }
+            catch (Exception) { }
+            //foreach (string fn1 in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\avia_m0_pc\image_color"))
+            {
+                Program.logIt($"{fn1}: ++");
+                Image<Bgr, Byte> img = new Image<Bgr, byte>(fn1);
+                Image<Hsv, Byte> img_hsv = img.Convert<Hsv, Byte>();
+                Image<Lab, Byte> img_lab = img.Convert<Lab, Byte>();
+
+                foreach (KeyValuePair<string, object> c in colors)
+                {
+                    Program.logIt($"{fn1}: check color: {c.Key}");
+                    Dictionary<string, object> cd = (Dictionary<string, object>)c.Value;
+                    Image<Bgr, Byte> img_cd = new Image<Bgr, byte>(img.Width, img.Height, new Bgr((int)cd["b"], (int)cd["g"], (int)cd["r"]));
+                    Image<Hsv, Byte> img_hsv_1 = img_cd.Convert<Hsv, Byte>();
+                    Image<Lab, Byte> img_lab_1 = img_cd.Convert<Lab, Byte>();
+                    int step = (int)cd["step"];
+                    int s = (int)cd["s"];
+                    int v = (int)cd["v"];
+                    int th = (int)cd["th"];
+                    for (int i = 0; i < step; i++)
+                    {
+                        Image<Gray, Byte> mask = img_hsv.InRange(new Hsv(0, s - i, v - i), new Hsv(179, s + i, v + i));
+                        int[] count = mask.CountNonzero();
+                        if (count[0] > 0)
+                        {
+                            Bgr avg1 = img.GetAverage(mask);
+                            double d = distance(avg1.MCvScalar, img_cd.GetAverage().MCvScalar);
+                            if (d < th)
+                            {
+                                // found
+                                Program.logIt($"{c.Key}: score={d}");
+                                break;
+                            }
+                            d = distance(img_hsv.GetAverage(mask).MCvScalar, img_hsv_1.GetAverage().MCvScalar);
+                            if (d < th)
+                            {
+                                // found
+                                Program.logIt($"{c.Key}: score={d}");
+                                break;
+                            }                            
+                            d = distance(img_lab.GetAverage(mask).MCvScalar, img_lab_1.GetAverage().MCvScalar);
+                            if (d < th)
+                            {
+                                // found
+                                Program.logIt($"{c.Key}: score={d}");
+                                break;
+                            }
+                        }
+                    }
+                }
+                Program.logIt($"{fn1}: --");
+            }
+#else
+            Dictionary<string, Bgr> colors = new Dictionary<string, Bgr>()
+            {
+                { "iPhone 7 Gold", new Bgr(183,204,223)},
+                { "iPhone 7 RoseGold", new Bgr(194,199,230)},
+                { "iPhone 7 Silver", new Bgr(226,228,228)},
+                { "iPhone 7 Black", new Bgr(51,48,46)},
+            };
+
+            foreach(KeyValuePair<string,Bgr> kvp in colors)
+            {
+                Image<Bgr, Byte> img = new Image<Bgr, byte>(100, 100, kvp.Value);
+                Image<Hsv, Byte> img_hsv = img.Convert<Hsv, Byte>();
+                Image<Lab, Byte> img_lab = img.Convert<Lab, Byte>();
+                Program.logIt($"{kvp.Key}: BGR={img.GetAverage()}, HSV={img_hsv.GetAverage()}, LAB={img_lab.GetAverage()}");
+            }
+
+            if (true)
+            {
+                string fn = "Iphone6P Gold.jpg";
+                Image<Bgr, Byte> img = new Image<Bgr, byte>(fn);
+                Image<Hsv, Byte> img_hsv = img.Convert<Hsv, Byte>();
+                Image<Lab, Byte> img_lab = img.Convert<Lab, Byte>();
+
+                Image<Bgr, Byte> img_gold = new Image<Bgr, byte>(img.Width, img.Height, new Bgr(183, 204, 223));
+                Image<Hsv, Byte> img_hsv1 = img_gold.Convert<Hsv, Byte>();
+                Image<Lab, Byte> img_lab1 = img_gold.Convert<Lab, Byte>();
+                double d1 = distance(img.GetAverage().MCvScalar, img_gold.GetAverage().MCvScalar);
+                double d2 = distance(img_hsv.GetAverage().MCvScalar, img_hsv1.GetAverage().MCvScalar);
+                double d3 = distance(img_lab.GetAverage().MCvScalar, img_lab1.GetAverage().MCvScalar);
+                for (int i = 0; i < 10; i++)
+                {
+                    Image<Gray, Byte> mask = img_hsv.InRange(new Hsv(0, 45 - i, 221 - i), new Hsv(179, 45 + i, 221 + i));
+                    int[] count = mask.CountNonzero();
+                    if (count[0] > 0)
+                    {
+                        Bgr v1 = img.GetAverage(mask);
+                        Hsv v2 = img_hsv.GetAverage(mask);
+                        Lab v3 = img_lab.GetAverage(mask);
+                        d1 = distance(v1.MCvScalar, img_gold.GetAverage().MCvScalar);
+                        d2 = distance(v2.MCvScalar, img_hsv1.GetAverage().MCvScalar);
+                        d3 = distance(v3.MCvScalar, img_lab1.GetAverage().MCvScalar);
+                        //break;
+                    }
+                }
+            }
+#endif
+        }
+        static double distance(MCvScalar i1, MCvScalar i2)
+        {
+            double ret = 0;
+            MCvScalar v = new MCvScalar(i1.V0 - i2.V0, i1.V1 - i2.V1, i1.V2 - i2.V2, i1.V3 - i2.V3);
+            ret = Math.Sqrt(v.V0 * v.V0 + v.V1 * v.V1 + v.V2 * v.V2 + v.V3 * v.V3);
+            return ret;
         }
         [STAThread]
         static void test_form()

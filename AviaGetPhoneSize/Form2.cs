@@ -106,5 +106,9 @@ namespace AviaGetPhoneSize
             catch (Exception) { }
         }
 
+        private void ToolStripCheck_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
