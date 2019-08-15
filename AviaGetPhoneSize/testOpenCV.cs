@@ -1404,14 +1404,17 @@ namespace AviaGetPhoneSize
         static void test_6()
         {
             Rectangle ROI = new Rectangle(615, 345, 610, 1110);
-            string fn0 = @"C:\Tools\avia\images\avia_m0_pc\FromMyCam\BackGround.jpg";
+            //string fn0 = @"C:\Tools\avia\images\avia_m0_pc\FromMyCam\BackGround.jpg";
+            string fn0 = @"C:\Tools\avia\images\FromMyCam\BackGround.jpg";
 
             Image<Bgr, Byte> img_bg = new Image<Bgr, byte>(fn0).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
             Image<Hsv, byte> hsv_bg = img_bg.Convert<Hsv, byte>();
             Image<Gray, Byte> mask_bg = hsv_bg.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
 
+            StringBuilder sb = new StringBuilder();
             //string fn1 = @"C:\Tools\avia\images\avia_m0_pc\FromMyCam\Iphone6s Gray.jpg";
-            foreach (string fn1 in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\avia_m0_pc\FromMyCam"))
+            //string fn1 = @"C:\Tools\avia\images\FromMyCam\Iphone6s Gray.jpg";
+            foreach (string fn1 in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\FromMyCam"))
             {
                 if (string.Compare(fn1, fn0, true) == 0)
                     continue;
@@ -1422,6 +1425,7 @@ namespace AviaGetPhoneSize
                 //img1.Save(System.IO.Path.GetFileName(fn1));
                 Size ret_sz = Size.Empty;
                 Bgr ret_bgr = new Bgr(0, 0, 0);
+                Hsv ret_hsv = new Hsv(0, 0, 0);
                 int w = 0;
                 // get size
                 if (true)
@@ -1469,18 +1473,21 @@ namespace AviaGetPhoneSize
                     Image<Hsv, Byte> img_hsv = img_c.Convert<Hsv, Byte>();
                     Hsv avg_hsv = img_hsv.GetAverage();                    
                     Program.logIt($"AVG HSV: {avg_hsv}");
-                    //mask1 = img_hsv.InRange(new Hsv(0, avg_hsv.Satuation/2, avg_hsv.Value / 2), new Hsv(255, avg_hsv.Satuation, avg_hsv.Value));
-                    mask1 = img_hsv.InRange(new Hsv(0, 0, avg_hsv.Value / 2), new Hsv(255, avg_hsv.Satuation, avg_hsv.Value));
-                    mask1.Save("temp_4.jpg");
+                    mask1 = img_hsv.InRange(new Hsv(0, Math.Floor(avg_hsv.Satuation)-1, Math.Floor(avg_hsv.Value - 2)-1), new Hsv(255, Math.Ceiling(avg_hsv.Satuation)+1, Math.Ceiling(avg_hsv.Value)+1));
+                    //mask1 = img_hsv.InRange(new Hsv(0, 0, avg_hsv.Value-1), new Hsv(255, 255, avg_hsv.Value+1));
+                    //mask1.Save("temp_4.jpg");
 
                     Image<Bgr, byte> img_c1 = img_c.Copy(mask1);
-                    img_c1.Save("temp_4.jpg");
+                    //img_c1.Save("temp_4.jpg");
+                    img_c1.Save($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}_mask.jpg");
                     ret_bgr = img_c.GetAverage(mask1);
-                    Hsv hsv = img_hsv.GetAverage(mask1);
-                    Program.logIt($"GRB: {ret_bgr}, HSV: {hsv}");
+                    ret_hsv = img_hsv.GetAverage(mask1);
+                    Program.logIt($"GRB: {ret_bgr}, HSV: {ret_hsv}");
                 }
-                Program.logIt($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}: size={ret_sz}, RGB={ret_bgr}");
+                //Program.logIt($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}: size={ret_sz}, RGB={ret_bgr}, hsv={ret_hsv}");
+                sb.AppendLine($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}: size={ret_sz}, RGB={ret_bgr}, hsv={ret_hsv}");
             }
+            Program.logIt($"report: {sb.ToString()}");
         }
         [STAThread]
         static void test_form()
