@@ -1413,11 +1413,11 @@ namespace AviaGetPhoneSize
 
             StringBuilder sb = new StringBuilder();
             //string fn1 = @"C:\Tools\avia\images\avia_m0_pc\FromMyCam\Iphone6s Gray.jpg";
-            //string fn1 = @"C:\Tools\avia\images\FromMyCam\Iphone6s Gray.jpg";
-            foreach (string fn1 in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\FromMyCam"))
+            string fn1 = @"C:\Tools\avia\images\FromMyCam\Iphone6 Gold .jpg";
+            //foreach (string fn1 in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\FromMyCam"))
             {
-                if (string.Compare(fn1, fn0, true) == 0)
-                    continue;
+                //if (string.Compare(fn1, fn0, true) == 0)
+                //    continue;
                 Program.logIt($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}");
                 Image<Bgr, byte> img1 = new Image<Bgr, byte>(fn1).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
                 Image<Hsv, byte> hsvimg1 = img1.Convert<Hsv, byte>();
@@ -1483,6 +1483,12 @@ namespace AviaGetPhoneSize
                     ret_bgr = img_c.GetAverage(mask1);
                     ret_hsv = img_hsv.GetAverage(mask1);
                     Program.logIt($"GRB: {ret_bgr}, HSV: {ret_hsv}");
+
+                    // test
+                    mask1=img_c.InRange(new Bgr(201,224,246),new Bgr(201,224,246));
+                    int[] count=mask1.CountNonzero();
+                    mask1 = img_hsv.InRange(new Hsv(20,0,0), new Hsv(20, 255, 255));
+                    count = mask1.CountNonzero();
                 }
                 //Program.logIt($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}: size={ret_sz}, RGB={ret_bgr}, hsv={ret_hsv}");
                 sb.AppendLine($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}: size={ret_sz}, RGB={ret_bgr}, hsv={ret_hsv}");
