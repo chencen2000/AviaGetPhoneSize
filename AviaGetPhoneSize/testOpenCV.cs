@@ -1485,9 +1485,9 @@ namespace AviaGetPhoneSize
                     Program.logIt($"GRB: {ret_bgr}, HSV: {ret_hsv}");
 
                     // test
-                    mask1=img_c.InRange(new Bgr(201,224,246),new Bgr(201,224,246));
+                    mask1=img_c.InRange(new Bgr(183,204,223),new Bgr(201,224,246));
                     int[] count=mask1.CountNonzero();
-                    mask1 = img_hsv.InRange(new Hsv(20,0,0), new Hsv(20, 255, 255));
+                    mask1 = img_hsv.InRange(new Hsv(20,80,150), new Hsv(20, 100, 220));
                     count = mask1.CountNonzero();
                 }
                 //Program.logIt($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}: size={ret_sz}, RGB={ret_bgr}, hsv={ret_hsv}");
