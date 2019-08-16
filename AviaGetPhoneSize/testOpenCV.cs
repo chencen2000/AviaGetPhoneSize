@@ -64,7 +64,8 @@ namespace AviaGetPhoneSize
             //test_5();
             //test_ss();
             //test_6();
-            test_7();
+            //test_7();
+            test_8();
             //test_form();
             return 0;
         }
@@ -1543,7 +1544,7 @@ namespace AviaGetPhoneSize
         static void test_7()
         {
 #if true
-            string fn1 = "Iphone7P Gold.jpg";
+            //string fn1 = "Iphone7P Gold.jpg";
             //Image<Bgr, Byte> img = new Image<Bgr, byte>(fn);
             //Image<Hsv, Byte> img_hsv = img.Convert<Hsv, Byte>();
             //Image<Lab, Byte> img_lab = img.Convert<Lab, Byte>();
@@ -1555,56 +1556,54 @@ namespace AviaGetPhoneSize
                 colors = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText("colors.json"));
             }
             catch (Exception) { }
-            //foreach (string fn1 in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\avia_m0_pc\image_color"))
+            foreach (string fn1 in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\avia_m0_pc\image_color"))
             {
                 Program.logIt($"{fn1}: ++");
                 Image<Bgr, Byte> img = new Image<Bgr, byte>(fn1);
-                Image<Hsv, Byte> img_hsv = img.Convert<Hsv, Byte>();
                 Image<Lab, Byte> img_lab = img.Convert<Lab, Byte>();
-
+                double score = 100;
+                KeyValuePair<string, object> the_color = default(KeyValuePair<string, object>);
                 foreach (KeyValuePair<string, object> c in colors)
                 {
                     Program.logIt($"{fn1}: check color: {c.Key}");
+                    if (string.Compare(fn1, @"C:\Tools\avia\images\avia_m0_pc\image_color\Iphone8 Gold.jpg") == 0)
+                    {
+
+                    }
                     Dictionary<string, object> cd = (Dictionary<string, object>)c.Value;
-                    Image<Bgr, Byte> img_cd = new Image<Bgr, byte>(img.Width, img.Height, new Bgr((int)cd["b"], (int)cd["g"], (int)cd["r"]));
-                    Image<Hsv, Byte> img_hsv_1 = img_cd.Convert<Hsv, Byte>();
-                    Image<Lab, Byte> img_lab_1 = img_cd.Convert<Lab, Byte>();
                     int step = (int)cd["step"];
-                    int s = (int)cd["s"];
-                    int v = (int)cd["v"];
+                    int x = (int)cd["x"];
+                    int y = (int)cd["y"];
+                    int z = (int)cd["z"];
                     int th = (int)cd["th"];
+                    Lab std = new Lab(x, y, z);
                     for (int i = 0; i < step; i++)
                     {
-                        Image<Gray, Byte> mask = img_hsv.InRange(new Hsv(0, s - i, v - i), new Hsv(179, s + i, v + i));
+                        //Image<Gray, Byte> mask = img_lab.InRange(
+                        //    new Lab(x - i, y > 128 ? 128 : 0, z > 128 ? 128 : 0), new Lab(x + i, y > 128 ? 255 : 127, z > 128 ? 255: 127));
+                        Image<Gray, Byte> mask = img_lab.InRange(
+                            new Lab(x - i, y - i, z - i), new Lab(x + i, y + i, z + i));
                         int[] count = mask.CountNonzero();
                         if (count[0] > 0)
                         {
-                            Bgr avg1 = img.GetAverage(mask);
-                            double d = distance(avg1.MCvScalar, img_cd.GetAverage().MCvScalar);
+                            Lab avg1 = img_lab.GetAverage(mask);
+                            double d = getDeltaE(avg1, std);
                             if (d < th)
                             {
                                 // found
-                                Program.logIt($"{c.Key}: score={d}");
-                                break;
-                            }
-                            d = distance(img_hsv.GetAverage(mask).MCvScalar, img_hsv_1.GetAverage().MCvScalar);
-                            if (d < th)
-                            {
-                                // found
-                                Program.logIt($"{c.Key}: score={d}");
-                                break;
-                            }                            
-                            d = distance(img_lab.GetAverage(mask).MCvScalar, img_lab_1.GetAverage().MCvScalar);
-                            if (d < th)
-                            {
-                                // found
-                                Program.logIt($"{c.Key}: score={d}");
+                                Program.logIt($"{c.Key}: score={d} step={i}");
+                                if (d < score)
+                                {
+                                    score = d;
+                                    the_color = c;
+                                }
                                 break;
                             }
                         }
                     }
                 }
-                Program.logIt($"{fn1}: --");
+                string s = $"colorid={the_color.Key}, score={score}";
+                Program.logIt($"{fn1}: -- {s}");
             }
 #else
             Dictionary<string, Bgr> colors = new Dictionary<string, Bgr>()
@@ -1654,11 +1653,58 @@ namespace AviaGetPhoneSize
             }
 #endif
         }
+        static void test_8()
+        {
+            string fn1 = "IphoneX Silver.jpg";
+            Image<Bgr, Byte> img = new Image<Bgr, byte>(fn1);
+            Image<Lab, Byte> img_lab = img.Convert<Lab, byte>();
+            //Image<Lab, Byte> img_gold = new Image<Lab, byte>(img.Width, img.Height, new Lab(212,131,142));
+
+            Image<Gray, Byte>[] LAB = img_lab.Split();
+            double minVal = 0.0;
+            double maxVal = 0.0;
+            Point minLoc = Point.Empty;
+            Point maxLoc = Point.Empty;
+            CvInvoke.MinMaxLoc(LAB[0], ref minVal, ref maxVal, ref minLoc, ref maxLoc);
+            Program.logIt($"L: min={minVal}, max={maxVal}");
+            double maxX = maxVal;
+            CvInvoke.MinMaxLoc(LAB[1], ref minVal, ref maxVal, ref minLoc, ref maxLoc);
+            Program.logIt($"A: min={minVal}, max={maxVal}");
+            double maxY = maxVal;
+            CvInvoke.MinMaxLoc(LAB[2], ref minVal, ref maxVal, ref minLoc, ref maxLoc);
+            Program.logIt($"B: min={minVal}, max={maxVal}");
+            double maxZ = maxVal;
+
+            Lab lab_std = new Lab(188, 128, 126);
+            for(int i=0;i<10;i++)
+            {
+                Image<Gray, Byte> mask = img_lab.InRange(
+                    new Lab(lab_std.X - i, lab_std.Y - i, lab_std.Z - i), new Lab(lab_std.X + i, lab_std.Y + i, lab_std.Z + i));
+                int[] count = mask.CountNonzero();
+                if (count[0] > 0)
+                {
+                    Lab avg_lab = img_lab.GetAverage(mask);
+                    double d = getDeltaE(avg_lab, lab_std);
+                }
+            }
+            //d= getDeltaE(img_gold_lab.GetAverage(), img_gold_lab_1.GetAverage());
+        }
+        static double getDeltaE(Lab l1, Lab l2)
+        {
+            return Math.Sqrt(
+                Math.Pow(l1.X - l2.X, 2) +
+                Math.Pow(l1.Y - l2.Y, 2) +
+                Math.Pow(l1.Z - l2.Z, 2));
+        }
         static double distance(MCvScalar i1, MCvScalar i2)
         {
             double ret = 0;
-            MCvScalar v = new MCvScalar(i1.V0 - i2.V0, i1.V1 - i2.V1, i1.V2 - i2.V2, i1.V3 - i2.V3);
-            ret = Math.Sqrt(v.V0 * v.V0 + v.V1 * v.V1 + v.V2 * v.V2 + v.V3 * v.V3);
+            //MCvScalar v = new MCvScalar(i1.V0 - i2.V0, i1.V1 - i2.V1, i1.V2 - i2.V2, i1.V3 - i2.V3);
+            ret = Math.Sqrt(
+                Math.Pow(i1.V0 - i2.V0, 2) +
+                Math.Pow(i1.V1 - i2.V1, 2) +
+                Math.Pow(i1.V2 - i2.V2, 2) +
+                Math.Pow(i1.V3 - i2.V3, 2));
             return ret;
         }
         [STAThread]
