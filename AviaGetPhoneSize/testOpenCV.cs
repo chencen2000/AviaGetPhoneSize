@@ -64,8 +64,9 @@ namespace AviaGetPhoneSize
             //test_5();
             //test_ss();
             //test_6();
-            test_7();
+            //test_7();
             //test_8();
+            test_9();
             //test_form();
             return 0;
         }
@@ -1457,8 +1458,9 @@ namespace AviaGetPhoneSize
                         }
                     }
                     w = roi.Width - 80;
-                    ret_sz = new Size(roi.Width + diff.Width / 2, roi.Height + diff.Height / 2);
+                    ret_sz = new Size(roi.Width + diff.Width , roi.Height + diff.Height );
                     Program.logIt($"size: {ret_sz}");
+                    img1.Copy(new Rectangle(new Point(0, 0), ret_sz)).Save($"{System.IO.Path.GetFileName(fn1)}");
                 }
 
                 // get color
@@ -1466,13 +1468,14 @@ namespace AviaGetPhoneSize
                 {
                     int x = img1.Width / 2 + 80;
                     int y = 100;
-                    Rectangle rc = new Rectangle(x, y, w, 300);
+                    Rectangle rc = new Rectangle(x, y, ret_sz.Width - x, ret_sz.Height - y);
                     x = rc.Width;
                     y = rc.Height;
                     SizeF sf = new SizeF(-0.2f * x, -0.2f * y);
-                    rc.Inflate(Size.Round(sf));
+                    //rc.Inflate(Size.Round(sf));
                     Image<Bgr, byte> img_c = img1.Copy(rc);
-                    img_c.Save(System.IO.Path.GetFileName(fn1));
+                    //img_c.Save(System.IO.Path.GetFileName(fn1));
+                    img_c.Save($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}_color.jpg");
                     Image<Hsv, Byte> img_hsv = img_c.Convert<Hsv, Byte>();
                     Image<Lab, Byte> img_lab = img_c.Convert<Lab, Byte>();
                     Hsv avg_hsv = img_hsv.GetAverage();                    
@@ -1584,11 +1587,15 @@ namespace AviaGetPhoneSize
                     Gray v1;
                     MCvScalar v2;
                     XYZ[2].AvgSdv(out v1, out v2);
+                    double v3 = CvInvoke.Threshold(XYZ[2], new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
+                    DenseHistogram dh = new DenseHistogram(256, new RangeF(0, 255));
+                    dh.Calculate<Byte>(new Image<Gray, byte>[] { XYZ[2] }, false, null);
+                    Program.logIt($"Value: avg={v1.MCvScalar.V0}, std={v2.V0}, otsu={v3}, overexposure=");
                     for (int i = 0; i < 10; i++)
                     {
                         Image<Gray, Byte> mask = img_hsv.InRange(
-                            new Hsv(minH, minS, v1.MCvScalar.V0 - i),
-                            new Hsv(maxH, maxS, v1.MCvScalar.V0 + i));
+                            new Hsv(minH, minS, v1.MCvScalar.V0 - v2.V0),
+                            new Hsv(maxH, maxS, v1.MCvScalar.V0 + v2.V0));
                         int[] count = mask.CountNonzero();
                         if (count[0] > 0)
                         {
@@ -1736,47 +1743,213 @@ namespace AviaGetPhoneSize
         }
         static void test_8()
         {
-            string fn1 = "Iphone6P Silver.jpg";
+#if false
+            string fn1 = "Iphone6sP RoseGold_color.jpg";
             Image<Bgr, Byte> img = new Image<Bgr, byte>(fn1);
             Image<Lab, Byte> img_lab = img.Convert<Lab, byte>();
             Image<Hsv, Byte> img_hsv = img.Convert<Hsv, byte>();
             //Image<Lab, Byte> img_gold = new Image<Lab, byte>(img.Width, img.Height, new Lab(212,131,142));
 
-            Image<Gray, Byte>[] LAB = img_hsv.Split();
-            double minVal = 0.0;
-            double maxVal = 0.0;
-            Point minLoc = Point.Empty;
-            Point maxLoc = Point.Empty;
-            CvInvoke.MinMaxLoc(LAB[0], ref minVal, ref maxVal, ref minLoc, ref maxLoc);
-            Program.logIt($"H: min={minVal}, max={maxVal}");
-            double maxX = maxVal;
-            double minX = minVal;
-            double x = CvInvoke.Threshold(LAB[0], new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
-            CvInvoke.MinMaxLoc(LAB[1], ref minVal, ref maxVal, ref minLoc, ref maxLoc);
-            Program.logIt($"S: min={minVal}, max={maxVal}");
-            double maxY = maxVal;
-            double minY = minVal;
-            double y = CvInvoke.Threshold(LAB[1], new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
-            CvInvoke.MinMaxLoc(LAB[2], ref minVal, ref maxVal, ref minLoc, ref maxLoc);
-            Program.logIt($"V: min={minVal}, max={maxVal}");
-            double maxZ = maxVal;
-            double minZ = minVal;
-            double z = CvInvoke.Threshold(LAB[2], new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
-
-            //Lab lab_std = new Lab(221, 127, 128);
-            Lab lab_std = new Lab(203, 127, 128);
-            for (int i=0;i<10;i++)
             {
-                Image<Gray, Byte> mask = img_hsv.InRange(
-                    new Hsv(minX, y-i, z-i), new Hsv(maxX, y+i, z+i));
-                int[] count = mask.CountNonzero();
-                if (count[0] > 0)
+                Image<Bgr, Byte> img1 = img.Copy();
+                img1._EqualizeHist();
+                img1._GammaCorrect(0.1);
+                img1.Save("temp_1.jpg");
+            }
+            {
+                Image<Bgr, Byte> img1 = img.Copy();
+                img1._EqualizeHist();
+                img1._GammaCorrect(1.5);
+                img1.Save("temp_2.jpg");
+            }
+#endif
+
+            //string fn1 = @"C:\Tools\avia\images\avia_m0_pc\image_color\Iphone6s RoseGold.jpg";
+            foreach (string fn1 in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\avia_m0_pc\image_color"))
+            {
+                Image<Bgr, byte> img = new Image<Bgr, byte>(fn1);
+                if (false)
                 {
-                    Lab avg_lab = img_lab.GetAverage(mask);
-                    double d = getDeltaE(avg_lab, lab_std);
+                    Image<Bgr, Byte> diff = img.AbsDiff(new Bgr(194, 199, 230));
+                    Image<Lab, Byte> diff_lab = diff.Convert<Lab, Byte>();
+                    double score = 100;
+                    List<Point> pts = new List<Point>();
+                    for (int r = 0; r < diff.Rows; r++)
+                    {
+                        for (int c = 0; c < diff.Cols; c++)
+                        {
+                            Lab l1 = diff_lab[r, c];
+                            double d = getDeltaE(l1, new Lab(0, 128, 128));
+                            if (d < score)
+                            {
+                                score = d;
+                                pts.Clear();
+                                pts.Add(new Point(c, r));
+                            }
+                            else if (d == score)
+                            {
+                                pts.Add(new Point(c, r));
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                    }
+                    Image<Hsv, Byte> img_hsv = img.Convert<Hsv, Byte>();
+                    foreach (Point p in pts)
+                    {
+                        Hsv hsv = img_hsv[p];
+                        Program.logIt($"{hsv}");
+                    }
+                }
+
+                Program.logIt($"{fn1}: ++ {img.Width*img.Height}");
+                bool done = false;
+                while(!done)
+                {
+                    Image<Hsv, byte> img_hsv = img.Convert<Hsv, byte>();
+                    Image<Gray, Byte> []chs = img_hsv.Split();
+                    Point minLocH = Point.Empty;
+                    Point maxLocH = Point.Empty;
+                    double minH = 0.0;
+                    double maxH = 0.0;
+                    CvInvoke.MinMaxLoc(chs[0], ref minH, ref maxH, ref minLocH, ref maxLocH);
+                    Point minLocS = Point.Empty;
+                    Point maxLocS = Point.Empty;
+                    double minS = 0.0;
+                    double maxS = 0.0;
+                    CvInvoke.MinMaxLoc(chs[1], ref minS, ref maxS, ref minLocS, ref maxLocS);
+                    Point minLocV = Point.Empty;
+                    Point maxLocV = Point.Empty;
+                    double minV = 0.0;
+                    double maxV = 0.0;
+                    CvInvoke.MinMaxLoc(chs[2], ref minV, ref maxV, ref minLocV, ref maxLocV);
+                    Gray v1;
+                    MCvScalar v2;
+                    chs[0].AvgSdv(out v1, out v2);
+                    Program.logIt($"Hue: {minH}-{maxH}, {img_hsv[minLocH]}-{img_hsv[maxLocH]}, {img[minLocH]}-{img[maxLocH]}, avg: {v1.MCvScalar.V0},{v2.V0}");
+                    chs[1].AvgSdv(out v1, out v2);
+                    //Program.logIt($"Satuation: {minS}-{maxS}, {img_hsv[minLocS]}-{img_hsv[maxLocS]}, {img[minLocS]}-{img[maxLocS]}, avg: {v1.MCvScalar.V0},{v2.V0}");
+                    chs[2].AvgSdv(out v1, out v2);
+                    Program.logIt($"Value: {minV}-{maxV}, {img_hsv[minLocV]}-{img_hsv[maxLocV]}, {img[minLocV]}-{img[maxLocV]}, avg: {v1.MCvScalar.V0},{v2.V0}，{v2.V0/v1.MCvScalar.V0:P}");
+                    DenseHistogram dh = new DenseHistogram(5, new RangeF(0, 256));
+                    dh.Calculate<Byte>(new Image<Gray, Byte>[] { chs[2] }, false, null);
+                    float[] data = dh.GetBinValues();
+                    Program.logIt($"{fn1}: {string.Join(",", data)}");
+                    done = true;
+                    if (data[0] + data[1] > 0 && data[2] / (data[0] + data[1]) < 0.1)
+                    {
+                        Program.logIt("under exposure");
+                        //done = false;
+                        //img_hsv = exposure(img_hsv, 0.1);
+                        //img = img_hsv.Convert<Bgr, Byte>();
+                    }
+                    if (data[3] + data[4] > 0 && data[2] / (data[3] + data[4]) < 0.1)
+                    {
+                        Program.logIt("over exposure");
+                        done = false;
+                        img_hsv = exposure(img_hsv, -0.1);
+                        img = img_hsv.Convert<Bgr, Byte>();
+                    }
+                }
+                img.Save($"{System.IO.Path.GetFileNameWithoutExtension(fn1)}_color_ready.jpg");
+                if (false)
+                {
+                    Image<Bgr, byte> img_blak = new Image<Bgr, byte>(img.Width, img.Height, new Bgr(0, 0, 0));
+                    Image<Bgr, byte> img1 = img.AddWeighted(img_blak, 0.75, 0.25, 0);
+                    {
+                        Image<Hsv, byte> img_hsv = img.Convert<Hsv, byte>();
+                        Image<Gray, Byte>[] chs = img_hsv.Split();
+                        Image<Gray, Byte> i = new Image<Gray, byte>(img.Width, img.Height, new Gray(0));
+                        Image<Gray, Byte> nv = chs[2].AddWeighted(i, 0.9, 0.1, 0);
+                        img_hsv = new Image<Hsv, byte>(new Image<Gray, Byte>[] { chs[0], chs[1], nv });
+                        img1 = img_hsv.Convert<Bgr, Byte>();
+                    }
+                    img1.Save("temp_1.jpg");
+                    {
+                        img = img1;
+                        Image<Hsv, byte> img_hsv = img.Convert<Hsv, byte>();
+                        Image<Gray, Byte>[] chs = img_hsv.Split();
+                        Point minLocH = Point.Empty;
+                        Point maxLocH = Point.Empty;
+                        double minH = 0.0;
+                        double maxH = 0.0;
+                        CvInvoke.MinMaxLoc(chs[0], ref minH, ref maxH, ref minLocH, ref maxLocH);
+                        Point minLocS = Point.Empty;
+                        Point maxLocS = Point.Empty;
+                        double minS = 0.0;
+                        double maxS = 0.0;
+                        CvInvoke.MinMaxLoc(chs[1], ref minS, ref maxS, ref minLocS, ref maxLocS);
+                        Point minLocV = Point.Empty;
+                        Point maxLocV = Point.Empty;
+                        double minV = 0.0;
+                        double maxV = 0.0;
+                        CvInvoke.MinMaxLoc(chs[2], ref minV, ref maxV, ref minLocV, ref maxLocV);
+                        Gray v1;
+                        MCvScalar v2;
+                        chs[0].AvgSdv(out v1, out v2);
+                        Program.logIt($"Hue: {minH}-{maxH}, {img_hsv[minLocH]}-{img_hsv[maxLocH]}, {img[minLocH]}-{img[maxLocH]}, avg: {v1.MCvScalar.V0},{v2.V0}");
+                        chs[1].AvgSdv(out v1, out v2);
+                        //Program.logIt($"Satuation: {minS}-{maxS}, {img_hsv[minLocS]}-{img_hsv[maxLocS]}, {img[minLocS]}-{img[maxLocS]}, avg: {v1.MCvScalar.V0},{v2.V0}");
+                        chs[2].AvgSdv(out v1, out v2);
+                        Program.logIt($"Value: {minV}-{maxV}, {img_hsv[minLocV]}-{img_hsv[maxLocV]}, {img[minLocV]}-{img[maxLocV]}, avg: {v1.MCvScalar.V0},{v2.V0}，{v2.V0 / v1.MCvScalar.V0:P}");
+                        if (maxV == 255)
+                        {
+                            Program.logIt($"{fn1}: over exposure!");
+                        }
+                        DenseHistogram dh = new DenseHistogram(5, new RangeF(0, 256));
+                        dh.Calculate<Byte>(new Image<Gray, Byte>[] { chs[2] }, false, null);
+                        Program.logIt($"{fn1}: {string.Join(",", dh.GetBinValues())}");
+                    }
+                }
+
+                Program.logIt($"{fn1}: --");
+            }
+        }
+        static void test_9()
+        {
+            Dictionary<string, object> colors = null;
+            try
+            {
+                var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                colors = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText("colors.json"));
+            }
+            catch (Exception) { }
+
+
+            string fn = "IPhone6 Gold _color_ready.jpg";
+            Image<Hsv, Byte> img = new Image<Hsv, byte>(fn);
+            Image<Gray, Byte>[] chs = img.Split();
+            Gray avg = chs[2].GetAverage();
+            Lab sample=new Lab(0,0,0);
+            for (int i = 0; i < 10; i++)
+            {
+                Image<Gray, Byte> mask = img.InRange(new Hsv(0, 0, avg.MCvScalar.V0 - i), new Hsv(179, 255, avg.MCvScalar.V0 + i));
+                if (CvInvoke.CountNonZero(mask) > 0)
+                {
+                    Image<Lab, Byte> i1 = img.Convert<Lab, Byte>();
+                    sample= i1.GetAverage(mask);
                 }
             }
-            //d= getDeltaE(img_gold_lab.GetAverage(), img_gold_lab_1.GetAverage());
+            Program.logIt($"{fn}: lab={sample}");
+            double score = 100;
+            KeyValuePair<string, object> the_color = new KeyValuePair<string, object>("NA", null);
+            foreach (KeyValuePair<string,object> c in colors)
+            {
+                Dictionary<string, object> d = (Dictionary<string, object>)c.Value;
+                int x = (int)d["x"];
+                int y = (int)d["y"];
+                int z = (int)d["z"];
+                double s = getDeltaE(sample, new Lab(x, y, z));
+                Program.logIt($"{c.Key}: score={s}");
+                if (s < score)
+                {
+                    score = s;
+                    the_color = c;
+                }
+            }
+            Program.logIt($"{the_color.Key}: score={score}");
         }
         static double getDeltaE(Lab l1, Lab l2)
         {
@@ -1794,6 +1967,15 @@ namespace AviaGetPhoneSize
                 Math.Pow(i1.V1 - i2.V1, 2) +
                 Math.Pow(i1.V2 - i2.V2, 2) +
                 Math.Pow(i1.V3 - i2.V3, 2));
+            return ret;
+        }
+        static Image<Hsv, Byte> exposure(Image<Hsv, Byte> img, double diff) 
+        {
+            Image<Hsv, Byte> ret = img;
+            Image<Gray, Byte>[] chs = img.Split();
+            Image<Gray, Byte> img_add = new Image<Gray, byte>(img.Width, img.Height, new Gray(0));
+            Image<Gray, Byte> nv = chs[2].AddWeighted(img_add, 1 + diff, 0, 0);
+            ret = new Image<Hsv, byte>(new Image<Gray, Byte>[] { chs[0],chs[1],nv}); 
             return ret;
         }
         [STAThread]
