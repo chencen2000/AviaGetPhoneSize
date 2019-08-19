@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<colors>
+  <color>
+    <description>iPhone 6, 7 Gold</description>
+    <id>9</id>
+    <red>223</red>
+    <green>204</green>
+    <blue>183</blue>
+    <x>212</x>
+    <y>131</y>
+    <z>141</z>
+    <h></h>
+    <s></s>
+    <v></v>
+  </color>
+  <color>
+    <description>iPhone 8 Gold</description>
+    <id>5</id>
+    <red>245</red>
+    <green>221</green>
+    <blue>197</blue>
+    <x>228</x>
+    <y>133</y>
+    <z>143</z>
+  </color>
+  <color>
+    <description>iPhone 6, 7 Silver</description>
+    <id>7</id>
+    <red>215</red>
+    <green>217</green>
+    <blue>216</blue>
+    <x>221</x>
+    <y>127</y>
+    <z>128</z>
+  </color>
+  <color>
+    <description>iPhone 8 Silver</description>
+    <id>4</id>
+    <red>228</red>
+    <green>228</green>
+    <blue>226</blue>
+    <x>203</x>
+    <y>127</y>
+    <z>128</z>
+  </color>
+  <color>
+    <description>iPhone 6, 7 Gray</description>
+    <id>7</id>
+    <red>180</red>
+    <green>181</green>
+    <blue>185</blue>
+    <x>188</x>
+    <y>128</y>
+    <z>126</z>
+  </color>
+  <color>
+    <description>iPhone 6, 7 Rose Gold</description>
+    <id>8</id>
+    <red>228</red>
+    <green>193</green>
+    <blue>185</blue>
+    <x>206</x>
+    <y>139</y>
+    <z>136</z>
+  </color>
+</colors>

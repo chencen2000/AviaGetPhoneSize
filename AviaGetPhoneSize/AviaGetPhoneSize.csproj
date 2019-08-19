@@ -157,6 +157,7 @@
     <Content Include="test\AviaGetPhoneSizeDebugOutput.xml" />
     <Content Include="test\background.txt" />
     <Content Include="test\color_sensor_output.txt" />
+    <Content Include="test\device_colors.xml" />
     <Content Include="test\iphone_6.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
