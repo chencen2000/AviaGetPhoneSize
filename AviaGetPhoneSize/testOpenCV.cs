@@ -1931,19 +1931,58 @@ namespace AviaGetPhoneSize
         }
         static void test_9()
         {
-            Rectangle ROI = new Rectangle(783, 582, 528, 1068);
-            string fn0 = @"C:\Tools\avia\images\newled\BackGround.jpg";
-            //string fn0 = @"C:\Tools\avia\images\FromMyCam\BackGround.jpg";
-            Image<Bgr, Byte> img_bg = new Image<Bgr, byte>(fn0).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
-            Image<Hsv, byte> hsv_bg = img_bg.Convert<Hsv, byte>();
-            Image<Gray, Byte> mask_bg = hsv_bg.InRange(new Hsv(75, 0, 50), new Hsv(95, 255, 255));
+            process_image(null);
+#if true
+            string fn = @"C:\Tools\avia\images\temp2\background.jpg";
+            Image<Gray, Byte> img = new Image<Gray, byte>(fn);
+            img.ROI = new Rectangle(img.Width / 2, img.Height / 2, img.Width / 2, img.Height / 2);
+            
+            img._Erode(1);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            img._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            img.Save("temp_1.jpg");
 
-            // test image
-            string fn1 = @"C:\Tools\avia\images\newled\WIN_20190819_16_01_20_Pro.jpg";
+            Size ret_sz = Size.Empty;
+            Rectangle roi = Rectangle.Empty;
+            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
             {
-                Image<Bgr, byte> img1 = new Image<Bgr, byte>(fn1).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
-                Image<Hsv, byte> hsvimg1 = img1.Convert<Hsv, byte>();
-                Image<Gray, Byte> mask1 = hsvimg1.InRange(new Hsv(75, 0, 50), new Hsv(95, 255, 255));
+                CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                int count = contours.Size;
+                for (int i = 0; i < count; i++)
+                {
+                    VectorOfPoint contour = contours[i];
+                    double a = CvInvoke.ContourArea(contour);
+                    Rectangle r = CvInvoke.BoundingRectangle(contour);
+                    if (a > 250.0)
+                    {
+                        //Program.logIt($"area: {a}, {r}");
+                        if (roi.IsEmpty) roi = r;
+                        else roi = Rectangle.Union(roi, r);
+                    }
+                }
+                ret_sz = new Size(roi.Width + img.Width, roi.Height + img.Height);
+                Program.logIt($"size: {ret_sz}");
+            }
+#endif
+        }
+        static void process_image(Bitmap img01)
+        {
+            string fn = @"C:\Tools\avia\images\temp2\background.jpg";
+            Bitmap mBackGround = new Bitmap(fn);
+            string fn1 = @"C:\Tools\avia\images\temp2\WIN_20190819_16_01_20_Pro.jpg";
+            Bitmap img = new Bitmap(fn1);
+            Rectangle ROI = new Rectangle(783, 582, 528, 1068);
+            Hsv hsv_low = new Hsv(75, 0, 50);
+            Hsv hsv_high = new Hsv(95, 255, 255);
+
+            {
+                Image<Bgr, Byte> bg = new Image<Bgr, byte>(mBackGround).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+                Image<Hsv, byte> hsv_bg = bg.Convert<Hsv, byte>();
+                Image<Gray, Byte> mask_bg = hsv_bg.InRange(hsv_low, hsv_high);
+
+                Image<Bgr, Byte> img1 = new Image<Bgr, byte>(img).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+                Image<Hsv, byte> hsv1 = img1.Convert<Hsv, byte>();
+                Image<Gray, Byte> mask1 = hsv1.InRange(hsv_low, hsv_high);
 
                 Image<Gray, Byte> diff = mask1.AbsDiff(mask_bg);
 
@@ -1974,7 +2013,6 @@ namespace AviaGetPhoneSize
                     Program.logIt($"size: {ret_sz}");
                 }
             }
-
         }
         static double getDeltaE(Lab l1, Lab l2)
         {

@@ -156,6 +156,39 @@ namespace AviaGetPhoneSize
             Image<Bgr, Byte> image = new Image<Bgr, byte>(img).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
             pictureBoxProcessed.Image = image.Bitmap;
         }
+        private Rectangle get_tray_size(Image<Gray,Byte> src)
+        {
+            Rectangle ret = Rectangle.Empty;
+            Image<Gray, Byte> img = src.Copy(new Rectangle(src.Width / 2, src.Height / 2, src.Width / 2, src.Height / 2));
+
+            img._Erode(1);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            img._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+
+            Size ret_sz = Size.Empty;
+            Rectangle roi = Rectangle.Empty;
+            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+            {
+                CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                int count = contours.Size;
+                for (int i = 0; i < count; i++)
+                {
+                    VectorOfPoint contour = contours[i];
+                    double a = CvInvoke.ContourArea(contour);
+                    Rectangle r = CvInvoke.BoundingRectangle(contour);
+                    if (a > 250.0)
+                    {
+                        //Program.logIt($"area: {a}, {r}");
+                        if (roi.IsEmpty) roi = r;
+                        else roi = Rectangle.Union(roi, r);
+                    }
+                }
+                ret_sz = new Size(roi.Width + img.Width, roi.Height + img.Height);
+                //Program.logIt($"size: {ret_sz}");
+                ret = new Rectangle(new Point(0, 0), ret_sz);
+            }
+            return ret;
+        }
         private void process_image(Bitmap img)
         {
             if (mBackGround == null)
