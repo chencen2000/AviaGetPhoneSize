@@ -79,8 +79,8 @@ namespace AviaGetPhoneSize
             //test_ss();
             //test_6();
             //test_7();
-            test_8();
-            //test_9();
+            //test_8();
+            test_9();
             //toXml();
             //test_form();
             return 0;
@@ -1931,41 +1931,50 @@ namespace AviaGetPhoneSize
         }
         static void test_9()
         {
-            colors colors_data = null;
-            try
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(colors));
-                StreamReader reader = new StreamReader("device_colors.xml");
-                colors_data = (colors)serializer.Deserialize(reader);
-                reader.Close();
-            }
-            catch (Exception) { }
+            Rectangle ROI = new Rectangle(783, 582, 528, 1068);
+            string fn0 = @"C:\Tools\avia\images\newled\BackGround.jpg";
+            //string fn0 = @"C:\Tools\avia\images\FromMyCam\BackGround.jpg";
+            Image<Bgr, Byte> img_bg = new Image<Bgr, byte>(fn0).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+            Image<Hsv, byte> hsv_bg = img_bg.Convert<Hsv, byte>();
+            Image<Gray, Byte> mask_bg = hsv_bg.InRange(new Hsv(75, 0, 50), new Hsv(95, 255, 255));
 
-            string fn = @"C:\Tools\avia\images\avia_m0_pc\device\Iphone8 Gold.jpg";
-            //foreach (string fn in System.IO.Directory.GetFiles(@"C:\Tools\avia\images\avia_m0_pc\device"))
+            // test image
+            string fn1 = @"C:\Tools\avia\images\newled\WIN_20190819_16_01_20_Pro.jpg";
             {
-                Program.logIt($"{fn}: ++");
-                Image<Bgr, Byte> img_bgr = new Image<Bgr, byte>(fn);
-                foreach (color_item ci in colors_data.color_items)
+                Image<Bgr, byte> img1 = new Image<Bgr, byte>(fn1).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+                Image<Hsv, byte> hsvimg1 = img1.Convert<Hsv, byte>();
+                Image<Gray, Byte> mask1 = hsvimg1.InRange(new Hsv(75, 0, 50), new Hsv(95, 255, 255));
+
+                Image<Gray, Byte> diff = mask1.AbsDiff(mask_bg);
+
+                diff.ROI = new Rectangle(diff.Width / 2, diff.Height / 2, diff.Width / 2, diff.Height / 2);
+                diff._Erode(1);
+                Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+                diff._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+
+                Size ret_sz = Size.Empty;
+                Rectangle roi = Rectangle.Empty;
+                using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
                 {
-                    Bgr s_rgb = new Bgr(ci.blue, ci.green, ci.red);
-                    Lab s_lab = new Lab(0, 0, 0);
-                    Image<Bgr, Byte> diff = img_bgr.AbsDiff(s_rgb);
-                    diff.Save("temp_1.jpg");
-                    Image<Lab, Byte> diff_lab = diff.Convert<Lab, Byte>();
-                    Image<Gray, Byte> mask = diff_lab.InRange(new Lab(0, 127, 127), new Lab(2, 129, 129));
-                    int cnt = CvInvoke.CountNonZero(mask);
-                    double score = 0;
-                    if (cnt > 0)
+                    CvInvoke.FindContours(diff, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                    int count = contours.Size;
+                    for (int i = 0; i < count; i++)
                     {
-                        Lab l1 = img_bgr.Convert<Lab, Byte>().GetAverage(mask);
-                        double d = getDeltaE(l1, s_lab);
-                        score = cnt / d;
+                        VectorOfPoint contour = contours[i];
+                        double a = CvInvoke.ContourArea(contour);
+                        Rectangle r = CvInvoke.BoundingRectangle(contour);
+                        if (a > 10.0)
+                        {
+                            //Program.logIt($"area: {a}, {r}");
+                            if (roi.IsEmpty) roi = r;
+                            else roi = Rectangle.Union(roi, r);
+                        }
                     }
-                    Program.logIt($"[{ci.description}]: score={score}");
+                    ret_sz = new Size(roi.Width + diff.Width, roi.Height + diff.Height);
+                    Program.logIt($"size: {ret_sz}");
                 }
-                Program.logIt($"{fn}: --");
             }
+
         }
         static double getDeltaE(Lab l1, Lab l2)
         {
