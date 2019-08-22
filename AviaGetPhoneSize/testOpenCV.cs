@@ -80,7 +80,8 @@ namespace AviaGetPhoneSize
             //test_6();
             //test_7();
             //test_8();
-            test_9();
+            //test_9();
+            test_10();
             //toXml();
             //test_form();
             return 0;
@@ -1965,6 +1966,31 @@ namespace AviaGetPhoneSize
             }
 #endif
         }
+        static void test_10()
+        {
+            // parameter
+            Rectangle ROI = new Rectangle(783, 582, 528, 1068);
+            Hsv hsv_low = new Hsv(75, 0, 30);
+            Hsv hsv_high = new Hsv(95, 255, 255);
+
+            Rectangle tray_rect = Rectangle.Empty;            
+            // get tray size
+            if(tray_rect.IsEmpty)
+            {
+                Image<Bgr, Byte> i = new Image<Bgr, byte>(@"C:\Tools\avia\images\newled\background.jpg").Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+                Image<Hsv, Byte> i1 = i.Convert<Hsv, byte>();
+                Image<Gray, Byte> i2 = i1.InRange(hsv_low,hsv_high);
+                tray_rect = get_tray_size(i2);
+            }
+
+            if (!tray_rect.IsEmpty)
+            {
+                Image<Bgr, Byte> i = new Image<Bgr, byte>(@"C:\Tools\avia\images\newled\test.jpg").Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+                Image<Hsv, Byte> img_hsv = i.Convert<Hsv, Byte>();
+                Image<Gray, Byte> mask = img_hsv.InRange(new Hsv(75, 0, 30), new Hsv(95, 255, 255));
+                mask.Save("temp_1.jpg");
+            }
+        }
         static void process_image(Bitmap img01)
         {
             string fn = @"C:\Tools\avia\images\temp2\background.jpg";
@@ -2154,6 +2180,39 @@ namespace AviaGetPhoneSize
                 }
             }
             Program.logIt($"sample_color_case_type_1: -- ret={ret.Key} score={score}");
+        }
+        static private Rectangle get_tray_size(Image<Gray, Byte> src)
+        {
+            Rectangle ret = Rectangle.Empty;
+            Image<Gray, Byte> img = src.Copy(new Rectangle(src.Width / 2, src.Height / 2, src.Width / 2, src.Height / 2));
+
+            img._Erode(1);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            img._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+
+            Size ret_sz = Size.Empty;
+            Rectangle roi = Rectangle.Empty;
+            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+            {
+                CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                int count = contours.Size;
+                for (int i = 0; i < count; i++)
+                {
+                    VectorOfPoint contour = contours[i];
+                    double a = CvInvoke.ContourArea(contour);
+                    Rectangle r = CvInvoke.BoundingRectangle(contour);
+                    if (a > 250.0)
+                    {
+                        //Program.logIt($"area: {a}, {r}");
+                        if (roi.IsEmpty) roi = r;
+                        else roi = Rectangle.Union(roi, r);
+                    }
+                }
+                ret_sz = new Size(roi.Width + img.Width, roi.Height + img.Height);
+                //Program.logIt($"size: {ret_sz}");
+                ret = new Rectangle(new Point(0, 0), ret_sz);
+            }
+            return ret;
         }
         [STAThread]
         static void test_form()

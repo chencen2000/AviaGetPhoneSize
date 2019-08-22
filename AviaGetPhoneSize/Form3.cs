@@ -18,8 +18,10 @@ namespace AviaGetPhoneSize
     {
         VideoCapture theVideoCapturer;
         Bitmap mBackGround = null;
-        Rectangle ROI = new Rectangle(783, 582, 528, 1068);
-        Hsv hsv_low = new Hsv(75, 0, 50);
+        //Rectangle ROI = new Rectangle(783, 582, 528, 1068);
+        Rectangle ROI = new Rectangle(864, 463, 642, 1150);
+        double rotate_angle = 90.0;
+        Hsv hsv_low = new Hsv(75, 0, 30);
         Hsv hsv_high = new Hsv(95, 255, 255);
         Mat mCurrentFrame = new Mat();
         public Form3()
@@ -40,7 +42,8 @@ namespace AviaGetPhoneSize
                 {
                     if (pictureBoxOrg.Image != null)
                     {
-                        save_image(pictureBoxOrg.Image);
+                        Image<Bgr, Byte> img = mCurrentFrame.ToImage<Bgr, Byte>().Copy();
+                        save_image(img.Bitmap);
                     }
                 });
                 cm.MenuItems.Add("Set As BackGround", (s, ea) => 
@@ -119,7 +122,7 @@ namespace AviaGetPhoneSize
                         try
                         {
                             Image<Bgr, Byte> i = mCurrentFrame.ToImage<Bgr, byte>().Copy();
-                            pictureBoxProcessed.Image = i.Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI).Bitmap;
+                            pictureBoxProcessed.Image = i.Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI).Bitmap;
                         }
                         catch (Exception) { }
                     }
@@ -138,7 +141,7 @@ namespace AviaGetPhoneSize
         }
         #endregion
 
-        private void save_image(Image img)
+        private void save_image(Bitmap img)
         {
             using (SaveFileDialog saveFileDialog1 = new SaveFileDialog())
             {
@@ -153,7 +156,7 @@ namespace AviaGetPhoneSize
         }
         private void preview_image(Bitmap img)
         {
-            Image<Bgr, Byte> image = new Image<Bgr, byte>(img).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+            Image<Bgr, Byte> image = new Image<Bgr, byte>(img).Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
             pictureBoxProcessed.Image = image.Bitmap;
         }
         private Rectangle get_tray_size(Image<Gray,Byte> src)
@@ -200,11 +203,12 @@ namespace AviaGetPhoneSize
             toolStripStatusLabel1.Text = "Precess image...";
             Task.Run(() =>
             {
-                Image<Bgr, Byte> bg = new Image<Bgr, byte>(mBackGround).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+                Image<Bgr, Byte> bg = new Image<Bgr, byte>(mBackGround).Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
                 Image<Hsv, byte> hsv_bg = bg.Convert<Hsv, byte>();
                 Image<Gray, Byte> mask_bg = hsv_bg.InRange(hsv_low, hsv_high);
+                Rectangle tray_rect = get_tray_size(mask_bg);
 
-                Image<Bgr, Byte> img1 = new Image<Bgr, byte>(img).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+                Image<Bgr, Byte> img1 = new Image<Bgr, byte>(img).Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
                 Image<Hsv, byte> hsv1 = img1.Convert<Hsv, byte>();
                 Image<Gray, Byte> mask1 = hsv1.InRange(hsv_low, hsv_high);
 
@@ -239,6 +243,11 @@ namespace AviaGetPhoneSize
                     {
                         toolStripStatusLabel1.Text = $"Device: Size={ret_sz}";
                     }));
+                }
+                if (!ret_sz.IsEmpty)
+                {
+                    img1.Copy(new Rectangle(new Point(0, 0), ret_sz)).Save("temp_1.jpg");
+                    img1.Copy(new Rectangle(tray_rect.Width, 0, ret_sz.Width - tray_rect.Width, ret_sz.Height)).Save("temp_2.jpg");
                 }
             });
         }
