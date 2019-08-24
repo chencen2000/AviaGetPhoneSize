@@ -75,7 +75,7 @@ namespace AviaGetPhoneSize
             //r.Item1.Save("temp_1.jpg");
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
-            //test_5();
+            test_5();
             //test_ss();
             //test_6();
             //test_7();
@@ -1213,66 +1213,43 @@ namespace AviaGetPhoneSize
         }
         static void test_5()
         {
-            Rectangle r1 = new Rectangle(610, 350, 600, 1100);
-            /*
-            Mat m0 = CvInvoke.Imread(@"C:\Tools\avia\images\avia_m0_pc\BackGround.jpg");
-            Mat m1 = CvInvoke.Imread(@"C:\Tools\avia\images\avia_m0_pc\IPhone6 Gold .jpg");
+            string fn = @"C:\Tools\avia\images\avia_m0_pc\color_bar\IPhone6 Gold _color.jpg";
+            Image<Bgr, Byte> img0 = new Image<Bgr, byte>(fn);
+            SizeF sz = new SizeF(0, 0);
+            Rectangle rect = new Rectangle(new Point(0, 0), img0.Size);
+            sz.Width = -0.3f * rect.Width;
+            rect.Inflate(Size.Round(sz));
+            rect.Height = 500;
+            Image<Bgr, Byte> img = img0.Copy(rect);
+            Image<Hsv, float> img_hsv = img.Convert<Hsv, float>();
+            Image<Gray, Byte> mask = img_hsv.InRange(new Hsv(0, 0, 128), new Hsv(255, 255, 240));
+            img.Copy(mask).Save("temp_1.jpg");
 
-            CvInvoke.Rotate(m0, m0, RotateFlags.Rotate90CounterClockwise);
-            CvInvoke.Rotate(m1, m1, RotateFlags.Rotate90CounterClockwise);
 
-            Image<Bgr, Byte> img0 = m0.ToImage<Bgr, Byte>();
-            Image<Bgr, Byte> img1 = m1.ToImage<Bgr, Byte>();
-
-            img0.ROI = r1;
-            img1.ROI = r1;
-
-            Image<Hsv, Byte> hsv0 = img0.Convert<Hsv, Byte>();
-            Image<Hsv, Byte> hsv1 = img1.Convert<Hsv, Byte>();
-
-            Image<Gray, Byte> mask = hsv0.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
-            int[] area = mask.CountNonzero();
-            double r = (double)area[0] / (mask.Width * mask.Height);
-
-            mask = hsv1.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
-            area = mask.CountNonzero();
-            r = (double)area[0] / (mask.Width * mask.Height);
-            */
-
-            Mat m00 = CvInvoke.Imread(@"C:\Tools\avia\images\avia_m0_pc\FromMyCam\BackGround.jpg");
-            CvInvoke.Rotate(m00, m00, RotateFlags.Rotate90CounterClockwise);
-            Image<Bgr, Byte> img00 = m00.ToImage<Bgr, Byte>().Copy(r1);
-
-            string dir = @"C:\Tools\avia\images\avia_m0_pc\FromMyCam";
-            StringBuilder sb = new StringBuilder();
-            foreach (string fn in System.IO.Directory.GetFiles(dir))
-            //string fn = @"C:\Tools\avia\images\avia_m0_pc\Iphone7 JetBlack.jpg";
+            //Bgr test_color = new Bgr(183, 204, 223);
+            Bgr test_color = new Bgr(216, 217, 215);
+            Image<Bgr, Byte> img_rgb = new Image<Bgr, byte>(img.Width, img.Height, test_color);
+            Image<Bgr, Byte> diff = img.AbsDiff(img_rgb);
+            Image<Lab, Byte> diff_lab = diff.Convert<Lab, Byte>();
+            //mask = diff_lab.InRange(new Lab(0, 127, 127), new Lab(2, 129, 129));
+            mask = new Image<Gray, byte>(img.Width, img.Height, new Gray(0));
+            for (int r = 0; r < img.Rows; r++)
             {
-                // check device inplace
-                Mat m0 = CvInvoke.Imread(fn);
-                CvInvoke.Rotate(m0, m0, RotateFlags.Rotate90CounterClockwise);
-                Image<Bgr, Byte> img0 = m0.ToImage<Bgr, Byte>().Copy(r1);
-                //img0.ROI = r1;
-                Tuple<bool, bool, double> res = AviaGetPhoneSize.AVIAGetPhoneSize.check_device_inplace_v2(img0, 0.33);
-                Program.logIt($"{System.IO.Path.GetFileName(fn)}: ret={res.Item1}, device inplace={res.Item2}");
-                Size sz = Size.Empty;
-                Bgr bgr;
-                // get size
-                if (res.Item1 && res.Item2)
+                for (int c = 0; c < img.Cols; c++)
                 {
-                    //Image<Bgr, Byte> diff = img0.AbsDiff(img00);
-                    //sz = AviaGetPhoneSize.AVIAGetPhoneSize.detect_size(diff.Convert<Gray, Byte>());
-                    //Program.logIt($"{System.IO.Path.GetFileName(fn)}: size={sz}");
-
-                    // sample color
-                    bgr = AviaGetPhoneSize.AVIAGetPhoneSize.sample_color(img0, new Rectangle(388, 84, 30, 200));
-                    Program.logIt($"{System.IO.Path.GetFileName(fn)}: size={bgr}");
-
-                    sb.AppendLine($"{System.IO.Path.GetFileNameWithoutExtension(fn)}, color={bgr}");
+                    double d = getDeltaE(diff_lab[r, c], new Lab(0, 127, 127));
+                    if (d < 4)
+                    {
+                        mask[r, c] = new Gray(255);
+                    }
                 }
             }
-
-            Program.logIt(sb.ToString());
+            if (CvInvoke.CountNonZero(mask) > 0)
+            {
+                Moments m = CvInvoke.Moments(mask);
+                Point pc = new Point((int)(m.M10 / m.M00), (int)(m.M01 / m.M00));
+                Rectangle r = CvInvoke.BoundingRectangle(mask);
+            }
         }
         static bool is_same_frame(Mat m1, Mat m2, double th = 17)
         {
