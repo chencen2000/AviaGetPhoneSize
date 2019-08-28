@@ -75,15 +75,16 @@ namespace AviaGetPhoneSize
             //r.Item1.Save("temp_1.jpg");
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
-            test_5();
+            //test_5();
             //test_ss();
             //test_6();
             //test_7();
             //test_8();
             //test_9();
-            test_10();
+            //test_10();
             //toXml();
             //test_form();
+            test_led();
             return 0;
         }
         static void test()
@@ -763,22 +764,12 @@ namespace AviaGetPhoneSize
         }
         static VectorOfPoint test_4()
         {
-            //Rectangle r = found_apple_logo(@"C:\Tools\avia\images\test.1\iphone6 Plus Gold\1473.1.jpg");
-            //Rectangle r = found_apple_logo(@"C:\Tools\avia\images\test.1\iphone6 Gold\0123.1.jpg");
-
-            string folder = @"C:\Tools\avia\images\test.1";
-            foreach (string fn in System.IO.Directory.GetFiles(folder, "*.jpg", System.IO.SearchOption.AllDirectories))
+            string fn = @"C:\Tools\avia\images\newled\cal_1.jpg";
+            //foreach (string fn in System.IO.Directory.GetFiles(folder, "*.jpg", System.IO.SearchOption.AllDirectories))
             {
-                Rectangle r = found_apple_logo(fn);
-                if (r.IsEmpty)
-                {
-                    // fail to found apple logo
-                    Program.logIt($"!!! Fail to found apple logo. {fn}");
-                }
-                else
-                {
-                    Program.logIt($"Found {r} in {fn}");
-                }
+                Image<Bgr, Byte> img = new Image<Bgr, byte>(fn);
+                Image<Hsv, Byte> img_hsv = img.Convert<Hsv, byte>();
+                Image<Gray, Byte> mask = img_hsv.InRange(new Hsv(0, 0, 250), new Hsv(0, 0, 255));
             }
 
 
@@ -1213,43 +1204,15 @@ namespace AviaGetPhoneSize
         }
         static void test_5()
         {
-            string fn = @"C:\Tools\avia\images\avia_m0_pc\color_bar\IPhone6 Gold _color.jpg";
-            Image<Bgr, Byte> img0 = new Image<Bgr, byte>(fn);
-            SizeF sz = new SizeF(0, 0);
-            Rectangle rect = new Rectangle(new Point(0, 0), img0.Size);
-            sz.Width = -0.3f * rect.Width;
-            rect.Inflate(Size.Round(sz));
-            rect.Height = 500;
-            Image<Bgr, Byte> img = img0.Copy(rect);
-            Image<Hsv, float> img_hsv = img.Convert<Hsv, float>();
-            Image<Gray, Byte> mask = img_hsv.InRange(new Hsv(0, 0, 128), new Hsv(255, 255, 240));
-            img.Copy(mask).Save("temp_1.jpg");
-
-
-            //Bgr test_color = new Bgr(183, 204, 223);
-            Bgr test_color = new Bgr(216, 217, 215);
-            Image<Bgr, Byte> img_rgb = new Image<Bgr, byte>(img.Width, img.Height, test_color);
-            Image<Bgr, Byte> diff = img.AbsDiff(img_rgb);
-            Image<Lab, Byte> diff_lab = diff.Convert<Lab, Byte>();
-            //mask = diff_lab.InRange(new Lab(0, 127, 127), new Lab(2, 129, 129));
-            mask = new Image<Gray, byte>(img.Width, img.Height, new Gray(0));
-            for (int r = 0; r < img.Rows; r++)
-            {
-                for (int c = 0; c < img.Cols; c++)
-                {
-                    double d = getDeltaE(diff_lab[r, c], new Lab(0, 127, 127));
-                    if (d < 4)
-                    {
-                        mask[r, c] = new Gray(255);
-                    }
-                }
-            }
-            if (CvInvoke.CountNonZero(mask) > 0)
-            {
-                Moments m = CvInvoke.Moments(mask);
-                Point pc = new Point((int)(m.M10 / m.M00), (int)(m.M01 / m.M00));
-                Rectangle r = CvInvoke.BoundingRectangle(mask);
-            }
+            //string fn = @"C:\Tools\avia\images\avia_m0_pc\color_bar\IPhone6 Gold _color.jpg";
+            //process_image(null);
+            //System.Drawing.Color c = System.Drawing.Color.FromArgb(230, 199, 194);
+            //float h = c.GetHue();
+            //float s = c.GetSaturation();
+            //float v = c.GetBrightness();
+            //Image<Bgr, byte> i = new Image<Bgr, byte>(100, 100, new Bgr(c.B,c.G,c.R));
+            //Hsv hsv = i.Convert<Hsv, byte>().GetAverage();
+            //Hls hls = i.Convert<Hls, byte>().GetAverage();
         }
         static bool is_same_frame(Mat m1, Mat m2, double th = 17)
         {
@@ -1946,44 +1909,89 @@ namespace AviaGetPhoneSize
         static void test_10()
         {
             // parameter
-            Rectangle ROI = new Rectangle(783, 582, 528, 1068);
-            Hsv hsv_low = new Hsv(75, 0, 30);
-            Hsv hsv_high = new Hsv(95, 255, 255);
+            string fn = @"temp_color.jpg";
+            Image<Bgr, byte> img = new Image<Bgr, byte>(fn);
 
-            Rectangle tray_rect = Rectangle.Empty;            
-            // get tray size
-            if(tray_rect.IsEmpty)
+#if true
+            Bgr test_color = new Bgr(194, 199, 230);
+            Image<Bgr, Byte> diff = img.AbsDiff(test_color);
+            Lab test_lab = new Lab(0, 128, 128);
+            Image<Gray, Byte> mask = new Image<Gray, byte>(img.Width, img.Height, new Gray(0));
+            Image<Lab, byte> diff_lab = diff.Convert<Lab, byte>();
+            for (int r = 0; r < img.Rows; r++)
             {
-                Image<Bgr, Byte> i = new Image<Bgr, byte>(@"C:\Tools\avia\images\newled\background.jpg").Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
-                Image<Hsv, Byte> i1 = i.Convert<Hsv, byte>();
-                Image<Gray, Byte> i2 = i1.InRange(hsv_low,hsv_high);
-                tray_rect = get_tray_size(i2);
+                for (int c = 0; c < img.Cols; c++)
+                {
+                    double d = getDeltaE(diff_lab[r, c], test_lab);
+                    if (d < 4)
+                    {
+                        mask[r, c] = new Gray(255);
+                    }
+                }
             }
+            int cnt = CvInvoke.CountNonZero(mask);
+            if (CvInvoke.CountNonZero(mask) > 0)
+            {
+                Moments m = CvInvoke.Moments(mask);
+                Point pc = new Point((int)(m.M10 / m.M00), (int)(m.M01 / m.M00));
+                Rectangle r = CvInvoke.BoundingRectangle(mask);
+            }
+#else
+            SizeF sz = new SizeF(0, 0);
+            Rectangle rect = new Rectangle(new Point(0, 0), img0.Size);
+            sz.Width = -0.3f * rect.Width;
+            rect.Inflate(Size.Round(sz));
+            rect.Height = 500;
+            Image<Bgr, Byte> img = img0.Copy(rect);
+            img.Save("temp_1.jpg");
+            Image<Hsv, float> img_hsv = img.Convert<Hsv, float>();
+            Image<Gray, Byte> mask = img_hsv.InRange(new Hsv(0, 0, 235), new Hsv(255, 255, 255));
+            //img.Copy(mask).Save("temp_1.jpg");
 
-            if (!tray_rect.IsEmpty)
+            //Bgr test_color = new Bgr(183, 204, 223);
+            //Bgr test_color = new Bgr(216, 217, 215);
+            Bgr test_color = new Bgr(194, 199, 230);
+            Image<Bgr, Byte> img_rgb = new Image<Bgr, byte>(img.Width, img.Height, test_color);
+            Image<Bgr, Byte> diff = img.AbsDiff(img_rgb);
+            Image<Lab, Byte> diff_lab = diff.Convert<Lab, Byte>();
+            //mask = diff_lab.InRange(new Lab(0, 127, 127), new Lab(2, 129, 129));
+            mask = new Image<Gray, byte>(img.Width, img.Height, new Gray(0));
+            for (int r = 0; r < img.Rows; r++)
             {
-                Image<Bgr, Byte> i = new Image<Bgr, byte>(@"C:\Tools\avia\images\newled\test.jpg").Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
-                Image<Hsv, Byte> img_hsv = i.Convert<Hsv, Byte>();
-                Image<Gray, Byte> mask = img_hsv.InRange(new Hsv(75, 0, 30), new Hsv(95, 255, 255));
-                mask.Save("temp_1.jpg");
+                for (int c = 0; c < img.Cols; c++)
+                {
+                    double d = getDeltaE(diff_lab[r, c], new Lab(0, 127, 127));
+                    if (d < 4)
+                    {
+                        mask[r, c] = new Gray(255);
+                    }
+                }
             }
+            if (CvInvoke.CountNonZero(mask) > 0)
+            {
+                Moments m = CvInvoke.Moments(mask);
+                Point pc = new Point((int)(m.M10 / m.M00), (int)(m.M01 / m.M00));
+                Rectangle r = CvInvoke.BoundingRectangle(mask);
+            }
+#endif
         }
         static void process_image(Bitmap img01)
         {
-            string fn = @"C:\Tools\avia\images\temp2\background.jpg";
+            string fn = @"C:\Tools\avia\images\newled\background.jpg";
             Bitmap mBackGround = new Bitmap(fn);
-            string fn1 = @"C:\Tools\avia\images\temp2\WIN_20190819_16_01_20_Pro.jpg";
+            string fn1 = @"temp_test.jpg";
             Bitmap img = new Bitmap(fn1);
-            Rectangle ROI = new Rectangle(783, 582, 528, 1068);
-            Hsv hsv_low = new Hsv(75, 0, 50);
-            Hsv hsv_high = new Hsv(95, 255, 255);
+            Rectangle ROI = new Rectangle(864, 463, 642, 1150);
+            double rotate_angle = 90.0;
+            Hsv hsv_low = new Hsv(60, 0, 30);
+            Hsv hsv_high = new Hsv(85, 255, 255);
 
             {
-                Image<Bgr, Byte> bg = new Image<Bgr, byte>(mBackGround).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+                Image<Bgr, Byte> bg = new Image<Bgr, byte>(mBackGround).Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
                 Image<Hsv, byte> hsv_bg = bg.Convert<Hsv, byte>();
                 Image<Gray, Byte> mask_bg = hsv_bg.InRange(hsv_low, hsv_high);
 
-                Image<Bgr, Byte> img1 = new Image<Bgr, byte>(img).Rotate(-90.0, new Bgr(0, 0, 0), false).Copy(ROI);
+                Image<Bgr, Byte> img1 = new Image<Bgr, byte>(img);
                 Image<Hsv, byte> hsv1 = img1.Convert<Hsv, byte>();
                 Image<Gray, Byte> mask1 = hsv1.InRange(hsv_low, hsv_high);
 
@@ -2065,7 +2073,7 @@ namespace AviaGetPhoneSize
             }
             catch (Exception) { }
         }
-        static int check_deviceimagetype(Image<Bgr, Byte> img, string fn = "")
+        public static int check_deviceimagetype(Image<Bgr, Byte> img, string fn = "")
         {
             int ret = 0;
             Program.logIt($"[{fn}]check_deviceimagetype: ++");
@@ -2191,6 +2199,86 @@ namespace AviaGetPhoneSize
             }
             return ret;
         }
+        static void test_led()
+        {
+            VideoCapture vc = new VideoCapture(0, VideoCapture.API.DShow);
+            bool b = vc.SetCaptureProperty(CapProp.FrameHeight, 1080);
+            b = vc.SetCaptureProperty(CapProp.FrameWidth, 1920);
+
+            Mat m = new Mat();
+
+            LedController led = new LedController("COM5");
+            if (led.open())
+            {
+                led.power_on();
+                led.turn_on_warm_led();
+                led.level_set(5);
+                System.Threading.Thread.Sleep(5000);
+                vc.Read(m);
+                if (!m.IsEmpty)
+                {
+                    m.Save("led_01_05.jpg");
+                }
+                led.level_set(10);
+                System.Threading.Thread.Sleep(3000);
+                vc.Read(m);
+                if (!m.IsEmpty)
+                {
+                    m.Save("led_01_10.jpg");
+                }
+                led.level_set(15);
+                System.Threading.Thread.Sleep(3000);
+                vc.Read(m);
+                if (!m.IsEmpty)
+                {
+                    m.Save("led_01_15.jpg");
+                }
+                led.level_set(20);
+                System.Threading.Thread.Sleep(3000);
+                vc.Read(m);
+                if (!m.IsEmpty)
+                {
+                    m.Save("led_01_20.jpg");
+                }
+                led.level_set(25);
+                System.Threading.Thread.Sleep(3000);
+                vc.Read(m);
+                if (!m.IsEmpty)
+                {
+                    m.Save("led_01_25.jpg");
+                }
+                led.level_set(30);
+                System.Threading.Thread.Sleep(3000);
+                vc.Read(m);
+                if (!m.IsEmpty)
+                {
+                    m.Save("led_01_30.jpg");
+                }
+                led.level_set(35);
+                System.Threading.Thread.Sleep(3000);
+                vc.Read(m);
+                if (!m.IsEmpty)
+                {
+                    m.Save("led_01_35.jpg");
+                }
+                led.level_set(40);
+                System.Threading.Thread.Sleep(3000);
+                vc.Read(m);
+                if (!m.IsEmpty)
+                {
+                    m.Save("led_01_40.jpg");
+                }
+                led.level_set(45);
+                System.Threading.Thread.Sleep(3000);
+                vc.Read(m);
+                if (!m.IsEmpty)
+                {
+                    m.Save("led_01_45.jpg");
+                }
+                led.close();
+            }
+        }
+        
         [STAThread]
         static void test_form()
         {

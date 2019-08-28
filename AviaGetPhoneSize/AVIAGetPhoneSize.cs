@@ -26,7 +26,7 @@ namespace AviaGetPhoneSize
             //Console.WriteLine($"Sobel: {r1} and {toFloat(r1)}");
             //test();
             //montion_detect();
-            start(null);
+            start(new System.Threading.EventWaitHandle(false, System.Threading.EventResetMode.ManualReset));
             return 0;
 
         }
@@ -35,7 +35,21 @@ namespace AviaGetPhoneSize
             //montion_detect(quitEvent);
             //montion_detect_v2(quitEvent);
             //montion_detect_v3(quitEvent);
-            montion_detect_v4(quitEvent);
+            //montion_detect_v4(quitEvent);
+            Task t= Task.Run(() => 
+            {
+                montion_detect_v5(quitEvent);
+            });
+            System.Console.WriteLine("Press any key to terminate.");
+            while (!quitEvent.WaitOne(1000))
+            {
+                if(System.Console.KeyAvailable)
+                {
+                    Program.logIt("Terminate by user hit kb.");
+                    quitEvent.Set();
+                }
+            }
+            t.Wait();
         }
         static void test()
         {
@@ -739,17 +753,23 @@ namespace AviaGetPhoneSize
                 }
             }
         }
-        public static Tuple<bool, bool, double> check_device_inplace_v2(Image<Bgr, Byte> diff, double threshold = 0.27)  // 0.3
+        public static Tuple<bool, bool, double> check_device_inplace_v2(Image<Bgr, Byte> diff, double threshold = 0.27, Hsv low= default(Hsv), Hsv high= default(Hsv))  // 0.3
         {
             bool ret = false;
             bool device_inplace = false;
             Program.logIt("check_device_inplace: ++");
             int[] all = diff.CountNonzero();
             double r = 0;
+            Hsv l = new Hsv(45, 100, 50);
+            Hsv h = new Hsv(75, 255, 255);
+            if (!low.Equals(default(Hsv)))
+                l = low;
+            if (!high.Equals(default(Hsv)))
+                h = high;
             if (all[0] > 0 && all[1] > 0 && all[2] > 0)
             {
                 Image<Hsv, Byte> hsvimg = diff.Convert<Hsv, Byte>();
-                Image<Gray, Byte> mask = hsvimg.InRange(new Hsv(45, 100, 50), new Hsv(75, 255, 255));
+                Image<Gray, Byte> mask = hsvimg.InRange(l, h);
                 //diff.Save("temp_2.jpg");
                 //Image<Gray, Byte> mask = diff.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70)); //img.InRange(new Bgr(30, 60, 30), new Bgr(95, 130, 70));
                 int[] area = mask.CountNonzero();
@@ -1064,6 +1084,7 @@ namespace AviaGetPhoneSize
         }
         static bool all_same_frames(Image<Bgr, Byte>[] frames, double th = 11)
         {
+            Program.logIt($"all_same_frames: ++ {th}");
             bool ret = false;
             Image<Bgr, Byte> m0 = frames[0];
             if (m0 != null)
@@ -1086,6 +1107,7 @@ namespace AviaGetPhoneSize
                 }
                 ret = all_same;
             }
+            Program.logIt($"all_same_frames: -- {ret}");
             return ret;
         }
         static int check_size(double score, Dictionary<string,object> cfg)
@@ -1140,6 +1162,297 @@ namespace AviaGetPhoneSize
 #endif
             Program.logIt($"check_size: -- ret={ret}");
             return ret;
+        }
+        static Rectangle get_size_by_bw(Image<Gray, Byte> src)
+        {
+            Rectangle ret = Rectangle.Empty;
+            Image<Gray, Byte> img = src.Copy(new Rectangle(src.Width / 2, src.Height / 2, src.Width / 2, src.Height / 2));
+
+            img._Erode(1);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            img._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+
+            Size ret_sz = Size.Empty;
+            Rectangle roi = Rectangle.Empty;
+            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+            {
+                CvInvoke.FindContours(img, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                int count = contours.Size;
+                for (int i = 0; i < count; i++)
+                {
+                    VectorOfPoint contour = contours[i];
+                    double a = CvInvoke.ContourArea(contour);
+                    Rectangle r = CvInvoke.BoundingRectangle(contour);
+                    if (a > 250.0)
+                    {
+                        //Program.logIt($"area: {a}, {r}");
+                        if (roi.IsEmpty) roi = r;
+                        else roi = Rectangle.Union(roi, r);
+                    }
+                }
+                ret_sz = new Size(roi.Width + img.Width, roi.Height + img.Height);
+                //Program.logIt($"size: {ret_sz}");
+                ret = new Rectangle(new Point(0, 0), ret_sz);
+            }
+            return ret;
+        }
+        static int check_deviceimagetype(Image<Bgr, Byte> img, string fn = "")
+        {
+            int ret = 0;
+            Program.logIt($"[{fn}]check_deviceimagetype: ++");
+            int area = img.Width * img.Height;
+            Image<Hsv, Byte> img_hsv = img.Convert<Hsv, Byte>();
+            Image<Gray, Byte> mask = img_hsv.InRange(new Hsv(0, 0, 0), new Hsv(255, 255, 127));
+            double ratio = 1.0 * CvInvoke.CountNonZero(mask) / area;
+            if (ratio > 0.5)
+            {
+                // dark color surface
+                ret = 3;
+            }
+            else
+            {
+                mask = img_hsv.InRange(new Hsv(0, 0, 242), new Hsv(255, 255, 255));
+                ratio = 1.0 * CvInvoke.CountNonZero(mask) / area;
+                //Program.logIt($"[{fn}]check_deviceimagetype: ratio={ratio:P}");
+                if (ratio < 0.3)
+                {
+                    // glass surface
+                    ret = 2;
+                }
+                else
+                {
+                    // metal surface
+                    ret = 1;
+                }
+            }
+            Program.logIt($"[{fn}]check_deviceimagetype: -- ret={ret} ratio={ratio}");
+            return ret;
+        }
+
+        static Tuple<bool,Size> get_size(Image<Bgr,Byte> img, Image<Bgr, Byte> bg, Hsv low = default(Hsv), Hsv high = default(Hsv))
+        {
+            bool ret = false;
+            Size ret_sz = default(Size);
+            Image<Hsv, byte> hsv_bg = bg.Convert<Hsv, byte>();
+            Image<Gray, Byte> mask_bg = hsv_bg.InRange(low, high);
+            Rectangle tray_rect = get_size_by_bw(mask_bg);
+
+            Image<Hsv, byte> hsv = img.Convert<Hsv, byte>();
+            Image<Gray, Byte> mask = hsv.InRange(low, high);
+            Image<Gray, Byte> diff = mask.AbsDiff(mask_bg);
+            Rectangle rect = get_size_by_bw(diff);
+            ret_sz = rect.Size;
+            if (ret_sz.Width > tray_rect.Width && ret_sz.Height > tray_rect.Height)
+                ret = true;
+            return new Tuple<bool, Size>(ret, ret_sz);
+        }
+        static void color_sample_case_1(VideoCapture vc, LedController led, double angle, Rectangle ROI, Rectangle tray, Rectangle device, Rectangle color_roi)
+        {
+            Program.logIt("color_sample_case_1: ++");
+            // make the exposure < 0.4
+            led.turn_on_cold_led();
+            led.level_set(30);            
+            Image<Bgr, Byte> ready_img = null;
+            int retry = 5;
+            while (ready_img==null && retry>0)
+            {
+                Mat m = new Mat();
+                vc.Read(m);
+                Image<Bgr, Byte> img = m.ToImage<Bgr, Byte>().Rotate(angle, new Bgr(0, 0, 0), false).Copy(ROI);
+                Image<Hsv, Byte> i_hsv = img.Copy(color_roi).Convert<Hsv, Byte>();
+                Image<Gray, Byte> mask = i_hsv.InRange(new Hsv(0, 0, 235), new Hsv(255, 255, 255));
+                int cnt = CvInvoke.CountNonZero(mask);
+                double ratio = 1.0 * cnt / (mask.Width * mask.Height);
+                if (ratio < 0.7)
+                    ready_img = img;
+                else
+                {
+                    led.level_down();
+                    Tuple<bool, int, int> res = led.read_value();
+                    if (res.Item1)
+                    {
+                        if (res.Item2 == 45)
+                        {
+                            retry--;
+                        }
+                    }
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+            if (ready_img != null)
+            {
+                // ready to check color
+                try
+                {
+                    var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                    Dictionary<string, object> colors = jss.Deserialize<Dictionary<string, object>>(System.IO.File.ReadAllText("colors.json"));
+                    foreach (KeyValuePair<string, object> kvp in colors)
+                    {
+                        Dictionary<string, object> ci = (Dictionary<string, object>)kvp.Value;
+                        if ((int)ci["case"] == 1)
+                        {
+                            Bgr c_bgr = new Bgr((int)ci["b"], (int)ci["g"], (int)ci["r"]);
+                            Image<Bgr, Byte> i = ready_img.Copy(color_roi);
+                            Image<Bgr, Byte> i1 = ready_img.Copy(new Rectangle(0, tray.Height, tray.Width, device.Height-tray.Height));
+                            Image<Lab, Byte> i_lab = i.AbsDiff(c_bgr).Convert<Lab, Byte>();
+                            Lab test_lab = new Lab(0, 128, 128);
+                            Image<Gray, Byte> mask = new Image<Gray, byte>(i.Width, i.Height, new Gray(0));
+                            int th = (int)ci["th"];
+                            double score = 0.0;
+                            for (int r = 0; r < i_lab.Rows; r++)
+                            {
+                                for (int c = 0; c < i_lab.Cols; c++)
+                                {
+                                    double d = getDeltaE(i_lab[r, c], test_lab);
+                                    if (d < th)
+                                    {
+                                        mask[r, c] = new Gray(255);
+                                        score += d;
+                                    }
+                                }
+                            }
+                            int cnt = CvInvoke.CountNonZero(mask);
+                            if (CvInvoke.CountNonZero(mask) > 0)
+                            {
+                                Moments m = CvInvoke.Moments(mask);
+                                Point pc = new Point((int)(m.M10 / m.M00), (int)(m.M01 / m.M00));
+                                Rectangle r = CvInvoke.BoundingRectangle(mask);
+                                Program.logIt($"[{kvp.Key}]: {score/cnt}, {score}, {cnt}, {pc}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception) { }
+            }
+            else
+            {
+                // fail to get image
+            }
+            Program.logIt("color_sample_case_1: -- ");
+        }
+        static void montion_detect_v5(System.Threading.EventWaitHandle quitEvent = null)
+        {
+            Hsv h = default(Hsv);
+            if (h.Equals(default(Hsv)))
+            {
+
+            }
+            Program.logIt("montion_detect_v5: ++");
+            LedController led = new LedController("COM5");
+            // control led
+            Task t1 = Task.Run(() =>
+             {
+                 led.open();
+                 led.set_led_to_detect_size();
+             });
+            VideoCapture vc = new VideoCapture(0, VideoCapture.API.DShow);
+            Task t2 = Task.Run(() =>
+            {
+                bool b;
+                b = vc.SetCaptureProperty(CapProp.FrameHeight, 1080);
+                b = vc.SetCaptureProperty(CapProp.FrameWidth, 1920);
+            });
+            Task.WaitAll(new Task[] { t1, t2 });
+
+            // parameters:
+            Image<Bgr, Byte> background = new Image<Bgr, byte>(@"C:\Tools\avia\images\newled\background.jpg");
+            //Rectangle ROI = new Rectangle(864, 463, 642, 1150);
+            Rectangle ROI = new Rectangle(492, 213, 580, 1100);
+            double rotate_angle = 90.0;
+            Hsv hsv_low = new Hsv(35, 0, 0);
+            Hsv hsv_high = new Hsv(95, 255, 255);
+            Image<Bgr, Byte> bg = background.Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
+            Image<Hsv, byte> hsv_bg = bg.Convert<Hsv, byte>();
+            Image<Gray, Byte> mask_bg = hsv_bg.InRange(hsv_low, hsv_high);
+            Rectangle tray_rect = get_size_by_bw(mask_bg);
+
+            // check 4 frames for the motion
+            Mat frame = new Mat();
+            Image<Bgr, Byte>[] frames = new Image<Bgr, Byte>[4];
+            int cnt_frame = 0;
+            bool motion = true;
+            bool skip_led_adjust = true;
+            while (!quitEvent.WaitOne(500))
+            {
+                vc.Read(frame);
+                if (!frame.IsEmpty)
+                {
+                    frames[cnt_frame % 4] = frame.ToImage<Bgr, Byte>();
+                    cnt_frame++;
+                    if (cnt_frame == 8)
+                        cnt_frame = 4;
+                }
+                if (cnt_frame > 3)
+                {
+                    if (all_same_frames(frames))
+                    {
+                        // same
+                        //Program.logIt("montion_detect_v5: still");
+                        motion = false;
+                    }
+                    else
+                    {
+                        // motion
+                        //Program.logIt("montion_detect_v5: motion detected");
+                        motion = true;
+                    }
+                    // check
+                    if (!motion)
+                    {
+                        Image<Bgr,Byte> img = frames[0].Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
+                        Tuple<bool, bool, double> in_place = check_device_inplace_v2(img, 0.42, low:hsv_low, high:hsv_high);
+                        if (in_place.Item1)
+                        {
+                            if (in_place.Item2)
+                            {
+                                // device in place
+                                Tuple<bool, Size> size_res = get_size(img, bg, hsv_low, hsv_high);
+                                if (size_res.Item1)
+                                {
+                                    Program.logIt($"size={size_res.Item2}");
+                                    Rectangle color_rect = new Rectangle(tray_rect.Width, 0, size_res.Item2.Width - tray_rect.Width, size_res.Item2.Height);
+                                    int case_type = check_deviceimagetype(img.Copy(color_rect));
+                                    switch (case_type)
+                                    {
+                                        case 1: // metal case
+                                            // make the exposure < 0.4
+                                            color_sample_case_1(vc, led, rotate_angle, ROI, tray_rect, new Rectangle(new Point(0, 0), size_res.Item2), color_rect);
+                                            skip_led_adjust = false;
+                                            break;
+                                        case 2: // glass case
+                                            break;
+                                        case 3: // dark color
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // device removed
+                            }
+                        }
+                    }
+                }
+                // reset led
+                if (!skip_led_adjust)
+                {
+                    led.set_led_to_detect_size();
+                    skip_led_adjust = true;
+                }
+                //
+                GC.Collect();
+            }
+            led.close();
+            Program.logIt("montion_detect_v5: --");
+        }
+        static double getDeltaE(Lab l1, Lab l2)
+        {
+            return Math.Sqrt(
+                Math.Pow(l1.X - l2.X, 2) +
+                Math.Pow(l1.Y - l2.Y, 2) +
+                Math.Pow(l1.Z - l2.Z, 2));
         }
     }
 }

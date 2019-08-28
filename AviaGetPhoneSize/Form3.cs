@@ -19,23 +19,36 @@ namespace AviaGetPhoneSize
         VideoCapture theVideoCapturer;
         Bitmap mBackGround = null;
         //Rectangle ROI = new Rectangle(783, 582, 528, 1068);
-        Rectangle ROI = new Rectangle(864, 463, 642, 1150);
+        //Rectangle ROI = new Rectangle(864, 463, 642, 1150);
+        Rectangle ROI = new Rectangle(492, 213, 580, 1100);
         double rotate_angle = 90.0;
-        Hsv hsv_low = new Hsv(75, 0, 30);
+        Hsv hsv_low = new Hsv(35, 0, 0);
         Hsv hsv_high = new Hsv(95, 255, 255);
         Mat mCurrentFrame = new Mat();
+        LedController led = null;
         public Form3()
         {
             InitializeComponent();
+            led = new LedController("COM5");
         }
 
         private void Form3_Load(object sender, EventArgs e)
         {
+            Task.Run(() => 
+            {
+                led.open();
+                led.set_led_to_detect_size();
+            });
             if (System.IO.File.Exists(@"C:\Tools\avia\images\newled\background.jpg"))
             {
                 mBackGround = new Bitmap(@"C:\Tools\avia\images\newled\background.jpg");
             }
             // prepare context menu of pictureBoxOrg
+            MenuItem led_menu = new MenuItem("LED Control");
+            led_menu.MenuItems.Add("On/Off LED", (s, ea) => { led.turn_onoff(); });
+            led_menu.MenuItems.Add("Change LED", (s, ea) => { led.switch_led(); });
+            led_menu.MenuItems.Add("LED Light", (s, ea) => { led.level_up(); });
+            led_menu.MenuItems.Add("LED dark", (s, ea) => { led.level_down(); });
             {
                 ContextMenu cm = new ContextMenu();
                 cm.MenuItems.Add("Save", (s,ea)=> 
@@ -50,6 +63,7 @@ namespace AviaGetPhoneSize
                 {
                     mBackGround = new Bitmap(pictureBoxOrg.Image);
                 });
+                cm.MenuItems.Add(led_menu.CloneMenu());
                 pictureBoxOrg.ContextMenu = cm;
             }
             // prepare context menu of pictureBoxProcessed
@@ -70,11 +84,20 @@ namespace AviaGetPhoneSize
                         process_image(img.Bitmap);
                     }
                 });
+                cm.MenuItems.Add("Save", (s, ea) =>
+                {
+                    if (pictureBoxOrg.Image != null)
+                    {
+                        //Image<Bgr, Byte> img = mCurrentFrame.ToImage<Bgr, Byte>().Copy();
+                        save_image((Bitmap)pictureBoxProcessed.Image);
+                    }
+                });
+                cm.MenuItems.Add(led_menu.CloneMenu());
                 pictureBoxProcessed.ContextMenu = cm;
             }
-            theVideoCapturer = new VideoCapture(0);
-            bool b = theVideoCapturer.SetCaptureProperty(CapProp.FrameHeight, 1944);
-            b = theVideoCapturer.SetCaptureProperty(CapProp.FrameWidth, 2592);
+            theVideoCapturer = new VideoCapture(0, VideoCapture.API.DShow);
+            bool b = theVideoCapturer.SetCaptureProperty(CapProp.FrameHeight, 1080);
+            b = theVideoCapturer.SetCaptureProperty(CapProp.FrameWidth, 1920);
             if(theVideoCapturer.IsOpened)
             {
                 timer1.Interval = 250;
@@ -230,7 +253,7 @@ namespace AviaGetPhoneSize
                         VectorOfPoint contour = contours[i];
                         double a = CvInvoke.ContourArea(contour);
                         Rectangle r = CvInvoke.BoundingRectangle(contour);
-                        if (a > 10.0)
+                        if (a > 100.0)
                         {
                             //Program.logIt($"area: {a}, {r}");
                             if (roi.IsEmpty) roi = r;
@@ -248,8 +271,60 @@ namespace AviaGetPhoneSize
                 {
                     img1.Copy(new Rectangle(new Point(0, 0), ret_sz)).Save("temp_1.jpg");
                     img1.Copy(new Rectangle(tray_rect.Width, 0, ret_sz.Width - tray_rect.Width, ret_sz.Height)).Save("temp_2.jpg");
+                    int case_type = testOpenCV.check_deviceimagetype(img1.Copy(new Rectangle(tray_rect.Width, 0, ret_sz.Width - tray_rect.Width, ret_sz.Height)));
+                    if (case_type == 1)
+                    {
+                        led.turn_on_cold_led();
+                        System.Threading.Thread.Sleep(1000);
+                        double ratio = 1.0;
+                        while (ratio > 0.5)
+                        {
+                            // get image
+                            Image<Bgr, Byte> i0 = mCurrentFrame.ToImage<Bgr, Byte>().Copy();
+                            img1 = i0.Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
+                            //
+                            ratio = test(img1.Copy(new Rectangle(tray_rect.Width, 0, ret_sz.Width - tray_rect.Width, ret_sz.Height)));
+                            //
+                            if (ratio > 0.5)
+                            {
+                                led.level_down();
+                                System.Threading.Thread.Sleep(1000);
+                            }
+                            else
+                            {
+                                // check color
+                            }
+                        }
+                    }
                 }
             });
+        }
+
+        private void Form3_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(led!=null)
+            {
+                led.close();
+            }
+        }
+
+        
+        double test(Image<Bgr,Byte> src)
+        {
+            double ret = 0;
+            // cut the corner
+            SizeF sz = new SizeF(0, 0);
+            Rectangle rect = new Rectangle(new Point(0, 0), src.Size);
+            sz.Width = -0.3f * rect.Width;
+            rect.Inflate(Size.Round(sz));
+            rect.Height = 500;
+            Image<Bgr, Byte> img = src.Copy(rect);
+            img.Save("temp_3.jpg");
+
+            Image<Hsv, float> img_hsv = img.Convert<Hsv, float>();
+            Image<Gray, Byte> mask = img_hsv.InRange(new Hsv(0, 0, 235), new Hsv(255, 255, 255));
+            ret = 1.0 * CvInvoke.CountNonZero(mask) / (mask.Width * mask.Height);
+            return ret;
         }
     }
 }

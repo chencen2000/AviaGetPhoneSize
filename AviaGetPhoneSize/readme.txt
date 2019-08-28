@@ -77,3 +77,14 @@ stdout
 model=iPhone 8 Plus
 or
 model=iPhone XR
+
+
+light:
+
+11_0: 
+Hsv hsv_low = new Hsv(27,0,30); 
+Hsv hsv_high = new Hsv(120,255,255); 
+
+11_2: 
+Hsv hsv_low = new Hsv(75, 0, 30); 
+Hsv hsv_high = new Hsv(95,255,255); 

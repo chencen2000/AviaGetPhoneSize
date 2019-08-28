@@ -33,16 +33,16 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.pictureBoxOrg = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.pictureBoxProcessed = new System.Windows.Forms.PictureBox();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.pictureBoxProcessed = new System.Windows.Forms.PictureBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOrg)).BeginInit();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessed)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessed)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -90,20 +90,6 @@
             this.tabPage2.UseVisualStyleBackColor = true;
             this.tabPage2.Enter += new System.EventHandler(this.TabPage2_Enter);
             // 
-            // pictureBoxProcessed
-            // 
-            this.pictureBoxProcessed.Location = new System.Drawing.Point(205, 36);
-            this.pictureBoxProcessed.Name = "pictureBoxProcessed";
-            this.pictureBoxProcessed.Size = new System.Drawing.Size(360, 296);
-            this.pictureBoxProcessed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxProcessed.TabIndex = 0;
-            this.pictureBoxProcessed.TabStop = false;
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 250;
-            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -119,6 +105,20 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
+            // pictureBoxProcessed
+            // 
+            this.pictureBoxProcessed.Location = new System.Drawing.Point(205, 36);
+            this.pictureBoxProcessed.Name = "pictureBoxProcessed";
+            this.pictureBoxProcessed.Size = new System.Drawing.Size(360, 296);
+            this.pictureBoxProcessed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxProcessed.TabIndex = 0;
+            this.pictureBoxProcessed.TabStop = false;
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 250;
+            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -127,15 +127,16 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "Form3";
             this.Text = "Form3";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form3_FormClosing);
             this.Load += new System.EventHandler(this.Form3_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOrg)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessed)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxProcessed)).EndInit();
             this.ResumeLayout(false);
 
         }
