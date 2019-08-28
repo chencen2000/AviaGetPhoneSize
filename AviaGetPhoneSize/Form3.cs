@@ -20,8 +20,9 @@ namespace AviaGetPhoneSize
         Bitmap mBackGround = null;
         //Rectangle ROI = new Rectangle(783, 582, 528, 1068);
         //Rectangle ROI = new Rectangle(864, 463, 642, 1150);
-        Rectangle ROI = new Rectangle(492, 213, 580, 1100);
-        double rotate_angle = 90.0;
+        //Rectangle ROI = new Rectangle(492, 213, 580, 1100);
+        Rectangle ROI = new Rectangle(108, 148, 788, 1249);
+        double rotate_angle = -90.0;
         Hsv hsv_low = new Hsv(35, 0, 0);
         Hsv hsv_high = new Hsv(95, 255, 255);
         Mat mCurrentFrame = new Mat();
@@ -29,7 +30,7 @@ namespace AviaGetPhoneSize
         public Form3()
         {
             InitializeComponent();
-            led = new LedController("COM5");
+            led = new LedController("COM7");
         }
 
         private void Form3_Load(object sender, EventArgs e)
@@ -39,9 +40,9 @@ namespace AviaGetPhoneSize
                 led.open();
                 led.set_led_to_detect_size();
             });
-            if (System.IO.File.Exists(@"C:\Tools\avia\images\newled\background.jpg"))
+            if (System.IO.File.Exists(@"D:\projects\avia\images\background.jpg"))
             {
-                mBackGround = new Bitmap(@"C:\Tools\avia\images\newled\background.jpg");
+                mBackGround = new Bitmap(@"D:\projects\avia\images\background.jpg");
             }
             // prepare context menu of pictureBoxOrg
             MenuItem led_menu = new MenuItem("LED Control");

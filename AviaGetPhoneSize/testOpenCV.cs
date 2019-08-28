@@ -2207,7 +2207,7 @@ namespace AviaGetPhoneSize
 
             Mat m = new Mat();
 
-            LedController led = new LedController("COM5");
+            LedController led = new LedController("COM7");
             if (led.open())
             {
                 led.power_on();
