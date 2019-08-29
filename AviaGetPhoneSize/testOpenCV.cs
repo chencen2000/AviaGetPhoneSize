@@ -75,7 +75,7 @@ namespace AviaGetPhoneSize
             //r.Item1.Save("temp_1.jpg");
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
-            //test_5();
+            test_5();
             //test_ss();
             //test_6();
             //test_7();
@@ -84,7 +84,7 @@ namespace AviaGetPhoneSize
             //test_10();
             //toXml();
             //test_form();
-            test_led();
+            //test_led();
             return 0;
         }
         static void test()
@@ -1204,15 +1204,36 @@ namespace AviaGetPhoneSize
         }
         static void test_5()
         {
-            //string fn = @"C:\Tools\avia\images\avia_m0_pc\color_bar\IPhone6 Gold _color.jpg";
-            //process_image(null);
-            //System.Drawing.Color c = System.Drawing.Color.FromArgb(230, 199, 194);
-            //float h = c.GetHue();
-            //float s = c.GetSaturation();
-            //float v = c.GetBrightness();
-            //Image<Bgr, byte> i = new Image<Bgr, byte>(100, 100, new Bgr(c.B,c.G,c.R));
-            //Hsv hsv = i.Convert<Hsv, byte>().GetAverage();
-            //Hls hls = i.Convert<Hls, byte>().GetAverage();
+            Rectangle ROI = new Rectangle(108, 148, 750, 1249);
+            double rotate_angle = -90.0;
+            Hsv hsv_low = new Hsv(40, 0, 50);
+            Hsv hsv_high = new Hsv(80, 255, 255);
+
+            string fn_bg = @"C:\Tools\avia\images\m3\background.jpg";
+            Image<Bgr, Byte> bg = new Image<Bgr, byte>(fn_bg);
+            Image<Bgr, Byte> bg1 = bg.Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
+            Image<Hsv, Byte> bg_hsv = bg1.Convert<Hsv, Byte>();
+            Image<Gray, Byte> bg_mask = bg_hsv.InRange(hsv_low, hsv_high);
+
+            string fn = @"C:\Tools\avia\images\m3\test.jpg";
+            Image<Bgr, Byte> img = new Image<Bgr, byte>(fn);
+            Image<Bgr, Byte> img1 = img.Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
+            Image<Hsv, Byte> img_hsv = img1.Convert<Hsv, Byte>();
+            Image<Gray, Byte> img_mask = img_hsv.InRange(hsv_low, hsv_high);
+
+            Image<Gray, Byte> diff = img_mask.AbsDiff(bg_mask);
+            Image<Bgr, Byte> img_color = img1.Copy(diff);
+            //diff.ROI = new Rectangle(diff.Width / 2, diff.Height / 2, diff.Width / 2, diff.Height / 2);
+            diff.Save("temp_1.jpg");
+
+            CvInvoke.GaussianBlur(diff, diff, new Size(3, 3), 0);
+            //diff._Erode(3);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            diff._MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+            diff._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+
+            //
+            //Image<Bgr, Byte> img_color = img1.Copy();
         }
         static bool is_same_frame(Mat m1, Mat m2, double th = 17)
         {
