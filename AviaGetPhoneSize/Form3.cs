@@ -21,10 +21,10 @@ namespace AviaGetPhoneSize
         //Rectangle ROI = new Rectangle(783, 582, 528, 1068);
         //Rectangle ROI = new Rectangle(864, 463, 642, 1150);
         //Rectangle ROI = new Rectangle(492, 213, 580, 1100);
-        Rectangle ROI = new Rectangle(108, 148, 788, 1249);
+        Rectangle ROI = new Rectangle(108, 148, 750, 1249);
         double rotate_angle = -90.0;
-        Hsv hsv_low = new Hsv(35, 0, 0);
-        Hsv hsv_high = new Hsv(95, 255, 255);
+        Hsv hsv_low = new Hsv(40, 0, 50);
+        Hsv hsv_high = new Hsv(80, 255, 255);
         Mat mCurrentFrame = new Mat();
         LedController led = null;
         public Form3()
@@ -81,8 +81,8 @@ namespace AviaGetPhoneSize
                 {
                     if (pictureBoxOrg.Image != null)
                     {
-                        Image<Bgr, Byte> img = mCurrentFrame.ToImage<Bgr, Byte>().Copy();
-                        process_image(img.Bitmap);
+                        //Image<Bgr, Byte> img = mCurrentFrame.ToImage<Bgr, Byte>().Copy();
+                        process_image();
                     }
                 });
                 cm.MenuItems.Add("Save", (s, ea) =>
@@ -114,7 +114,8 @@ namespace AviaGetPhoneSize
                 if (theVideoCapturer != null && theVideoCapturer.IsOpened)
                 {
                     //Mat m=new Mat();
-                    theVideoCapturer.Read(mCurrentFrame);
+                    lock(mCurrentFrame)
+                        theVideoCapturer.Read(mCurrentFrame);
                     //pictureBoxOrg.Image = m.ToImage<Bgr, Byte>().Bitmap;
                     display_picture();
                 }
@@ -216,7 +217,7 @@ namespace AviaGetPhoneSize
             }
             return ret;
         }
-        private void process_image(Bitmap img)
+        private void process_image()
         {
             if (mBackGround == null)
             {
@@ -230,20 +231,27 @@ namespace AviaGetPhoneSize
                 Image<Bgr, Byte> bg = new Image<Bgr, byte>(mBackGround).Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
                 Image<Hsv, byte> hsv_bg = bg.Convert<Hsv, byte>();
                 Image<Gray, Byte> mask_bg = hsv_bg.InRange(hsv_low, hsv_high);
-                Rectangle tray_rect = get_tray_size(mask_bg);
+                //Rectangle tray_rect = get_tray_size(mask_bg);
+                Rectangle tray_rect = testOpenCV.get_size_m3(mask_bg.Copy(new Rectangle(0, 0, mask_bg.Width * 2 / 3, mask_bg.Height * 4 / 5)).Not());
 
-                Image<Bgr, Byte> img1 = new Image<Bgr, byte>(img).Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
+                //Image<Bgr, Byte> img = mCurrentFrame.ToImage<Bgr, Byte>();
+                Image<Bgr, Byte> img1;
+                lock(mCurrentFrame)
+                    img1 = mCurrentFrame.ToImage<Bgr, Byte>().Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
                 Image<Hsv, byte> hsv1 = img1.Convert<Hsv, byte>();
                 Image<Gray, Byte> mask1 = hsv1.InRange(hsv_low, hsv_high);
 
                 Image<Gray, Byte> diff = mask1.AbsDiff(mask_bg);
 
-                diff.ROI = new Rectangle(diff.Width / 2, diff.Height / 2, diff.Width / 2, diff.Height / 2);
-                diff._Erode(1);
-                Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
-                diff._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+                //diff.ROI = new Rectangle(diff.Width / 2, diff.Height / 2, diff.Width / 2, diff.Height / 2);
+                //diff._Erode(1);
+                //Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+                //diff._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
 
                 Size ret_sz = Size.Empty;
+                Rectangle phone_rect = testOpenCV.get_size_m3(diff);
+                ret_sz = phone_rect.Size;
+                /*
                 Rectangle roi = Rectangle.Empty;
                 using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
                 {
@@ -268,6 +276,7 @@ namespace AviaGetPhoneSize
                         toolStripStatusLabel1.Text = $"Device: Size={ret_sz}";
                     }));
                 }
+                */
                 if (!ret_sz.IsEmpty)
                 {
                     img1.Copy(new Rectangle(new Point(0, 0), ret_sz)).Save("temp_1.jpg");
@@ -278,10 +287,13 @@ namespace AviaGetPhoneSize
                         led.turn_on_cold_led();
                         System.Threading.Thread.Sleep(1000);
                         double ratio = 1.0;
-                        while (ratio > 0.5)
+                        int retry = 5;
+                        while (ratio > 0.5 && retry>0)
                         {
                             // get image
-                            Image<Bgr, Byte> i0 = mCurrentFrame.ToImage<Bgr, Byte>().Copy();
+                            Image<Bgr, Byte> i0;
+                            lock(mCurrentFrame)
+                                i0 = mCurrentFrame.ToImage<Bgr, Byte>().Copy();
                             img1 = i0.Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
                             //
                             ratio = test(img1.Copy(new Rectangle(tray_rect.Width, 0, ret_sz.Width - tray_rect.Width, ret_sz.Height)));
@@ -289,12 +301,20 @@ namespace AviaGetPhoneSize
                             if (ratio > 0.5)
                             {
                                 led.level_down();
+                                Tuple<bool,int,int> led_value= led.read_value();
+                                if (led_value.Item1 && (led_value.Item2 == 45 || led_value.Item3 == 45))
+                                    retry--;
                                 System.Threading.Thread.Sleep(1000);
                             }
                             else
                             {
                                 // check color
                             }
+                        }
+                        // final
+                        lock (mCurrentFrame)
+                        {
+                            mCurrentFrame.ToImage<Bgr, Byte>().Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI).Save("temp_1.jpg");
                         }
                     }
                 }
