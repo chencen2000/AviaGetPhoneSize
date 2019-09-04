@@ -1514,6 +1514,7 @@ namespace AviaGetPhoneSize
         {
             bool ret = false;
             string retS = string.Empty;
+            Program.logIt($"detect_size_id: ++ szInMM={szInMM}");
             Size iphone5 = new Size(364, 808);
             //float th = 0.05f;
             if(!szInMM.IsEmpty && !szInPixel.IsEmpty)
@@ -1545,6 +1546,7 @@ namespace AviaGetPhoneSize
                                 sf.Height = Decimal.ToSingle((decimal)model["Height"]); 
                             }
                             delta = new SizeF(Math.Abs(szInMM.Width - sf.Width) / sf.Width, Math.Abs(szInMM.Height - sf.Height) / sf.Height);
+                            Program.logIt($"detect_size_id: {model["Size"]}: delta={delta}");
                             if (delta.Height < th && delta.Width < th)
                             {
                                 // this is iphone 5 size
@@ -1557,6 +1559,7 @@ namespace AviaGetPhoneSize
                     catch (Exception) { }
                 }
             }
+            Program.logIt($"detect_size_id: -- ret={ret} id={retS}");
             return new Tuple<bool, string>(ret, retS);
         }
     }
