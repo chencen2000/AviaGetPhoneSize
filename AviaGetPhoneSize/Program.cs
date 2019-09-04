@@ -46,6 +46,66 @@ namespace AviaGetPhoneSize
             return doc;
         }
         #region load data from config
+        public static Tuple<bool, SizeF> config_load_size_ratio(Dictionary<string, object> config)
+        {
+            bool ret = false;
+            SizeF rets = SizeF.Empty;
+            if (config.ContainsKey("ratio") && config["ratio"] != null && config["ratio"].GetType() == typeof(Dictionary<string, object>))
+            {
+                Dictionary<string, object> d = (Dictionary<string, object>)config["ratio"];
+                float f = 0f;
+                if(d.ContainsKey("w") && d["w"]!=null && d["w"].GetType() == typeof(decimal))
+                {
+                    f = Decimal.ToSingle((decimal)d["w"]);
+                    rets.Width = f;
+                    ret = true;
+                }
+                if (d.ContainsKey("h") && d["h"] != null && d["h"].GetType() == typeof(decimal))
+                {
+                    f = Decimal.ToSingle((decimal)d["h"]);
+                    rets.Height= f;
+                    ret = true;
+                }
+            }
+            return new Tuple<bool, SizeF>(ret, rets);
+        }
+        public static Tuple<bool, Hsv, Hsv> config_load_hsv(Dictionary<string, object> config)
+        {
+            bool ret = false;
+            Hsv hsv1 = new Hsv(45,50,50);
+            Hsv hsv2 = new Hsv(75,255,255);
+            if (config.ContainsKey("hsv1") && config["hsv1"] != null && config["hsv1"].GetType() == typeof(Dictionary<string, object>))
+            {
+                Dictionary<string, object> d = (Dictionary<string, object>)config["hsv1"];
+                int h = 45;
+                int s = 50;
+                int v = 50;
+                if (d.ContainsKey("h") && d["h"] != null && d["h"].GetType() == typeof(int))
+                    h = (int)d["h"];
+                if (d.ContainsKey("s") && d["s"] != null && d["s"].GetType() == typeof(int))
+                    s = (int)d["s"];
+                if (d.ContainsKey("v") && d["v"] != null && d["v"].GetType() == typeof(int))
+                    v = (int)d["v"];
+                hsv1 = new Hsv(h, s, v);
+                ret = true;
+            }
+            if (config.ContainsKey("hsv2") && config["hsv2"] != null && config["hsv2"].GetType() == typeof(Dictionary<string, object>))
+            {
+                Dictionary<string, object> d = (Dictionary<string, object>)config["hsv2"];
+                int h = 45;
+                int s = 50;
+                int v = 50;
+                if (d.ContainsKey("h") && d["h"] != null && d["h"].GetType() == typeof(int))
+                    h = (int)d["h"];
+                if (d.ContainsKey("s") && d["s"] != null && d["s"].GetType() == typeof(int))
+                    s = (int)d["s"];
+                if (d.ContainsKey("v") && d["v"] != null && d["v"].GetType() == typeof(int))
+                    v = (int)d["v"];
+                hsv2 = new Hsv(h, s, v);
+                ret = true;
+            }
+            return new Tuple<bool, Hsv, Hsv>(ret, hsv1, hsv2);
+        }
         public static Rectangle config_load_rectangle(Dictionary<string,object> config, string key)
         {
             Rectangle ret = new Rectangle(744, 266, 540, 1116);
