@@ -61,7 +61,7 @@ namespace AviaGetPhoneSize
         static int Main(string[] args)
         {
             //resize_image();
-            //test();
+            test();
             //test_1();
             //train_iphone_color_data();
             //train_iphone_size_data_v2();
@@ -84,72 +84,20 @@ namespace AviaGetPhoneSize
             //test_10();
             //toXml();
             //test_form();
-            test_led();
+            //test_led();
             return 0;
         }
         static void test()
         {
-            Rectangle r0 = new Rectangle(744, 266, 576, 1116);
-            string fn0 = @"C:\Tools\avia\images\temp\background.jpg";
-            string fn1 = @"C:\Tools\avia\images\temp\iphone_8p_black.jpg";
-            string[] tf = new string[]
+            string s = System.IO.File.ReadAllText(@"C:\Tools\avia\test\color_data.json");
+            try
             {
-                //@"C:\Tools\avia\images\temp\iphone_8p_black.jpg",
-                //@"C:\Tools\avia\images\temp\iphone_8p_gray.jpg",
-                //@"C:\Tools\avia\images\temp\iphone_8p_red.jpg",
-                //@"C:\Tools\avia\images\temp\iphone_xr_blue.jpg",
-                @"C:\Tools\avia\images\temp\iphone_6_rosegold.jpg",
-            };
-            foreach (string fn in tf)
-            {
-                string tn = System.IO.Path.GetFileNameWithoutExtension(fn);
-                Program.logIt($"preocess: {tn}");
-                Mat m0 = CvInvoke.Imread(fn0);
-                Mat m1 = CvInvoke.Imread(fn);
+                var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                List<Dictionary<string, object>> data = jss.Deserialize<List<Dictionary<string, object>>>(s);
 
-                CvInvoke.Rotate(m0, m0, RotateFlags.Rotate90CounterClockwise);
-                CvInvoke.Rotate(m1, m1, RotateFlags.Rotate90CounterClockwise);
-
-                Image<Bgr, Byte> img0 = m0.ToImage<Bgr, Byte>().Copy(r0);
-                Image<Bgr, Byte> img1 = m1.ToImage<Bgr, Byte>().Copy(r0);
-
-                img0 = img1.AbsDiff(img0);
-                img1.Save($"temp_{tn}_1.jpg");
-                img0.Save($"temp_{tn}_2.jpg");
-                Image<Gray, Byte> img = img0.Mat.ToImage<Gray, Byte>();
-                Gray gv = img.GetAverage();
-                CvInvoke.Threshold(img, img, 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
-                img._Erode(2);
-                Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
-                img._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
-                img.Save($"temp_{tn}_3.jpg");
-
-                Rectangle roi = Rectangle.Empty;
-                using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
-                {
-                    CvInvoke.FindContours(img, contours, null, RetrType.List, ChainApproxMethod.ChainApproxSimple);
-                    int count = contours.Size;
-                    for (int i = 0; i < count; i++)
-                    {
-                        VectorOfPoint contour = contours[i];
-                        double a = CvInvoke.ContourArea(contour);
-                        Rectangle r = CvInvoke.BoundingRectangle(contour);
-                        //if (a > 10.0)
-                        {
-                            //Program.logIt($"area: {a}, {r}");
-                            if (roi.IsEmpty) roi = r;
-                            else roi = Rectangle.Union(roi, r);
-                        }
-                    }
-                }
-                Size sz = new Size(roi.X + roi.Width, roi.Y + roi.Height);
-
-                Rectangle rc = new Rectangle(20, 810, 290, 30);
-                Image<Bgr, Byte> imgc = img1.Copy(rc);
-                Bgr bgr = imgc.GetAverage();
-
-                Program.logIt($"{tn}: size={sz} r={bgr.Red} g={bgr.Green} b={bgr.Blue}");
+                var cg=data.GroupBy()
             }
+            catch (Exception) { }
         }
         static void test_1()
         {
