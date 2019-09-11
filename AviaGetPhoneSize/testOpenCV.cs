@@ -76,7 +76,7 @@ namespace AviaGetPhoneSize
             //r.Item2.Save("temp_2.jpg");
             //test_ocr();
             //test_5();
-            //test_ss();
+            test_ss();
             //test_6();
             //test_7();
             //test_8();
@@ -1152,15 +1152,95 @@ namespace AviaGetPhoneSize
         }
         static void test_5()
         {
-            //string fn = @"C:\Tools\avia\images\avia_m0_pc\color_bar\IPhone6 Gold _color.jpg";
-            //process_image(null);
-            //System.Drawing.Color c = System.Drawing.Color.FromArgb(230, 199, 194);
-            //float h = c.GetHue();
-            //float s = c.GetSaturation();
-            //float v = c.GetBrightness();
-            //Image<Bgr, byte> i = new Image<Bgr, byte>(100, 100, new Bgr(c.B,c.G,c.R));
-            //Hsv hsv = i.Convert<Hsv, byte>().GetAverage();
-            //Hls hls = i.Convert<Hls, byte>().GetAverage();
+            Rectangle ROI = new Rectangle(108, 148, 750, 1249);
+            double rotate_angle = -90.0;
+            Hsv hsv_low = new Hsv(40, 0, 50);
+            Hsv hsv_high = new Hsv(80, 255, 255);
+
+            string fn_bg = @"D:\projects\avia\images\background.jpg";
+            Image<Bgr, Byte> bg = new Image<Bgr, byte>(fn_bg);
+            Image<Bgr, Byte> bg1 = bg.Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
+            Image<Hsv, Byte> bg_hsv = bg1.Convert<Hsv, Byte>();
+            Image<Gray, Byte> bg_mask = bg_hsv.InRange(hsv_low, hsv_high);
+
+            string fn = @"D:\projects\avia\images\test.jpg";
+            Image<Bgr, Byte> img = new Image<Bgr, byte>(fn);
+            Image<Bgr, Byte> img1 = img.Rotate(rotate_angle, new Bgr(0, 0, 0), false).Copy(ROI);
+            Image<Hsv, Byte> img_hsv = img1.Convert<Hsv, Byte>();
+            Image<Gray, Byte> img_mask = img_hsv.InRange(hsv_low, hsv_high);
+
+            Image<Gray, Byte> diff = img_mask.AbsDiff(bg_mask);
+            Image<Bgr, Byte> img_color = img1.Copy(diff);
+            //diff.ROI = new Rectangle(diff.Width / 2, diff.Height / 2, diff.Width / 2, diff.Height / 2);
+            diff.Save("temp_1.jpg");
+
+#if true
+            Rectangle tray_sz = get_size_m3(bg_mask.Copy(new Rectangle(0,0,bg_mask.Width*2/3,bg_mask.Height*4/5)).Not());
+            Rectangle sz = get_size_m3(diff);
+
+#else
+
+            CvInvoke.GaussianBlur(diff, diff, new Size(3, 3), 0);
+            //diff._Erode(3);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            diff._MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+            diff._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+
+            // calc size
+            Size ret_sz = Size.Empty;
+            {
+                int x = diff.Height / 2;
+                Image<Gray, byte> temp = diff.Copy(new Rectangle(0, x - 100, diff.Width, 100));
+                using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+                {
+                    Rectangle roi = Rectangle.Empty;
+                    CvInvoke.FindContours(temp, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                    int count = contours.Size;
+                    for (int i = 0; i < count; i++)
+                    {
+                        VectorOfPoint contour = contours[i];
+                        double a = CvInvoke.ContourArea(contour);
+                        Rectangle r = CvInvoke.BoundingRectangle(contour);
+                        if (a > 10.0)
+                        {
+                            //Program.logIt($"area: {a}, {r}");
+                            if (roi.IsEmpty) roi = r;
+                            else roi = Rectangle.Union(roi, r);
+                        }
+                    }
+                    //ret_sz = new Size(roi.Width + diff.Width, roi.Height + diff.Height);
+                    //Program.logIt($"size: {ret_sz}");
+                    ret_sz.Width = roi.X + roi.Width;
+                }
+
+                x = diff.Width / 3;
+                temp = diff.Copy(new Rectangle(x - 100, 0, 100, diff.Height));
+                using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+                {
+                    Rectangle roi = Rectangle.Empty;
+                    CvInvoke.FindContours(temp, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                    int count = contours.Size;
+                    for (int i = 0; i < count; i++)
+                    {
+                        VectorOfPoint contour = contours[i];
+                        double a = CvInvoke.ContourArea(contour);
+                        Rectangle r = CvInvoke.BoundingRectangle(contour);
+                        if (a > 10.0)
+                        {
+                            //Program.logIt($"area: {a}, {r}");
+                            if (roi.IsEmpty) roi = r;
+                            else roi = Rectangle.Union(roi, r);
+                        }
+                    }
+                    //ret_sz = new Size(roi.Width + diff.Width, roi.Height + diff.Height);
+                    //Program.logIt($"size: {ret_sz}");
+                    ret_sz.Height = roi.Y + roi.Height;
+                }
+                Program.logIt($"size={ret_sz}");
+            }
+#endif
+            //
+            //Image<Bgr, Byte> img_color = img1.Copy();
         }
         static bool is_same_frame(Mat m1, Mat m2, double th = 17)
         {
@@ -1175,89 +1255,14 @@ namespace AviaGetPhoneSize
 
         static void test_ss()
         {
-#if true
-            TcpClient client = new TcpClient();
-            bool done = false;
-            string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
-            Regex r = new Regex(@"^ACK frame (.+)\s*$", RegexOptions.IgnoreCase);
-            Mat bg = null;
-            try
-            {
-                client.Connect(IPAddress.Loopback, 6280);
-                NetworkStream ns = client.GetStream();
-                byte[] cmd = System.Text.Encoding.UTF8.GetBytes("QueryFrame\n");
-                byte[] data = new byte[1024];
-                while (!done)
-                {
-                    ns.Write(cmd, 0, cmd.Length);
-                    int read = ns.Read(data, 0, data.Length);
-                    string str = System.Text.Encoding.UTF8.GetString(data, 0, read);
-                    Match m = r.Match(str);
-                    if (m.Success)
-                    {
-                        //Mat cm = CvInvoke.Imread(System.IO.Path.Combine(root, m.Groups[1].Value));
-                        //if (bg == null)
-                        //    bg = cm;
-                        //else
-                        //{
-                        //    Mat diff = new Mat();
-                        //    CvInvoke.AbsDiff(cm, bg, diff);
-                        //    Image<Gray, byte> img = diff.ToImage<Gray, Byte>();
-                        //    Gray ga = img.GetAverage();
-                        //    if (ga.MCvScalar.V0 > 17)
-                        //        done = true;
-                        //    double db = CvInvoke.Threshold(img, new Mat(), 0, 255, ThresholdType.Binary | ThresholdType.Otsu);
-                        //}
-                    }
-                }
-            }
-            catch (Exception) { }
-#else
-            TcpClient client = new TcpClient();
-            bool done = false;
-            string root = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
-            Regex r = new Regex(@"^ACK frame (.+)\s*$", RegexOptions.IgnoreCase);
-            BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
-            try
-            {
-                client.Connect(IPAddress.Loopback, 6280);
-                NetworkStream ns = client.GetStream();
-                while (!done)
-                {
-                    byte []b = System.Text.Encoding.UTF8.GetBytes("QueryFrame\n");
-                    ns.Write(b, 0, b.Length);
-                    b = new byte[1024];
-                    int read = ns.Read(b, 0, b.Length);
-                    string s = System.Text.Encoding.UTF8.GetString(b, 0, read);
-                    Match m = r.Match(s);
-                    if (m.Success)
-                    {
-                        string fn = System.IO.Path.Combine(root, m.Groups[1].Value);
-                        Mat cm = CvInvoke.Imread(fn);
-                        Mat mask = new Mat();
-                        bgs.Apply(cm, mask);
-                        Image<Gray, Byte> g = mask.ToImage<Gray, Byte>();
-                        Gray ga = g.GetAverage();
-                        if (ga.MCvScalar.V0 > 17)
-                        {
-                            done = true;
-                        }
-                    }
-                    System.Threading.Thread.Sleep(500);
-                }
-                client.Close();
-            }
-            catch (Exception) { }
-#endif
-            /*
             VideoCapture vc = new VideoCapture(0);
             if (vc.IsOpened)
             {
                 bool b = false;
                 double db = vc.GetCaptureProperty(CapProp.Mode);
-                b = vc.SetCaptureProperty(CapProp.Mode, 0);
-                b = vc.SetCaptureProperty(CapProp.FrameHeight, 1944);
-                b = vc.SetCaptureProperty(CapProp.FrameWidth, 2592);
+                //b = vc.SetCaptureProperty(CapProp.Mode, 0);
+                b = vc.SetCaptureProperty(CapProp.FrameHeight, 1080);
+                b = vc.SetCaptureProperty(CapProp.FrameWidth, 1920);
                 if (vc.Grab())
                 {
                     Mat m = new Mat();
@@ -1267,7 +1272,7 @@ namespace AviaGetPhoneSize
                     }
                 }
             }
-            */
+            
         }
         static bool check_apple_icon(string filename, Tuple<VectorOfPoint, VectorOfPoint> apple_logo, double threhold = 0.05)
         {
@@ -2114,6 +2119,74 @@ namespace AviaGetPhoneSize
             }
             Program.logIt($"sample_color_case_type_1: -- ret={ret.Key} score={score}");
         }
+        public static Rectangle get_size_m3(Image<Gray, Byte> src)
+        {
+            Rectangle ret = Rectangle.Empty;
+            Program.logIt($"get_size_m3: ++ {src.Size}");
+            Image<Gray, Byte> diff = src.Copy();
+            CvInvoke.GaussianBlur(diff, diff, new Size(3, 3), 0);
+            //diff._Erode(3);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            diff._MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 3, BorderType.Default, new MCvScalar(0));
+            diff._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+
+            // calc size
+            Size ret_sz = Size.Empty;
+            {
+                int x = diff.Height / 2;
+                Image<Gray, byte> temp = diff.Copy(new Rectangle(0, x - 100, diff.Width, 100));
+                using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+                {
+                    Rectangle roi = Rectangle.Empty;
+                    CvInvoke.FindContours(temp, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                    int count = contours.Size;
+                    for (int i = 0; i < count; i++)
+                    {
+                        VectorOfPoint contour = contours[i];
+                        double a = CvInvoke.ContourArea(contour);
+                        Rectangle r = CvInvoke.BoundingRectangle(contour);
+                        if (a > 10.0)
+                        {
+                            //Program.logIt($"area: {a}, {r}");
+                            if (roi.IsEmpty) roi = r;
+                            else roi = Rectangle.Union(roi, r);
+                        }
+                    }
+                    //ret_sz = new Size(roi.Width + diff.Width, roi.Height + diff.Height);
+                    //Program.logIt($"size: {ret_sz}");
+                    ret_sz.Width = roi.X + roi.Width;
+                }
+
+                x = diff.Width / 3;
+                temp = diff.Copy(new Rectangle(x - 100, 0, 100, diff.Height));
+                using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+                {
+                    Rectangle roi = Rectangle.Empty;
+                    CvInvoke.FindContours(temp, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                    int count = contours.Size;
+                    for (int i = 0; i < count; i++)
+                    {
+                        VectorOfPoint contour = contours[i];
+                        double a = CvInvoke.ContourArea(contour);
+                        Rectangle r = CvInvoke.BoundingRectangle(contour);
+                        if (a > 10.0)
+                        {
+                            //Program.logIt($"area: {a}, {r}");
+                            if (roi.IsEmpty) roi = r;
+                            else roi = Rectangle.Union(roi, r);
+                        }
+                    }
+                    //ret_sz = new Size(roi.Width + diff.Width, roi.Height + diff.Height);
+                    //Program.logIt($"size: {ret_sz}");
+                    ret_sz.Height = roi.Y + roi.Height;
+                }
+                if (!ret_sz.IsEmpty)
+                    ret = new Rectangle(new Point(0, 0), ret_sz);
+                Program.logIt($"size={ret_sz}");
+            }
+            Program.logIt($"get_size_m3: -- size: {ret}");
+            return ret;
+        }
         static private Rectangle get_tray_size(Image<Gray, Byte> src)
         {
             Rectangle ret = Rectangle.Empty;
@@ -2155,7 +2228,7 @@ namespace AviaGetPhoneSize
 
             Mat m = new Mat();
 
-            LedController led = new LedController("COM5");
+            LedController led = new LedController("COM7");
             if (led.open())
             {
                 led.power_on();

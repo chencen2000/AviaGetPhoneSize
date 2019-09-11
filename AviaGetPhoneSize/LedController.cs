@@ -254,6 +254,10 @@ namespace AviaGetPhoneSize
                     {
                         // power offed
                         turn_onoff();
+                        // 3 time '-'
+                        level_down();
+                        level_down();
+                        level_down();
                     }
                     else
                     {

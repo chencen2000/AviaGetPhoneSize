@@ -35,7 +35,9 @@ namespace AviaGetPhoneSize
             //montion_detect(quitEvent);
             //montion_detect_v2(quitEvent);
             //montion_detect_v3(quitEvent);
-            //montion_detect_v4(quitEvent);
+#if true
+            montion_detect_v4(quitEvent);
+#else
             Task t= Task.Run(() => 
             {
                 montion_detect_v5(quitEvent);
@@ -50,6 +52,7 @@ namespace AviaGetPhoneSize
                 }
             }
             t.Wait();
+#endif
         }
         static void test()
         {
@@ -179,7 +182,26 @@ namespace AviaGetPhoneSize
                 //Rectangle roi = new Rectangle(744, 266, 540, 1116);
                 Rectangle roi = Program.config_load_rectangle(_cfg, "rectangle1");
                 Rectangle roi_color = Program.config_load_rectangle(_cfg, "rectangle2");
+                Hsv hsv_low = new Hsv(45, 50, 0);
+                Hsv hsv_high = new Hsv(95, 255, 255);
+                {
+                    Tuple<bool, Hsv, Hsv> res = Program.config_load_hsv(_cfg);
+                    if (res.Item1)
+                    {
+                        hsv_low = res.Item2;
+                        hsv_high = res.Item3;
+                    }
+                }
+                SizeF size_ratio = SizeF.Empty;
+                {
+                    Tuple<bool, SizeF> res = Program.config_load_size_ratio(_cfg);
+                    if (res.Item1)
+                    {
+                        size_ratio = res.Item2;
+                    }
+                }
                 double threshold1 = _cfg.ContainsKey("threshold1") ? System.Decimal.ToDouble((System.Decimal)_cfg["threshold1"]) : 0.27;
+                float threshold2 = _cfg.ContainsKey("threshold2") ? System.Decimal.ToSingle((System.Decimal)_cfg["threshold2"]) : 0.05f;
                 //System.Threading.Thread.Sleep(5000);
                 //string frames = System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"), "AVIA", "frames");
                 //Regex r = new Regex(@"^ACK frame (.+)\s*$", RegexOptions.IgnoreCase);
@@ -191,11 +213,12 @@ namespace AviaGetPhoneSize
                 //BackgroundSubtractorMOG2 bgs = new BackgroundSubtractorMOG2();
                 Image<Bgr, Byte> bg_img = new Emgu.CV.Image<Bgr, Byte>(System.IO.Path.Combine(root, "Images", "BackGround.jpg")).Rotate(-90, new Bgr(0, 0, 0), false);
                 bg_img.ROI = roi;
+                Image<Gray, Byte> bg_mask = bg_img.Convert<Hsv,byte>().InRange(hsv_low, hsv_high);
                 int frame_num = 0;
                 Image<Bgr, Byte>[] frames = new Image<Bgr, Byte>[4];
                 while (true)
                 {
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(100);
                     // fetch a frame
                     Image<Bgr, Byte> cf = get_frame(client, ns);
                     if (cf != null)
@@ -213,7 +236,7 @@ namespace AviaGetPhoneSize
                         {
                             Image<Bgr, Byte> frame_roi = frames[0];
                             // still
-                            Tuple<bool, bool, double> device_inplace = check_device_inplace_v2(frame_roi, threshold1);
+                            Tuple<bool, bool, double> device_inplace = check_device_inplace_v2(frame_roi, threshold1, hsv_low,hsv_high);
                             if (device_inplace.Item1)
                             {
                                 if (device_inplace.Item2)
@@ -221,7 +244,7 @@ namespace AviaGetPhoneSize
                                     // device inplace
                                     Program.logIt($"Device inplace, score={device_inplace.Item3}");
 
-#if true
+#if false
                                     int sizeid = check_size(device_inplace.Item3, _cfg);
                                     if (sizeid > 0)
                                     {
@@ -240,23 +263,23 @@ namespace AviaGetPhoneSize
                                         Program.logIt("Fail to get size");
                                     }
 #else
-                                    Image<Bgr, Byte> diff = frame_roi.AbsDiff(bg_img);
-                                    Size sz = detect_size(diff.Convert<Gray, Byte>());
-                                    if (sz.IsEmpty)
+                                    Image<Gray, Byte> mask = frame_roi.Convert<Hsv, byte>().InRange(hsv_low, hsv_high);
+
+                                    Image<Gray, Byte> diff = mask.AbsDiff(bg_mask);
+                                    Tuple<bool,Size> sz = detect_size_v2(diff);
+                                    if(sz.Item1)
                                     {
-                                        // error
-                                    }
-                                    else
-                                    {
-                                        Bgr rgb = sample_color(frame_roi);
-                                        Program.logIt($"device: size={sz}, color={rgb}");
-                                        Tuple<bool, int, int> res = predict_color_and_size(rgb, sz, _cfg);
-                                        if (res.Item1)
+                                        SizeF szf = new SizeF(size_ratio.Width * sz.Item2.Width, size_ratio.Height * sz.Item2.Height);
+                                        //Console.WriteLine($"size={szf}");
+                                        Tuple<bool, string> sid = detect_size_id(sz.Item2, szf, threshold2);
+                                        if(sid.Item1)
                                         {
                                             Console.WriteLine($"device=ready");
-                                            Console.WriteLine($"colorid={res.Item2}");
-                                            Console.WriteLine($"sizeid={res.Item3}");
+                                            Console.WriteLine($"sizeid={sid.Item2}");
                                         }
+                                        //Console.WriteLine($"colorid={res.Item2}");
+                                        //Console.WriteLine($"sizeid={res.Item3}");
+                                        //Console.WriteLine($"size={szf}");
                                     }
 #endif
                                 }
@@ -1020,6 +1043,39 @@ namespace AviaGetPhoneSize
 #endif
             return rgb;
         }
+        public static Tuple<bool,Size> detect_size_v2(Image<Gray, Byte> img)
+        {
+            bool ret = false;
+            Size ret_sz = Size.Empty;
+            Image<Gray, Byte> diff = img.Copy(new Rectangle(img.Width / 2, img.Height / 2, img.Width / 2, img.Height / 2));
+            //diff.ROI = new Rectangle(diff.Width / 2, diff.Height / 2, diff.Width / 2, diff.Height / 2);
+            //diff._Erode(1);
+            Mat k = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(3, 3), new Point(1, 1));
+            diff._MorphologyEx(MorphOp.Open, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            diff._MorphologyEx(MorphOp.Gradient, k, new Point(-1, -1), 1, BorderType.Default, new MCvScalar(0));
+            Rectangle roi = Rectangle.Empty;
+            using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
+            {
+                CvInvoke.FindContours(diff, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+                int count = contours.Size;
+                for (int i = 0; i < count; i++)
+                {
+                    VectorOfPoint contour = contours[i];
+                    double a = CvInvoke.ContourArea(contour);
+                    Rectangle r = CvInvoke.BoundingRectangle(contour);
+                    if (a > 100.0)
+                    {
+                        //Program.logIt($"area: {a}, {r}");
+                        if (roi.IsEmpty) roi = r;
+                        else roi = Rectangle.Union(roi, r);
+                        ret = true;
+                    }
+                }
+                ret_sz = new Size(roi.Width + diff.Width, roi.Height + diff.Height);
+                Program.logIt($"size: {ret_sz}");
+            }
+            return new Tuple<bool, Size>(ret, ret_sz);
+        }
         public static Size detect_size(Image<Gray, Byte> img)
         {
             Program.logIt("detect_size: ++");
@@ -1453,6 +1509,58 @@ namespace AviaGetPhoneSize
                 Math.Pow(l1.X - l2.X, 2) +
                 Math.Pow(l1.Y - l2.Y, 2) +
                 Math.Pow(l1.Z - l2.Z, 2));
+        }
+        static Tuple<bool, string> detect_size_id(Size szInPixel, SizeF szInMM, float th=0.05f)
+        {
+            bool ret = false;
+            string retS = string.Empty;
+            Program.logIt($"detect_size_id: ++ szInMM={szInMM}");
+            Size iphone5 = new Size(364, 808);
+            //float th = 0.05f;
+            if(!szInMM.IsEmpty && !szInPixel.IsEmpty)
+            {
+                SizeF delta = SizeF.Empty;
+                // check iphone 5/5s first
+                delta = new SizeF(1.0f * Math.Abs(szInPixel.Width - iphone5.Width) / iphone5.Width, 1.0f * Math.Abs(szInPixel.Height - iphone5.Height) / iphone5.Height);
+                if(delta.Height<th && delta.Width<th)
+                {
+                    // this is iphone 5 size
+                    ret = true;
+                    retS = "AS01";
+                }
+                else
+                {
+                    try
+                    {
+                        var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                        List<Dictionary<string, object>> models = jss.Deserialize<List<Dictionary<string, object>>>(System.IO.File.ReadAllText(System.IO.Path.Combine(System.Environment.GetEnvironmentVariable("FDHOME"),"avia","avia_models.json")));
+                        foreach(var model in models)
+                        {
+                            SizeF sf = SizeF.Empty;
+                            if (model.ContainsKey("Width") && model["Width"] != null && model["Width"].GetType() == typeof(decimal))
+                            {
+                                sf.Width = Decimal.ToSingle((decimal)model["Width"]);
+                            }
+                            if (model.ContainsKey("Height") && model["Height"] != null && model["Height"].GetType() == typeof(decimal))
+                            {
+                                sf.Height = Decimal.ToSingle((decimal)model["Height"]); 
+                            }
+                            delta = new SizeF(Math.Abs(szInMM.Width - sf.Width) / sf.Width, Math.Abs(szInMM.Height - sf.Height) / sf.Height);
+                            Program.logIt($"detect_size_id: {model["Size"]}: delta={delta}");
+                            if (delta.Height < th && delta.Width < th)
+                            {
+                                // this is iphone 5 size
+                                ret = true;
+                                retS = model["Size"] as string;
+                                break;
+                            }
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            }
+            Program.logIt($"detect_size_id: -- ret={ret} id={retS}");
+            return new Tuple<bool, string>(ret, retS);
         }
     }
 }
