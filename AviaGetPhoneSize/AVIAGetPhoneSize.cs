@@ -214,6 +214,7 @@ namespace AviaGetPhoneSize
                 Image<Bgr, Byte> bg_img = new Emgu.CV.Image<Bgr, Byte>(System.IO.Path.Combine(root, "Images", "BackGround.jpg")).Rotate(-90, new Bgr(0, 0, 0), false);
                 bg_img.ROI = roi;
                 Image<Gray, Byte> bg_mask = bg_img.Convert<Hsv,byte>().InRange(hsv_low, hsv_high);
+                Tuple<bool, Size> tray_size = detect_size_v2(bg_mask);
                 int frame_num = 0;
                 Image<Bgr, Byte>[] frames = new Image<Bgr, Byte>[4];
                 while (true)
@@ -271,11 +272,11 @@ namespace AviaGetPhoneSize
                                     {
                                         SizeF szf = new SizeF(size_ratio.Width * sz.Item2.Width, size_ratio.Height * sz.Item2.Height);
                                         //Console.WriteLine($"size={szf}");
-                                        Tuple<bool, string> sid = detect_size_id(sz.Item2, szf, threshold2);
-                                        if(sid.Item1)
+                                        //Tuple<bool, string> sid = detect_size_id(sz.Item2, szf, threshold2);
+                                        //if(sid.Item1)
                                         {
+                                            Console.WriteLine($"size={szf.Height},{szf.Width}");
                                             Console.WriteLine($"device=ready");
-                                            Console.WriteLine($"sizeid={sid.Item2}");
                                         }
                                         //Console.WriteLine($"colorid={res.Item2}");
                                         //Console.WriteLine($"sizeid={res.Item3}");
