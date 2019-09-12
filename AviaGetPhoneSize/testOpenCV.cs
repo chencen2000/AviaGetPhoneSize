@@ -95,7 +95,7 @@ namespace AviaGetPhoneSize
                 var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
                 List<Dictionary<string, object>> data = jss.Deserialize<List<Dictionary<string, object>>>(s);
 
-                var cg=data.GroupBy()
+                //var cg=data.GroupBy()
             }
             catch (Exception) { }
         }
