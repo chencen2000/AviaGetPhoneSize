@@ -45,8 +45,8 @@ namespace AviaGetPhoneSize
             //resize_image();
             //test();
             //test_1();
-            train_iphone_color_data();
-            train_iphone_size_data();
+            //train_iphone_color_data();
+            //train_iphone_size_data();
             //test_ML();
             //test_3();
             //test_4();
@@ -60,6 +60,7 @@ namespace AviaGetPhoneSize
             //test_5();
             //test_ss();
             //test_6();
+            test_hdr();
             return 0;
         }
         static void test()
@@ -1288,8 +1289,53 @@ namespace AviaGetPhoneSize
                     Program.logIt($"{fn}: {s}");
                 }
                 GC.Collect();
+            }           
+        }
+        static void test_hdr()
+        {
+            //string dir = @"C:\projects\local\opencv_extra-3.4\testdata\cv\hdr\exposures";
+            string dir = @"C:\projects\test\images";
+            VectorOfMat images = new VectorOfMat();
+            VectorOfFloat times = new VectorOfFloat();
+            string []lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(dir, "list.txt"));
+            foreach(string line in lines)
+            {
+                string[] ss = line.Split(' ');
+                Mat m = CvInvoke.Imread(System.IO.Path.Combine(dir, ss[0]));
+                float f = float.Parse(ss[1]);
+                //f = 1.0f / f;
+                images.Push(m);
+                times.Push(new float[] { f });                
             }
-            
+
+            CalibrateDebevec cd = new CalibrateDebevec();
+            Mat response = new Mat();
+            cd.Process(images, response, times);
+
+            MergeDebevec md = new MergeDebevec();
+            Mat hdr = new Mat();
+            md.Process(images, hdr, times, response);
+            hdr.Save("hdr.hdr");
+
+            if(false)
+            {
+                Mat ldr = new Mat();
+                Tonemap tmap = new Tonemap(4.0f);
+                tmap.Process(hdr, ldr);
+                (ldr * 255).Save("temp_1.jpg");
+            }
+            if (true)
+            {
+                Mat ldr = new Mat();
+                TonemapDrago tmap = new TonemapDrago();
+                tmap.Process(hdr, ldr);
+                (ldr * 255).Save("temp_1.jpg");
+            }
+
+            Mat img = new Mat();
+            MergeMertens mm = new MergeMertens();
+            mm.Process(images, img);
+            (img * 255).Save("temp_2.jpg");
         }
     }
 }
